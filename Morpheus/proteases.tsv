@@ -1,0 +1,15 @@
+Name	Amino Acids Inducing Cleavage	Amino Acids Preventing Cleavage	Cleavage Terminus	Specificity
+Arg-C	R		C	Full
+Asp-N	D		N	Full
+chymotrypsin	FWY	P	C	Full
+chymotrypsin (no proline rule)	FWY		C	Full
+CNBr	M		C	Full
+Glu-C	E		C	Full
+Lys-C	K	P	C	Full
+Lys-C (no proline rule)	K		C	Full
+Lys-N	K		N	Full
+trypsin	KR	P	C	Full
+trypsin (no proline rule)	KR		C	Full
+tryptophan oxidation	W		C	Full
+no enzyme	ACDEFGHIKLMNPQRSTVWY		None	None
+top-down			None	None

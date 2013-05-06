@@ -1,0 +1,32 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Morpheus (Agilent 64-bit)", "Morpheus (Agilent 64-bit).csproj", "{288CC061-1067-4FBD-8E79-FB4C7B3F3FB4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Morpheus (Agilent 32-bit)", "Morpheus (Agilent 32-bit).csproj", "{07D21D73-18B5-4D6F-B249-E8AD462BDCAD}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x64 = Debug|x64
+		Debug|x86 = Debug|x86
+		Release|x64 = Release|x64
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{288CC061-1067-4FBD-8E79-FB4C7B3F3FB4}.Debug|x64.ActiveCfg = Debug|x64
+		{288CC061-1067-4FBD-8E79-FB4C7B3F3FB4}.Debug|x64.Build.0 = Debug|x64
+		{288CC061-1067-4FBD-8E79-FB4C7B3F3FB4}.Debug|x86.ActiveCfg = Debug|x64
+		{288CC061-1067-4FBD-8E79-FB4C7B3F3FB4}.Release|x64.ActiveCfg = Release|x64
+		{288CC061-1067-4FBD-8E79-FB4C7B3F3FB4}.Release|x64.Build.0 = Release|x64
+		{288CC061-1067-4FBD-8E79-FB4C7B3F3FB4}.Release|x86.ActiveCfg = Release|x64
+		{07D21D73-18B5-4D6F-B249-E8AD462BDCAD}.Debug|x64.ActiveCfg = Debug|x86
+		{07D21D73-18B5-4D6F-B249-E8AD462BDCAD}.Debug|x86.ActiveCfg = Debug|x86
+		{07D21D73-18B5-4D6F-B249-E8AD462BDCAD}.Debug|x86.Build.0 = Debug|x86
+		{07D21D73-18B5-4D6F-B249-E8AD462BDCAD}.Release|x64.ActiveCfg = Release|x86
+		{07D21D73-18B5-4D6F-B249-E8AD462BDCAD}.Release|x86.ActiveCfg = Release|x86
+		{07D21D73-18B5-4D6F-B249-E8AD462BDCAD}.Release|x86.Build.0 = Release|x86
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
