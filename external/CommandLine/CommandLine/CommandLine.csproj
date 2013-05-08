@@ -96,6 +96,9 @@
       <SubType>Code</SubType>
     </Compile>
     <Content Include="App.ico" />
+    <Content Include="MIT_License.CommandLine.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
