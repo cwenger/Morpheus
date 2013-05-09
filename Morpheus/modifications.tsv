@@ -1,4 +1,4 @@
-Description	Type	Residue	Monoisotopic Mass Shift (Da)	Average Mass Shift (Da)	Default	Chemical Formula
+Description	Type	Amino Acid Residue	Monoisotopic Mass Shift (Da)	Average Mass Shift (Da)	Default	Notes
 carbamidomethylation of C	amino acid residue	C	57.02146373	57.05132	fixed	CH3NO
 oxidation of M	amino acid residue	M	15.99491463	15.9994	variable	O
 acetylation of protein N-terminus	protein N-terminus	n/a	42.01056469	42.03668	none	C2H2O
