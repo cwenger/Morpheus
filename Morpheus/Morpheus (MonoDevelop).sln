@@ -1,11 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Morpheus", "Morpheus (MonoDevelop).csproj", "{288CC061-1067-4FBD-8E79-FB4C7B3F3FB4}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Morpheus (MonoDevelop)", "Morpheus (MonoDevelop).csproj", "{288CC061-1067-4FBD-8E79-FB4C7B3F3FB4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Morpheus (command line)", "Morpheus (command line)\Morpheus (MonoDevelop command line).csproj", "{9E22E4AC-C0D7-4E7B-8C6F-73827FA79177}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Morpheus (MonoDevelop command line)", "Morpheus (command line)\Morpheus (MonoDevelop command line).csproj", "{9E22E4AC-C0D7-4E7B-8C6F-73827FA79177}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CommandLine", "..\external\CommandLine\CommandLine\CommandLine (MonoDevelop).csproj", "{E2EED323-9E53-4193-B0D6-FA3987FE9834}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CommandLine (MonoDevelop)", "..\external\CommandLine\CommandLine\CommandLine (MonoDevelop).csproj", "{E2EED323-9E53-4193-B0D6-FA3987FE9834}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
