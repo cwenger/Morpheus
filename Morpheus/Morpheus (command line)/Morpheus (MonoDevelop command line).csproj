@@ -59,11 +59,11 @@
   <ItemGroup>
     <ProjectReference Include="..\..\external\CommandLine\CommandLine\CommandLine (MonoDevelop).csproj">
       <Project>{E2EED323-9E53-4193-B0D6-FA3987FE9834}</Project>
-      <Name>CommandLine</Name>
+      <Name>CommandLine (MonoDevelop)</Name>
     </ProjectReference>
     <ProjectReference Include="..\Morpheus (MonoDevelop).csproj">
       <Project>{288CC061-1067-4FBD-8E79-FB4C7B3F3FB4}</Project>
-      <Name>Morpheus</Name>
+      <Name>Morpheus (MonoDevelop)</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
