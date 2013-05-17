@@ -12,30 +12,25 @@ namespace Morpheus
         {
             using(StreamWriter output = new StreamWriter(filepath))
             {
-                bool first = true;
+                if(typeof(T) == typeof(PeptideSpectrumMatch))
+                {
+                    output.WriteLine(PeptideSpectrumMatch.Header);
+                }
+                else if(typeof(T) == typeof(PeptideSpectrumMatch))
+                {
+                    output.WriteLine(ProteinGroup.Header);
+                }
+                else if(typeof(T) == typeof(IdentificationWithFalseDiscoveryRate<PeptideSpectrumMatch>))
+                {
+                    output.WriteLine(PeptideSpectrumMatch.Header + IdentificationWithFalseDiscoveryRate<PeptideSpectrumMatch>.Header);
+                }
+                else if(typeof(T) == typeof(IdentificationWithFalseDiscoveryRate<ProteinGroup>))
+                {
+                    output.WriteLine(ProteinGroup.Header + IdentificationWithFalseDiscoveryRate<ProteinGroup>.Header);
+                }
                 foreach(T item in items)
                 {
-                    if(first)
-                    {
-                        if(item is PeptideSpectrumMatch)
-                        {
-                            output.WriteLine(PeptideSpectrumMatch.Header);
-                        }
-                        else if(item is ProteinGroup)
-                        {
-                            output.WriteLine(ProteinGroup.Header);
-                        }
-                        else if(item is IdentificationWithFalseDiscoveryRate<PeptideSpectrumMatch>)
-                        {
-                            output.WriteLine(PeptideSpectrumMatch.Header + IdentificationWithFalseDiscoveryRate<PeptideSpectrumMatch>.Header);
 
-                        }
-                        else if(item is IdentificationWithFalseDiscoveryRate<ProteinGroup>)
-                        {
-                            output.WriteLine(ProteinGroup.Header + IdentificationWithFalseDiscoveryRate<ProteinGroup>.Header);
-                        }
-                        first = false;
-                    }
                     output.WriteLine(item.ToString());
                 }
             }
