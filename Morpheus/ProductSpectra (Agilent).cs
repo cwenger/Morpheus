@@ -56,6 +56,7 @@ namespace Morpheus
                     IBDASpecData agilent_spectrum = agilent_d.GetSpectrum(row_number, ms1_peak_filter, ms2_peak_filter);
 
                     int scan_number = row_number + 1;
+                    string scan_id = "scanId=" + agilent_spectrum.ScanId.ToString();
 
                     double precursor_mz = agilent_spectrum.MZOfInterest[0].Start;
                     double precursor_intensity;
@@ -121,7 +122,7 @@ namespace Morpheus
 
                             double precursor_mass = Utilities.MassFromMZ(precursor_mz, c);
 
-                            ProductSpectrum spectrum = new ProductSpectrum(agilentDFolderPath, scan_number, scan_record.RetentionTime, FRAGMENTATION_METHOD, precursor_mz, precursor_intensity, c, precursor_mass, peaks);
+                            ProductSpectrum spectrum = new ProductSpectrum(agilentDFolderPath, scan_id, scan_number, scan_record.RetentionTime, FRAGMENTATION_METHOD, precursor_mz, precursor_intensity, c, precursor_mass, peaks);
                             spectra.Add(spectrum);
                         }
                     }
@@ -163,7 +164,7 @@ namespace Morpheus
 
                         double precursor_mass = Utilities.MassFromMZ(precursor_mz, charge);
 
-                        ProductSpectrum spectrum = new ProductSpectrum(agilentDFolderPath, scan_number, scan_record.RetentionTime, FRAGMENTATION_METHOD, precursor_mz, precursor_intensity, charge, precursor_mass, peaks);
+                        ProductSpectrum spectrum = new ProductSpectrum(agilentDFolderPath, scan_id, scan_number, scan_record.RetentionTime, FRAGMENTATION_METHOD, precursor_mz, precursor_intensity, charge, precursor_mass, peaks);
                         spectra.Add(spectrum);
                     }
                 }
