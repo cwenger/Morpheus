@@ -14,6 +14,8 @@ namespace Morpheus
 
     public partial class ProductSpectra : List<ProductSpectrum>
     {
+        private const bool GET_PRECURSOR_MZ_AND_INTENSITY_FROM_MS1 = true;
+
         private const bool HARMONIC_CHARGE_DETECTION = false;
 
         private ProductSpectra() : base() { }
@@ -43,11 +45,15 @@ namespace Morpheus
             OnReportTaskWithProgress(new EventArgs());
             int old_progress = 0;
 
-            foreach(XmlNode node in mzML.SelectNodes("//mzML:mzML/mzML:run/mzML:spectrumList/mzML:spectrum", xnm))
+            XmlNode ms1_spectrum_node = null;
+            double[] ms1_mz = null;
+            double[] ms1_intensity = null;
+
+            foreach(XmlNode spectrum_node in mzML.SelectNodes("//mzML:mzML/mzML:run/mzML:spectrumList/mzML:spectrum", xnm))
             {
-                int scan_index = int.Parse(node.Attributes["index"].Value);
+                int scan_index = int.Parse(spectrum_node.Attributes["index"].Value);
                 int scan_number = scan_index + 1;
-                string scan_id = node.Attributes["id"].Value;
+                string scan_id = spectrum_node.Attributes["id"].Value;
 
                 int ms_level = -1;
                 double retention_time = double.NaN;
@@ -57,109 +63,91 @@ namespace Morpheus
                 string fragmentation_method = null;
                 double[] mz = null;
                 double[] intensity = null;
-                foreach(XmlNode node2 in node.ChildNodes)
+                foreach(XmlNode spectrum_child_node in spectrum_node.ChildNodes)
                 {
-                    if(node2.Name == "cvParam")
+                    if(spectrum_child_node.Name == "cvParam")
                     {
-                        if(node2.Attributes["name"].Value == "ms level")
+                        if(spectrum_child_node.Attributes["name"].Value == "ms level")
                         {
-                            ms_level = int.Parse(node2.Attributes["value"].Value);
+                            ms_level = int.Parse(spectrum_child_node.Attributes["value"].Value);
                         }
                     }
-                    else if(node2.Name == "referenceableParamGroupRef")
+                    else if(spectrum_child_node.Name == "referenceableParamGroupRef")
                     {
-                        foreach(XmlNode node3 in referenceable_param_groups[node2.Attributes["ref"].Value])
+                        foreach(XmlNode node in referenceable_param_groups[spectrum_child_node.Attributes["ref"].Value])
                         {
-                            if(node3.Name == "cvParam")
+                            if(node.Name == "cvParam")
                             {
-                                if(node3.Attributes["name"].Value == "ms level")
+                                if(node.Attributes["name"].Value == "ms level")
                                 {
-                                    ms_level = int.Parse(node3.Attributes["value"].Value);
+                                    ms_level = int.Parse(node.Attributes["value"].Value);
                                     break;
                                 }
                             }
                         }
                     }
-                    else if(node2.Name == "scanList")
+                    else if(spectrum_child_node.Name == "scanList")
                     {
-                        foreach(XmlNode node3 in node2.SelectNodes("mzML:scan/mzML:cvParam", xnm))
+                        foreach(XmlNode node in spectrum_child_node.SelectNodes("mzML:scan/mzML:cvParam", xnm))
                         {
-                            if(node3.Attributes["name"].Value == "scan start time")
+                            if(node.Attributes["name"].Value == "scan start time")
                             {
-                                retention_time = double.Parse(node3.Attributes["value"].Value);
+                                retention_time = double.Parse(node.Attributes["value"].Value);
                             }
                         }
                     }
-                    else if(node2.Name == "precursorList")
+                    else if(spectrum_child_node.Name == "precursorList")
                     {
-                        foreach(XmlNode node3 in node2.SelectNodes("mzML:precursor/mzML:selectedIonList/mzML:selectedIon/mzML:cvParam", xnm))
+                        foreach(XmlNode node in spectrum_child_node.SelectNodes("mzML:precursor/mzML:selectedIonList/mzML:selectedIon/mzML:cvParam", xnm))
                         {
-                            if(node3.Attributes["name"].Value == "selected ion m/z")
+                            if(node.Attributes["name"].Value == "selected ion m/z")
                             {
-                                precursor_mz = double.Parse(node3.Attributes["value"].Value);
+                                precursor_mz = double.Parse(node.Attributes["value"].Value);
                             }
-                            else if(node3.Attributes["name"].Value == "charge state")
+                            else if(node.Attributes["name"].Value == "charge state")
                             {
-                                charge = int.Parse(node3.Attributes["value"].Value);
+                                charge = int.Parse(node.Attributes["value"].Value);
                             }
-                            else if(node3.Attributes["name"].Value == "peak intensity")
+                            else if(node.Attributes["name"].Value == "peak intensity")
                             {
-                                precursor_intensity = double.Parse(node3.Attributes["value"].Value);
+                                precursor_intensity = double.Parse(node.Attributes["value"].Value);
                             }
                         }
-                        fragmentation_method = node2.SelectSingleNode("mzML:precursor/mzML:activation/mzML:cvParam", xnm).Attributes["name"].Value;
+                        fragmentation_method = spectrum_child_node.SelectSingleNode("mzML:precursor/mzML:activation/mzML:cvParam", xnm).Attributes["name"].Value;
                     }
-                    else if(node2.Name == "binaryDataArrayList")
+                    else if(spectrum_child_node.Name == "binaryDataArrayList")
                     {
-                        int word_length_in_bytes = 0;
-                        bool zlib_compressed = false;
-                        ArrayDataType array_data_type = ArrayDataType.Unknown;
-                        foreach(XmlNode node3 in node2.SelectNodes("mzML:binaryDataArray/*", xnm))
-                        {
-                            if(node3.Name == "cvParam")
-                            {
-                                if(node3.Attributes["name"].Value == "32-bit float")
-                                {
-                                    word_length_in_bytes = 4;
-                                }
-                                else if(node3.Attributes["name"].Value == "64-bit float")
-                                {
-                                    word_length_in_bytes = 8;
-                                }
-                                else if(node3.Attributes["name"].Value == "zlib compression")
-                                {
-                                    zlib_compressed = true;
-                                }
-                                else if(node3.Attributes["name"].Value == "m/z array")
-                                {
-                                    array_data_type = ArrayDataType.MZ;
-                                }
-                                else if(node3.Attributes["name"].Value == "intensity array")
-                                {
-                                    array_data_type = ArrayDataType.Intensity;
-                                }
-                            }
-                            else if(node3.Name == "binary")
-                            {
-                                if(array_data_type == ArrayDataType.MZ)
-                                {
-                                    mz = ReadBase64EncodedDoubleArray(node3.InnerText, word_length_in_bytes, zlib_compressed);
-                                }
-                                else if(array_data_type == ArrayDataType.Intensity)
-                                {
-                                    intensity = ReadBase64EncodedDoubleArray(node3.InnerText, word_length_in_bytes, zlib_compressed);
-                                }
-                            }
-                        }
+                        ReadDataFromSpectrumNode(spectrum_child_node.SelectNodes("mzML:binaryDataArray/*", xnm), out mz, out intensity);
                     }
                     if(ms_level == 1)
                     {
+                        ms1_spectrum_node = spectrum_node;
+                        ms1_mz = null;
+                        ms1_intensity = null;
                         break;
                     }
                 }
 
                 if(ms_level >= 2)
                 {
+                    if(GET_PRECURSOR_MZ_AND_INTENSITY_FROM_MS1)
+                    {
+                        if(ms1_mz == null)
+                        {
+                            ReadDataFromSpectrumNode(ms1_spectrum_node.SelectNodes("mzML:binaryDataArrayList/mzML:binaryDataArray/*", xnm), out ms1_mz, out ms1_intensity);
+                        }
+                        int index = -1;
+                        for(int i = ms1_mz.GetLowerBound(0); i <= ms1_mz.GetUpperBound(0); i++)
+                        {
+                            if(index < 0 || Math.Abs(ms1_mz[i] - precursor_mz) < Math.Abs(ms1_mz[index] - precursor_mz))
+                            {
+                                index = i;
+                            }
+                        }
+                        precursor_mz = ms1_mz[index];
+                        precursor_intensity = ms1_intensity[index];
+                    }
+
                     List<MSPeak> peaks = new List<MSPeak>(mz.Length);
                     for(int i = 0; i < mz.Length; i++)
                     {
@@ -215,6 +203,53 @@ namespace Morpheus
             }
 
             return spectra;
+        }
+
+        private static void ReadDataFromSpectrumNode(XmlNodeList binaryDataArrayNodes, out double[] mz, out double[] intensity)
+        {
+            mz = null;
+            intensity = null;
+
+            int word_length_in_bytes = 0;
+            bool zlib_compressed = false;
+            ArrayDataType array_data_type = ArrayDataType.Unknown;
+            foreach(XmlNode node in binaryDataArrayNodes)
+            {
+                if(node.Name == "cvParam")
+                {
+                    if(node.Attributes["name"].Value == "32-bit float")
+                    {
+                        word_length_in_bytes = 4;
+                    }
+                    else if(node.Attributes["name"].Value == "64-bit float")
+                    {
+                        word_length_in_bytes = 8;
+                    }
+                    else if(node.Attributes["name"].Value == "zlib compression")
+                    {
+                        zlib_compressed = true;
+                    }
+                    else if(node.Attributes["name"].Value == "m/z array")
+                    {
+                        array_data_type = ArrayDataType.MZ;
+                    }
+                    else if(node.Attributes["name"].Value == "intensity array")
+                    {
+                        array_data_type = ArrayDataType.Intensity;
+                    }
+                }
+                else if(node.Name == "binary")
+                {
+                    if(array_data_type == ArrayDataType.MZ)
+                    {
+                        mz = ReadBase64EncodedDoubleArray(node.InnerText, word_length_in_bytes, zlib_compressed);
+                    }
+                    else if(array_data_type == ArrayDataType.Intensity)
+                    {
+                        intensity = ReadBase64EncodedDoubleArray(node.InnerText, word_length_in_bytes, zlib_compressed);
+                    }
+                }
+            }
         }
 
         private static double[] ReadBase64EncodedDoubleArray(string s, int wordLengthInBytes, bool zlibCompressed)

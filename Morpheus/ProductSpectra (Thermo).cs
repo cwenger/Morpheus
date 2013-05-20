@@ -13,6 +13,7 @@ namespace Morpheus
     public partial class ProductSpectra : List<ProductSpectrum>
     {
         private const PrecursorMassType PRECURSOR_MASS_TYPE = PrecursorMassType.Monoisotopic;
+        private const bool GET_PRECURSOR_MZ_AND_INTENSITY_FROM_MS1 = true;
 
         public ProductSpectra() : base() { }
 
@@ -151,7 +152,14 @@ namespace Morpheus
             {
                 mz = GetMonoisotopicMZ(raw, scanNumber, scanFilter);
             }
-            GetAccurateMzAndIntensity(raw, scanNumber, firstScanNumber, ref mz, out intensity);
+            if(GET_PRECURSOR_MZ_AND_INTENSITY_FROM_MS1)
+            {
+                GetAccurateMzAndIntensity(raw, scanNumber, firstScanNumber, ref mz, out intensity);
+            }
+            else
+            {
+                intensity = double.NaN;
+            }
         }
 
         private static bool GetAccurateMzAndIntensity(IXRawfile2 raw, int scanNumber, int firstScanNumber, ref double mz, out double intensity)
