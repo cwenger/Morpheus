@@ -47,6 +47,7 @@ namespace Morpheus
             {
                 int scan_index = int.Parse(node.Attributes["index"].Value);
                 int scan_number = scan_index + 1;
+                string scan_id = node.Attributes["id"].Value;
 
                 int ms_level = -1;
                 double retention_time = double.NaN;
@@ -183,7 +184,7 @@ namespace Morpheus
 
                             double precursor_mass = Utilities.MassFromMZ(precursor_mz, c);
 
-                            ProductSpectrum spectrum = new ProductSpectrum(mzmlFilepath, scan_number, retention_time, fragmentation_method, precursor_mz, precursor_intensity, c, precursor_mass, new_peaks);
+                            ProductSpectrum spectrum = new ProductSpectrum(mzmlFilepath, scan_id, scan_number, retention_time, fragmentation_method, precursor_mz, precursor_intensity, c, precursor_mass, new_peaks);
                             spectra.Add(spectrum);
                         }
                     }
@@ -200,7 +201,7 @@ namespace Morpheus
 
                         double precursor_mass = Utilities.MassFromMZ(precursor_mz, charge);
 
-                        ProductSpectrum spectrum = new ProductSpectrum(mzmlFilepath, scan_number, retention_time, fragmentation_method, precursor_mz, precursor_intensity, charge, precursor_mass, peaks);
+                        ProductSpectrum spectrum = new ProductSpectrum(mzmlFilepath, scan_id, scan_number, retention_time, fragmentation_method, precursor_mz, precursor_intensity, charge, precursor_mass, peaks);
                         spectra.Add(spectrum);
                     }
                 }
