@@ -162,6 +162,9 @@ namespace Morpheus
             }
         }
 
+        private static int ms1ScanNumber = -1;
+        private static double[,] ms1 = null;
+
         private static bool GetAccurateMzAndIntensity(IXRawfile2 raw, int scanNumber, int firstScanNumber, ref double mz, out double intensity)
         {
             scanNumber--;
@@ -172,22 +175,25 @@ namespace Morpheus
 
                 if(scan_filter.Contains(" ms "))
                 {
-                    double[,] ms1;
-                    if(scan_filter.Contains("FTMS"))
+                    if(scanNumber != ms1ScanNumber)
                     {
-                        object labels_obj = null;
-                        object flags_obj = null;
-                        raw.GetLabelData(ref labels_obj, ref flags_obj, ref scanNumber);
-                        ms1 = (double[,])labels_obj;
-                    }
-                    else
-                    {
-                        double centroid_peak_width = double.NaN;
-                        object mass_list = null;
-                        object peak_flags = null;
-                        int array_size = -1;
-                        raw.GetMassListFromScanNum(scanNumber, null, 0, 0, 0, 1, ref centroid_peak_width, ref mass_list, ref peak_flags, ref array_size);
-                        ms1 = (double[,])mass_list;
+                        if(scan_filter.Contains("FTMS"))
+                        {
+                            object labels_obj = null;
+                            object flags_obj = null;
+                            raw.GetLabelData(ref labels_obj, ref flags_obj, ref scanNumber);
+                            ms1 = (double[,])labels_obj;
+                        }
+                        else
+                        {
+                            double centroid_peak_width = double.NaN;
+                            object mass_list = null;
+                            object peak_flags = null;
+                            int array_size = -1;
+                            raw.GetMassListFromScanNum(scanNumber, null, 0, 0, 0, 1, ref centroid_peak_width, ref mass_list, ref peak_flags, ref array_size);
+                            ms1 = (double[,])mass_list;
+                        }
+                        ms1ScanNumber = scanNumber;
                     }
 
                     int index = -1;
