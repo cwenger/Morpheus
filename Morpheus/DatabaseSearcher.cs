@@ -366,7 +366,7 @@ namespace Morpheus
 
                     log.WriteLine(total_proteins.ToString("N0") + " total (" + target_proteins.ToString("N0") + " target + " + decoy_proteins.ToString("N0") + " decoy + " + on_the_fly_decoy_proteins.ToString("N0") + " on-the-fly decoy) proteins");
 
-                    OnUpdateStatus(new StatusEventArgs("Extracting and pre-processing MS/MS spectra..."));
+                    OnUpdateStatus(new StatusEventArgs("Extracting and preprocessing MS/MS spectra..."));
                     OnReportTaskWithProgress(new EventArgs());
                     OnUpdateProgress(new ProgressEventArgs(0));
 
