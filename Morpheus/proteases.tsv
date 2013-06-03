@@ -11,5 +11,5 @@ Lys-N	K		N	Full
 trypsin	KR	P	C	Full
 trypsin (no proline rule)	KR		C	Full
 tryptophan oxidation	W		C	Full
-no enzyme	ACDEFGHIKLMNPQRSTVWY		None	None
+non-specific	ACDEFGHIKLMNPQRSTVWY		None	None
 top-down			None	None
