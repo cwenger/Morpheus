@@ -1,6 +1,6 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual Studio 2010
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Morpheus", "Morpheus.csproj", "{288CC061-1067-4FBD-8E79-FB4C7B3F3FB4}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Morpheus (command line)", "Morpheus (command line)\Morpheus (command line).csproj", "{9E22E4AC-C0D7-4E7B-8C6F-73827FA79177}"

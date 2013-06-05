@@ -1,6 +1,6 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual Studio 2010
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Morpheus (Agilent 64-bit)", "Morpheus (Agilent 64-bit).csproj", "{288CC061-1067-4FBD-8E79-FB4C7B3F3FB4}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Morpheus (Agilent 32-bit)", "Morpheus (Agilent 32-bit).csproj", "{07D21D73-18B5-4D6F-B249-E8AD462BDCAD}"
