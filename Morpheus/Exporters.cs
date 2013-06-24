@@ -244,7 +244,10 @@ namespace Morpheus
                     output.WriteAttributeString("spectrum", psm.Spectrum.ScanID);
                     output.WriteAttributeString("start_scan", psm.Spectrum.ScanNumber.ToString());
                     output.WriteAttributeString("end_scan", psm.Spectrum.ScanNumber.ToString());
-                    output.WriteAttributeString("retention_time_sec", TimeSpan.FromMinutes(psm.Spectrum.RetentionTime).TotalSeconds.ToString());
+                    if(!double.IsNaN(psm.Spectrum.RetentionTime))
+                    {
+                        output.WriteAttributeString("retention_time_sec", TimeSpan.FromMinutes(psm.Spectrum.RetentionTime).TotalSeconds.ToString());
+                    }
                     //output.WriteAttributeString("activation_method", psm.Spectrum.FragmentationMethod);
                     output.WriteAttributeString("precursor_neutral_mass", psm.Spectrum.PrecursorMass.ToString());
                     output.WriteAttributeString("assumed_charge", psm.Spectrum.PrecursorCharge.ToString());
