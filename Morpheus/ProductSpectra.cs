@@ -60,7 +60,7 @@ namespace Morpheus
                 double precursor_mz = double.NaN;
                 int charge = 0;
                 double precursor_intensity = double.NaN;
-                string fragmentation_method = null;
+                string fragmentation_method = "collision-induced dissociation";
                 double[] mz = null;
                 double[] intensity = null;
                 foreach(XmlNode spectrum_child_node in spectrum_node.ChildNodes)
@@ -113,7 +113,11 @@ namespace Morpheus
                                 precursor_intensity = double.Parse(node.Attributes["value"].Value);
                             }
                         }
-                        fragmentation_method = spectrum_child_node.SelectSingleNode("mzML:precursor/mzML:activation/mzML:cvParam", xnm).Attributes["name"].Value;
+                        XmlNode node2 = spectrum_child_node.SelectSingleNode("mzML:precursor/mzML:activation/mzML:cvParam", xnm);
+                        if(node2 != null)
+                        {
+                            fragmentation_method = node2.Attributes["name"].Value;
+                        }
                     }
                     else if(spectrum_child_node.Name == "binaryDataArrayList")
                     {
@@ -134,18 +138,24 @@ namespace Morpheus
                     {
                         if(ms1_mz == null)
                         {
-                            ReadDataFromSpectrumNode(ms1_spectrum_node.SelectNodes("mzML:binaryDataArrayList/mzML:binaryDataArray/*", xnm), out ms1_mz, out ms1_intensity);
-                        }
-                        int index = -1;
-                        for(int i = ms1_mz.GetLowerBound(0); i <= ms1_mz.GetUpperBound(0); i++)
-                        {
-                            if(index < 0 || Math.Abs(ms1_mz[i] - precursor_mz) < Math.Abs(ms1_mz[index] - precursor_mz))
+                            if(ms1_spectrum_node != null)
                             {
-                                index = i;
+                                ReadDataFromSpectrumNode(ms1_spectrum_node.SelectNodes("mzML:binaryDataArrayList/mzML:binaryDataArray/*", xnm), out ms1_mz, out ms1_intensity);
                             }
                         }
-                        precursor_mz = ms1_mz[index];
-                        precursor_intensity = ms1_intensity[index];
+                        if(ms1_mz != null)
+                        {
+                            int index = -1;
+                            for(int i = ms1_mz.GetLowerBound(0); i <= ms1_mz.GetUpperBound(0); i++)
+                            {
+                                if(index < 0 || Math.Abs(ms1_mz[i] - precursor_mz) < Math.Abs(ms1_mz[index] - precursor_mz))
+                                {
+                                    index = i;
+                                }
+                            }
+                            precursor_mz = ms1_mz[index];
+                            precursor_intensity = ms1_intensity[index];
+                        }
                     }
 
                     List<MSPeak> peaks = new List<MSPeak>(mz.Length);
