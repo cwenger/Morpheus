@@ -372,7 +372,7 @@ namespace Morpheus
 
                     ProductSpectra spectra = ProductSpectra.Load(data_filepath, minimumAssumedPrecursorChargeState, maximumAssumedPrecursorChargeState,
                         absoluteThreshold, relativeThresholdPercent, maximumNumberOfPeaks,
-                        assignChargeStates, deisotope, productMassTolerance);
+                        assignChargeStates, deisotope, productMassTolerance, maximumThreads);
 
                     log.WriteLine(spectra.Count.ToString("N0") + " MS/MS spectra");
 
@@ -386,7 +386,16 @@ namespace Morpheus
                     PeptideSpectrumMatch[] psms = null;
                     if(spectra.Count > 0)
                     {
-                        psms = new PeptideSpectrumMatch[spectra[spectra.Count - 1].ScanNumber];
+                        int max_scan_number = 0;
+                        foreach(ProductSpectrum spectrum in spectra)
+                        {
+                            if(spectrum.ScanNumber > max_scan_number)
+                            {
+                                max_scan_number = spectrum.ScanNumber;
+                            }
+                        }
+
+                        psms = new PeptideSpectrumMatch[max_scan_number];
 
                         spectra.Sort(ProductSpectrum.AscendingPrecursorMassComparison);
                     }

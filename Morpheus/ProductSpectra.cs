@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using System.Xml;
 using Ionic.Zlib;
 
@@ -12,6 +14,29 @@ namespace Morpheus
         Intensity
     }
 
+    internal class SpectrumNode
+    {
+        internal XmlNode Node { get; private set; }
+        internal XmlNamespaceManager XmlNamespaceManager { get; private set; }
+        internal bool SpectrumConverted { get; private set; }
+        internal double[] MZ { get; private set; }
+        internal double[] Intensity { get; private set; }
+
+        internal SpectrumNode(XmlNode node, XmlNamespaceManager xmlNamespaceManager)
+        {
+            Node = node;
+            XmlNamespaceManager = xmlNamespaceManager;
+        }
+
+        internal void ConvertSpectrum(out double[] mz, out double[] intensity)
+        {
+            ProductSpectra.ReadDataFromSpectrumNode(Node.SelectNodes("mzML:binaryDataArrayList/mzML:binaryDataArray/*", XmlNamespaceManager), out mz, out intensity);
+            MZ = mz;
+            Intensity = intensity;
+            SpectrumConverted = true;
+        }
+    }
+
     public partial class ProductSpectra : List<ProductSpectrum>
     {
         private const bool GET_PRECURSOR_MZ_AND_INTENSITY_FROM_MS1 = true;
@@ -22,7 +47,7 @@ namespace Morpheus
 
         public static ProductSpectra Load(string mzmlFilepath, int minimumAssumedPrecursorChargeState, int maximumAssumedPrecursorChargeState,
             double absoluteThreshold, double relativeThresholdPercent, int maximumNumberOfPeaks,
-            bool assignChargeStates, bool deisotope, MassTolerance isotopicMzTolerance)
+            bool assignChargeStates, bool deisotope, MassTolerance isotopicMzTolerance, int maximumThreads)
         {
             OnReportTaskWithoutProgress(new EventArgs());
 
@@ -38,184 +63,250 @@ namespace Morpheus
                 referenceable_param_groups.Add(referenceable_param_group.Attributes["id"].Value, referenceable_param_group.ChildNodes);
             }
 
+            ParallelOptions parallel_options = new ParallelOptions();
+            parallel_options.MaxDegreeOfParallelism = maximumThreads;
+
+            Dictionary<string, SpectrumNode> ms1s = null;
+            if(GET_PRECURSOR_MZ_AND_INTENSITY_FROM_MS1)
+            {
+                ms1s = new Dictionary<string, SpectrumNode>();
+                Parallel.ForEach(mzML.SelectNodes("//mzML:mzML/mzML:run/mzML:spectrumList/mzML:spectrum", xnm).Cast<XmlNode>(), parallel_options, spectrum_node =>
+                    {
+                        string scan_id = spectrum_node.Attributes["id"].Value;
+                        int ms_level = -1;
+
+                        foreach(XmlNode spectrum_child_node in spectrum_node.ChildNodes)
+                        {
+                            if(spectrum_child_node.Name == "cvParam")
+                            {
+                                if(spectrum_child_node.Attributes["name"].Value == "ms level")
+                                {
+                                    ms_level = int.Parse(spectrum_child_node.Attributes["value"].Value);
+                                }
+                            }
+                            else if(spectrum_child_node.Name == "referenceableParamGroupRef")
+                            {
+                                foreach(XmlNode node in referenceable_param_groups[spectrum_child_node.Attributes["ref"].Value])
+                                {
+                                    if(node.Name == "cvParam")
+                                    {
+                                        if(node.Attributes["name"].Value == "ms level")
+                                        {
+                                            ms_level = int.Parse(node.Attributes["value"].Value);
+                                            break;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+
+                        if(ms_level == 1)
+                        {
+                            lock(ms1s)
+                            {
+                                ms1s.Add(scan_id, new SpectrumNode(spectrum_node, xnm));
+                            }
+                        }
+                    }
+                );
+            }
+
             int num_spectra = int.Parse(mzML.SelectSingleNode("//mzML:mzML/mzML:run/mzML:spectrumList", xnm).Attributes["count"].Value);
 
             ProductSpectra spectra = new ProductSpectra();
 
             OnReportTaskWithProgress(new EventArgs());
+            object progress_lock = new object();
+            int spectra_processed = 0;
             int old_progress = 0;
 
-            XmlNode ms1_spectrum_node = null;
-            double[] ms1_mz = null;
-            double[] ms1_intensity = null;
-
-            foreach(XmlNode spectrum_node in mzML.SelectNodes("//mzML:mzML/mzML:run/mzML:spectrumList/mzML:spectrum", xnm))
-            {
-                int scan_index = int.Parse(spectrum_node.Attributes["index"].Value);
-                int scan_number = scan_index + 1;
-                string scan_id = spectrum_node.Attributes["id"].Value;
-
-                int ms_level = -1;
-                double retention_time = double.NaN;
-                double precursor_mz = double.NaN;
-                int charge = 0;
-                double precursor_intensity = double.NaN;
-                string fragmentation_method = "collision-induced dissociation";
-                double[] mz = null;
-                double[] intensity = null;
-                foreach(XmlNode spectrum_child_node in spectrum_node.ChildNodes)
+            Parallel.ForEach(mzML.SelectNodes("//mzML:mzML/mzML:run/mzML:spectrumList/mzML:spectrum", xnm).Cast<XmlNode>(), parallel_options, spectrum_node =>
                 {
-                    if(spectrum_child_node.Name == "cvParam")
+                    int scan_index = int.Parse(spectrum_node.Attributes["index"].Value);
+                    int scan_number = scan_index + 1;
+                    string scan_id = spectrum_node.Attributes["id"].Value;
+                    int ms_level = -1;
+                    double retention_time = double.NaN;
+                    string precursor_scan_id = null;
+                    double precursor_mz = double.NaN;
+                    int charge = 0;
+                    double precursor_intensity = double.NaN;
+                    string fragmentation_method = "collision-induced dissociation";
+                    double[] mz = null;
+                    double[] intensity = null;
+
+                    foreach(XmlNode spectrum_child_node in spectrum_node.ChildNodes)
                     {
-                        if(spectrum_child_node.Attributes["name"].Value == "ms level")
+                        if(spectrum_child_node.Name == "cvParam")
                         {
-                            ms_level = int.Parse(spectrum_child_node.Attributes["value"].Value);
-                        }
-                    }
-                    else if(spectrum_child_node.Name == "referenceableParamGroupRef")
-                    {
-                        foreach(XmlNode node in referenceable_param_groups[spectrum_child_node.Attributes["ref"].Value])
-                        {
-                            if(node.Name == "cvParam")
+                            if(spectrum_child_node.Attributes["name"].Value == "ms level")
                             {
-                                if(node.Attributes["name"].Value == "ms level")
+                                ms_level = int.Parse(spectrum_child_node.Attributes["value"].Value);
+                            }
+                        }
+                        else if(spectrum_child_node.Name == "referenceableParamGroupRef")
+                        {
+                            foreach(XmlNode node in referenceable_param_groups[spectrum_child_node.Attributes["ref"].Value])
+                            {
+                                if(node.Name == "cvParam")
                                 {
-                                    ms_level = int.Parse(node.Attributes["value"].Value);
-                                    break;
+                                    if(node.Attributes["name"].Value == "ms level")
+                                    {
+                                        ms_level = int.Parse(node.Attributes["value"].Value);
+                                        break;
+                                    }
                                 }
                             }
                         }
-                    }
-                    else if(spectrum_child_node.Name == "scanList")
-                    {
-                        foreach(XmlNode node in spectrum_child_node.SelectNodes("mzML:scan/mzML:cvParam", xnm))
+                        else if(spectrum_child_node.Name == "scanList")
                         {
-                            if(node.Attributes["name"].Value == "scan start time")
+                            foreach(XmlNode node in spectrum_child_node.SelectNodes("mzML:scan/mzML:cvParam", xnm))
                             {
-                                retention_time = double.Parse(node.Attributes["value"].Value);
-                            }
-                        }
-                    }
-                    else if(spectrum_child_node.Name == "precursorList")
-                    {
-                        foreach(XmlNode node in spectrum_child_node.SelectNodes("mzML:precursor/mzML:selectedIonList/mzML:selectedIon/mzML:cvParam", xnm))
-                        {
-                            if(node.Attributes["name"].Value == "selected ion m/z")
-                            {
-                                precursor_mz = double.Parse(node.Attributes["value"].Value);
-                            }
-                            else if(node.Attributes["name"].Value == "charge state")
-                            {
-                                charge = int.Parse(node.Attributes["value"].Value);
-                            }
-                            else if(node.Attributes["name"].Value == "peak intensity")
-                            {
-                                precursor_intensity = double.Parse(node.Attributes["value"].Value);
-                            }
-                        }
-                        XmlNode node2 = spectrum_child_node.SelectSingleNode("mzML:precursor/mzML:activation/mzML:cvParam", xnm);
-                        if(node2 != null)
-                        {
-                            fragmentation_method = node2.Attributes["name"].Value;
-                        }
-                    }
-                    else if(spectrum_child_node.Name == "binaryDataArrayList")
-                    {
-                        ReadDataFromSpectrumNode(spectrum_child_node.SelectNodes("mzML:binaryDataArray/*", xnm), out mz, out intensity);
-                    }
-                    if(ms_level == 1)
-                    {
-                        ms1_spectrum_node = spectrum_node;
-                        ms1_mz = null;
-                        ms1_intensity = null;
-                        break;
-                    }
-                }
-
-                if(ms_level >= 2)
-                {
-                    if(GET_PRECURSOR_MZ_AND_INTENSITY_FROM_MS1)
-                    {
-                        if(ms1_mz == null)
-                        {
-                            if(ms1_spectrum_node != null)
-                            {
-                                ReadDataFromSpectrumNode(ms1_spectrum_node.SelectNodes("mzML:binaryDataArrayList/mzML:binaryDataArray/*", xnm), out ms1_mz, out ms1_intensity);
-                            }
-                        }
-                        if(ms1_mz != null)
-                        {
-                            int index = -1;
-                            for(int i = ms1_mz.GetLowerBound(0); i <= ms1_mz.GetUpperBound(0); i++)
-                            {
-                                if(index < 0 || Math.Abs(ms1_mz[i] - precursor_mz) < Math.Abs(ms1_mz[index] - precursor_mz))
+                                if(node.Attributes["name"].Value == "scan start time")
                                 {
-                                    index = i;
+                                    retention_time = double.Parse(node.Attributes["value"].Value);
                                 }
                             }
-                            precursor_mz = ms1_mz[index];
-                            precursor_intensity = ms1_intensity[index];
+                        }
+                        else if(spectrum_child_node.Name == "precursorList")
+                        {
+                            XmlNode precursor_node = spectrum_child_node.SelectSingleNode("mzML:precursor", xnm);
+                            XmlAttribute precursor_ref_attribute = precursor_node.Attributes["spectrumRef"];
+                            if(precursor_ref_attribute != null)
+                            {
+                                precursor_scan_id = precursor_ref_attribute.Value;
+                            }
+                            foreach(XmlNode node in precursor_node.SelectNodes("mzML:selectedIonList/mzML:selectedIon/mzML:cvParam", xnm))
+                            {
+                                if(node.Attributes["name"].Value == "selected ion m/z")
+                                {
+                                    precursor_mz = double.Parse(node.Attributes["value"].Value);
+                                }
+                                else if(node.Attributes["name"].Value == "charge state")
+                                {
+                                    charge = int.Parse(node.Attributes["value"].Value);
+                                }
+                                else if(node.Attributes["name"].Value == "peak intensity")
+                                {
+                                    precursor_intensity = double.Parse(node.Attributes["value"].Value);
+                                }
+                            }
+                            XmlNode node2 = spectrum_child_node.SelectSingleNode("mzML:precursor/mzML:activation/mzML:cvParam", xnm);
+                            if(node2 != null)
+                            {
+                                fragmentation_method = node2.Attributes["name"].Value;
+                            }
+                        }
+                        else if(spectrum_child_node.Name == "binaryDataArrayList")
+                        {
+                            ReadDataFromSpectrumNode(spectrum_child_node.SelectNodes("mzML:binaryDataArray/*", xnm), out mz, out intensity);
+                        }
+                        if(ms_level == 1)
+                        {
+                            break;
                         }
                     }
 
-                    List<MSPeak> peaks = new List<MSPeak>(mz.Length);
-                    for(int i = 0; i < mz.Length; i++)
+                    if(ms_level >= 2)
                     {
-                        peaks.Add(new MSPeak(mz[i], intensity[i], 0));
-                    }
-
-                    peaks = FilterPeaks(peaks, absoluteThreshold, relativeThresholdPercent, maximumNumberOfPeaks);
-
-                    if(charge == 0)
-                    {
-                        for(int c = minimumAssumedPrecursorChargeState; c <= maximumAssumedPrecursorChargeState; c++)
+                        if(GET_PRECURSOR_MZ_AND_INTENSITY_FROM_MS1 && precursor_scan_id != null)
                         {
-                            List<MSPeak> new_peaks = peaks;
+                            SpectrumNode ms1;
+                            if(ms1s.TryGetValue(precursor_scan_id, out ms1))
+                            {
+                                double[] ms1_mz;
+                                double[] ms1_intensity;
+                                if(!ms1.SpectrumConverted)
+                                {
+                                    ms1.ConvertSpectrum(out ms1_mz, out ms1_intensity);
+                                }
+                                else
+                                {
+                                    ms1_mz = ms1.MZ;
+                                    ms1_intensity = ms1.Intensity;
+                                }
+                                int index = -1;
+                                for(int i = ms1_mz.GetLowerBound(0); i <= ms1_mz.GetUpperBound(0); i++)
+                                {
+                                    if(index < 0 || Math.Abs(ms1_mz[i] - precursor_mz) < Math.Abs(ms1_mz[index] - precursor_mz))
+                                    {
+                                        index = i;
+                                    }
+                                }
+                                precursor_mz = ms1_mz[index];
+                                precursor_intensity = ms1_intensity[index];
+                            }
+                        }
+
+                        List<MSPeak> peaks = new List<MSPeak>(mz.Length);
+                        for(int i = 0; i < mz.Length; i++)
+                        {
+                            peaks.Add(new MSPeak(mz[i], intensity[i], 0));
+                        }
+
+                        peaks = FilterPeaks(peaks, absoluteThreshold, relativeThresholdPercent, maximumNumberOfPeaks);
+
+                        if(charge == 0)
+                        {
+                            for(int c = minimumAssumedPrecursorChargeState; c <= maximumAssumedPrecursorChargeState; c++)
+                            {
+                                List<MSPeak> new_peaks = peaks;
+                                if(assignChargeStates)
+                                {
+                                    new_peaks = AssignChargeStates(new_peaks, c, isotopicMzTolerance);
+                                    if(deisotope)
+                                    {
+                                        new_peaks = Deisotope(new_peaks, c, isotopicMzTolerance);
+                                    }
+                                }
+
+                                double precursor_mass = Utilities.MassFromMZ(precursor_mz, c);
+
+                                ProductSpectrum spectrum = new ProductSpectrum(mzmlFilepath, scan_id, scan_number, retention_time, fragmentation_method, precursor_mz, precursor_intensity, c, precursor_mass, new_peaks);
+                                lock(spectra)
+                                {
+                                    spectra.Add(spectrum);
+                                }
+                            }
+                        }
+                        else
+                        {
                             if(assignChargeStates)
                             {
-                                new_peaks = AssignChargeStates(new_peaks, c, isotopicMzTolerance);
+                                peaks = AssignChargeStates(peaks, charge, isotopicMzTolerance);
                                 if(deisotope)
                                 {
-                                    new_peaks = Deisotope(new_peaks, c, isotopicMzTolerance);
+                                    peaks = Deisotope(peaks, charge, isotopicMzTolerance);
                                 }
                             }
 
-                            double precursor_mass = Utilities.MassFromMZ(precursor_mz, c);
+                            double precursor_mass = Utilities.MassFromMZ(precursor_mz, charge);
 
-                            ProductSpectrum spectrum = new ProductSpectrum(mzmlFilepath, scan_id, scan_number, retention_time, fragmentation_method, precursor_mz, precursor_intensity, c, precursor_mass, new_peaks);
-                            spectra.Add(spectrum);
-                        }
-                    }
-                    else
-                    {
-                        if(assignChargeStates)
-                        {
-                            peaks = AssignChargeStates(peaks, charge, isotopicMzTolerance);
-                            if(deisotope)
+                            ProductSpectrum spectrum = new ProductSpectrum(mzmlFilepath, scan_id, scan_number, retention_time, fragmentation_method, precursor_mz, precursor_intensity, charge, precursor_mass, peaks);
+                            lock(spectra)
                             {
-                                peaks = Deisotope(peaks, charge, isotopicMzTolerance);
+                                spectra.Add(spectrum);
                             }
                         }
+                    }
 
-                        double precursor_mass = Utilities.MassFromMZ(precursor_mz, charge);
-
-                        ProductSpectrum spectrum = new ProductSpectrum(mzmlFilepath, scan_id, scan_number, retention_time, fragmentation_method, precursor_mz, precursor_intensity, charge, precursor_mass, peaks);
-                        spectra.Add(spectrum);
+                    lock(progress_lock)
+                    {
+                        spectra_processed++;
+                        int new_progress = (int)((double)spectra_processed / num_spectra * 100);
+                        if(new_progress > old_progress)
+                        {
+                            OnUpdateProgress(new ProgressEventArgs(new_progress));
+                            old_progress = new_progress;
+                        }
                     }
                 }
-
-                int new_progress = (int)((double)(scan_index + 1) / num_spectra * 100);
-                if(new_progress > old_progress)
-                {
-                    OnUpdateProgress(new ProgressEventArgs(new_progress));
-                    old_progress = new_progress;
-                }
-            }
+            );
 
             return spectra;
         }
 
-        private static void ReadDataFromSpectrumNode(XmlNodeList binaryDataArrayNodes, out double[] mz, out double[] intensity)
+        internal static void ReadDataFromSpectrumNode(XmlNodeList binaryDataArrayNodes, out double[] mz, out double[] intensity)
         {
             mz = null;
             intensity = null;

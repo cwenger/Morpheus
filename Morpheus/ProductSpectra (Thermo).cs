@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using MSFileReaderLib;
 
 namespace Morpheus
@@ -19,16 +20,16 @@ namespace Morpheus
 
         public static ProductSpectra Load(string rawFilepath, int minimumAssumedPrecursorChargeState, int maximumAssumedPrecursorChargeState,
             double absoluteThreshold, double relativeThresholdPercent, int maximumNumberOfPeaks,
-            bool assignChargeStates, bool deisotope, MassTolerance isotopicMzTolerance)
+            bool assignChargeStates, bool deisotope, MassTolerance isotopicMzTolerance, int maximumThreads)
         {
             return Load(rawFilepath, minimumAssumedPrecursorChargeState, maximumAssumedPrecursorChargeState,
                 absoluteThreshold, relativeThresholdPercent, maximumNumberOfPeaks, 
-                assignChargeStates);
+                assignChargeStates, maximumThreads);
         }
 
         public static ProductSpectra Load(string rawFilepath, int minimumAssumedPrecursorChargeState, int maximumAssumedPrecursorChargeState,
             double absoluteThreshold, double relativeThresholdPercent, int maximumNumberOfPeaks,
-            bool assignChargeStates)
+            bool assignChargeStates, int maximumThreads)
         {
             OnReportTaskWithoutProgress(new EventArgs());
 
@@ -45,65 +46,80 @@ namespace Morpheus
             ProductSpectra spectra = new ProductSpectra();
 
             OnReportTaskWithProgress(new EventArgs());
+            object progress_lock = new object();
+            int spectra_processed = 0;
             int old_progress = 0;
 
-            for(int scan_number = first_scan_number; scan_number <= last_scan_number; scan_number++)
-            {
-                string scan_filter = null;
-                raw.GetFilterForScanNum(scan_number, ref scan_filter);
-
-                if(!scan_filter.Contains(" ms "))
+            ParallelOptions parallel_options = new ParallelOptions();
+            parallel_options.MaxDegreeOfParallelism = maximumThreads;
+            Parallel.For(first_scan_number, last_scan_number + 1, scan_number =>
                 {
-                    string scan_id = "controllerType=0 controllerNumber=1 scan=" + scan_number.ToString();
+                    string scan_filter = null;
+                    raw.GetFilterForScanNum(scan_number, ref scan_filter);
 
-                    double retention_time = double.NaN;
-                    raw.RTFromScanNum(scan_number, ref retention_time);
-
-                    string fragmentation_method = GetFragmentationMethod(scan_filter);
-
-                    double precursor_mz;
-                    double precursor_intensity;
-                    GetPrecursor(raw, scan_number, scan_filter, first_scan_number, out precursor_mz, out precursor_intensity);
-
-                    int charge = DeterminePrecursorCharge(raw, scan_number);
-
-                    double[,] label_data = GetFragmentationData(raw, scan_number);
-                    List<MSPeak> peaks = new List<MSPeak>(label_data.GetLength(1));
-                    for(int peak_index = label_data.GetLowerBound(1); peak_index <= label_data.GetUpperBound(1); peak_index++)
+                    if(!scan_filter.Contains(" ms "))
                     {
-                        peaks.Add(new MSPeak(label_data[(int)RawLabelDataColumn.MZ, peak_index],
-                            label_data[(int)RawLabelDataColumn.Intensity, peak_index],
-                            assignChargeStates ? (int)label_data[(int)RawLabelDataColumn.Charge, peak_index] : 0));
-                    }
+                        string scan_id = "controllerType=0 controllerNumber=1 scan=" + scan_number.ToString();
 
-                    peaks = FilterPeaks(peaks, absoluteThreshold, relativeThresholdPercent, maximumNumberOfPeaks);
+                        double retention_time = double.NaN;
+                        raw.RTFromScanNum(scan_number, ref retention_time);
 
-                    if(charge == 0)
-                    {
-                        for(int c = minimumAssumedPrecursorChargeState; c <= maximumAssumedPrecursorChargeState; c++)
+                        string fragmentation_method = GetFragmentationMethod(scan_filter);
+
+                        double precursor_mz;
+                        double precursor_intensity;
+                        GetPrecursor(raw, scan_number, scan_filter, first_scan_number, out precursor_mz, out precursor_intensity);
+
+                        int charge = DeterminePrecursorCharge(raw, scan_number);
+
+                        double[,] label_data = GetFragmentationData(raw, scan_number);
+                        List<MSPeak> peaks = new List<MSPeak>(label_data.GetLength(1));
+                        for(int peak_index = label_data.GetLowerBound(1); peak_index <= label_data.GetUpperBound(1); peak_index++)
                         {
-                            double precursor_mass = Utilities.MassFromMZ(precursor_mz, c);
+                            peaks.Add(new MSPeak(label_data[(int)RawLabelDataColumn.MZ, peak_index],
+                                label_data[(int)RawLabelDataColumn.Intensity, peak_index],
+                                assignChargeStates ? (int)label_data[(int)RawLabelDataColumn.Charge, peak_index] : 0));
+                        }
 
-                            ProductSpectrum spectrum = new ProductSpectrum(rawFilepath, scan_id, scan_number, retention_time, fragmentation_method, precursor_mz, precursor_intensity, c, precursor_mass, peaks);
-                            spectra.Add(spectrum);
+                        peaks = FilterPeaks(peaks, absoluteThreshold, relativeThresholdPercent, maximumNumberOfPeaks);
+
+                        if(charge == 0)
+                        {
+                            for(int c = minimumAssumedPrecursorChargeState; c <= maximumAssumedPrecursorChargeState; c++)
+                            {
+                                double precursor_mass = Utilities.MassFromMZ(precursor_mz, c);
+
+                                ProductSpectrum spectrum = new ProductSpectrum(rawFilepath, scan_id, scan_number, retention_time, fragmentation_method, precursor_mz, precursor_intensity, c, precursor_mass, peaks);
+                                lock(spectra)
+                                {
+                                    spectra.Add(spectrum);
+                                }
+                            }
+                        }
+                        else
+                        {
+                            double isolation_mass = Utilities.MassFromMZ(precursor_mz, charge);
+
+                            ProductSpectrum spectrum = new ProductSpectrum(rawFilepath, scan_id, scan_number, retention_time, fragmentation_method, precursor_mz, precursor_intensity, charge, isolation_mass, peaks);
+                            lock(spectra)
+                            {
+                                spectra.Add(spectrum);
+                            }
                         }
                     }
-                    else
-                    {
-                        double isolation_mass = Utilities.MassFromMZ(precursor_mz, charge);
 
-                        ProductSpectrum spectrum = new ProductSpectrum(rawFilepath, scan_id, scan_number, retention_time, fragmentation_method, precursor_mz, precursor_intensity, charge, isolation_mass, peaks);
-                        spectra.Add(spectrum);
+                    lock(progress_lock)
+                    {
+                        spectra_processed++;
+                        int new_progress = (int)((double)spectra_processed / (last_scan_number - first_scan_number + 1) * 100);
+                        if(new_progress > old_progress)
+                        {
+                            OnUpdateProgress(new ProgressEventArgs(new_progress));
+                            old_progress = new_progress;
+                        }
                     }
                 }
-
-                int new_progress = (int)((double)(scan_number + 1) / (last_scan_number - first_scan_number + 1) * 100);
-                if(new_progress > old_progress)
-                {
-                    OnUpdateProgress(new ProgressEventArgs(new_progress));
-                    old_progress = new_progress;
-                }
-            }
+            );
 
             raw.Close();
 
@@ -162,8 +178,7 @@ namespace Morpheus
             }
         }
 
-        private static int ms1ScanNumber = -1;
-        private static double[,] ms1 = null;
+        private static Dictionary<int, double[,]> ms1s = new Dictionary<int, double[,]>();
 
         private static bool GetAccurateMzAndIntensity(IXRawfile2 raw, int scanNumber, int firstScanNumber, ref double mz, out double intensity)
         {
@@ -175,25 +190,29 @@ namespace Morpheus
 
                 if(scan_filter.Contains(" ms "))
                 {
-                    if(scanNumber != ms1ScanNumber)
+                    double[,] ms1;
+                    lock(ms1s)
                     {
-                        if(scan_filter.Contains("FTMS"))
+                        if(!ms1s.TryGetValue(scanNumber, out ms1))
                         {
-                            object labels_obj = null;
-                            object flags_obj = null;
-                            raw.GetLabelData(ref labels_obj, ref flags_obj, ref scanNumber);
-                            ms1 = (double[,])labels_obj;
+                            if(scan_filter.Contains("FTMS"))
+                            {
+                                object labels_obj = null;
+                                object flags_obj = null;
+                                raw.GetLabelData(ref labels_obj, ref flags_obj, ref scanNumber);
+                                ms1 = (double[,])labels_obj;
+                            }
+                            else
+                            {
+                                double centroid_peak_width = double.NaN;
+                                object mass_list = null;
+                                object peak_flags = null;
+                                int array_size = -1;
+                                raw.GetMassListFromScanNum(scanNumber, null, 0, 0, 0, 1, ref centroid_peak_width, ref mass_list, ref peak_flags, ref array_size);
+                                ms1 = (double[,])mass_list;
+                            }
+                            ms1s.Add(scanNumber, ms1);
                         }
-                        else
-                        {
-                            double centroid_peak_width = double.NaN;
-                            object mass_list = null;
-                            object peak_flags = null;
-                            int array_size = -1;
-                            raw.GetMassListFromScanNum(scanNumber, null, 0, 0, 0, 1, ref centroid_peak_width, ref mass_list, ref peak_flags, ref array_size);
-                            ms1 = (double[,])mass_list;
-                        }
-                        ms1ScanNumber = scanNumber;
                     }
 
                     int index = -1;
