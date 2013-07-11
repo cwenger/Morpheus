@@ -68,7 +68,7 @@ namespace Morpheus
                 {
                     protease = proteases[arguments["p"]];
                 }
-                int max_missed_cleavages = 3;
+                int max_missed_cleavages = 2;
                 if(arguments["mmc"] != null)
                 {
                     max_missed_cleavages = int.Parse(arguments["mmc"]);
@@ -100,7 +100,7 @@ namespace Morpheus
                 {
                     max_variable_mod_isoforms_per_peptide = int.Parse(arguments["mvmi"]);
                 }
-                double precursor_mass_tolerance_value = 3.1;
+                double precursor_mass_tolerance_value = 2.1;
                 if(arguments["precmtv"] != null)
                 {
                     precursor_mass_tolerance_value = double.Parse(arguments["precmtv"]);
