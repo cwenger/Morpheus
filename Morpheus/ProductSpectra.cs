@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Xml;
+using System.Xml.XPath;
 using Ionic.Zlib;
 
 namespace Morpheus
@@ -14,23 +15,23 @@ namespace Morpheus
         Intensity
     }
 
-    internal class SpectrumNode
+    internal class SpectrumNavigator
     {
-        internal XmlNode Node { get; private set; }
+        internal XPathNavigator Navigator { get; private set; }
         internal XmlNamespaceManager XmlNamespaceManager { get; private set; }
         internal bool SpectrumConverted { get; private set; }
         internal double[] MZ { get; private set; }
         internal double[] Intensity { get; private set; }
 
-        internal SpectrumNode(XmlNode node, XmlNamespaceManager xmlNamespaceManager)
+        internal SpectrumNavigator(XPathNavigator navigator, XmlNamespaceManager xmlNamespaceManager)
         {
-            Node = node;
+            Navigator = navigator;
             XmlNamespaceManager = xmlNamespaceManager;
         }
 
         internal void ConvertSpectrum(out double[] mz, out double[] intensity)
         {
-            ProductSpectra.ReadDataFromSpectrumNode(Node.SelectNodes("mzML:binaryDataArrayList/mzML:binaryDataArray/*", XmlNamespaceManager), out mz, out intensity);
+            ProductSpectra.ReadDataFromSpectrumNavigator(Navigator.Select("mzML:binaryDataArrayList/mzML:binaryDataArray/*", XmlNamespaceManager), out mz, out intensity);
             MZ = mz;
             Intensity = intensity;
             SpectrumConverted = true;
@@ -51,48 +52,47 @@ namespace Morpheus
         {
             OnReportTaskWithoutProgress(new EventArgs());
 
-            XmlDocument mzML = new XmlDocument();
-            mzML.Load(mzmlFilepath);
+            XPathNavigator mzML = new XPathDocument(mzmlFilepath).CreateNavigator();
 
             XmlNamespaceManager xnm = new XmlNamespaceManager(mzML.NameTable);
             xnm.AddNamespace("mzML", "http://psi.hupo.org/ms/mzml");
 
-            Dictionary<string, XmlNodeList> referenceable_param_groups = new Dictionary<string, XmlNodeList>();
-            foreach(XmlNode referenceable_param_group in mzML.SelectNodes("//mzML:mzML/mzML:referenceableParamGroupList/mzML:referenceableParamGroup", xnm))
+            Dictionary<string, XPathNodeIterator> referenceable_param_groups = new Dictionary<string, XPathNodeIterator>();
+            foreach(XPathNavigator referenceable_param_group in mzML.Select("//mzML:mzML/mzML:referenceableParamGroupList/mzML:referenceableParamGroup", xnm))
             {
-                referenceable_param_groups.Add(referenceable_param_group.Attributes["id"].Value, referenceable_param_group.ChildNodes);
+                referenceable_param_groups.Add(referenceable_param_group.GetAttribute("id", string.Empty), referenceable_param_group.SelectChildren(XPathNodeType.All));
             }
 
             ParallelOptions parallel_options = new ParallelOptions();
             parallel_options.MaxDegreeOfParallelism = maximumThreads;
 
-            Dictionary<string, SpectrumNode> ms1s = null;
+            Dictionary<string, SpectrumNavigator> ms1s = null;
             if(GET_PRECURSOR_MZ_AND_INTENSITY_FROM_MS1)
             {
-                ms1s = new Dictionary<string, SpectrumNode>();
-                Parallel.ForEach(mzML.SelectNodes("//mzML:mzML/mzML:run/mzML:spectrumList/mzML:spectrum", xnm).Cast<XmlNode>(), parallel_options, spectrum_node =>
+                ms1s = new Dictionary<string, SpectrumNavigator>();
+                Parallel.ForEach(mzML.Select("//mzML:mzML/mzML:run/mzML:spectrumList/mzML:spectrum", xnm).Cast<XPathNavigator>(), parallel_options, spectrum_navigator =>
                     {
-                        string scan_id = spectrum_node.Attributes["id"].Value;
+                        string scan_id = spectrum_navigator.GetAttribute("id", string.Empty);
                         int ms_level = -1;
 
-                        foreach(XmlNode spectrum_child_node in spectrum_node.ChildNodes)
+                        foreach(XPathNavigator spectrum_child_navigator in spectrum_navigator.SelectChildren(XPathNodeType.All))
                         {
-                            if(spectrum_child_node.Name == "cvParam")
+                            if(spectrum_child_navigator.Name == "cvParam")
                             {
-                                if(spectrum_child_node.Attributes["name"].Value == "ms level")
+                                if(spectrum_child_navigator.GetAttribute("name", string.Empty) == "ms level")
                                 {
-                                    ms_level = int.Parse(spectrum_child_node.Attributes["value"].Value);
+                                    ms_level = int.Parse(spectrum_child_navigator.GetAttribute("value", string.Empty));
                                 }
                             }
-                            else if(spectrum_child_node.Name == "referenceableParamGroupRef")
+                            else if(spectrum_child_navigator.Name == "referenceableParamGroupRef")
                             {
-                                foreach(XmlNode node in referenceable_param_groups[spectrum_child_node.Attributes["ref"].Value])
+                                foreach(XPathNavigator navigator in referenceable_param_groups[spectrum_child_navigator.GetAttribute("ref", string.Empty)])
                                 {
-                                    if(node.Name == "cvParam")
+                                    if(navigator.Name == "cvParam")
                                     {
-                                        if(node.Attributes["name"].Value == "ms level")
+                                        if(navigator.GetAttribute("name", string.Empty) == "ms level")
                                         {
-                                            ms_level = int.Parse(node.Attributes["value"].Value);
+                                            ms_level = int.Parse(navigator.GetAttribute("value", string.Empty));
                                             break;
                                         }
                                     }
@@ -104,14 +104,14 @@ namespace Morpheus
                         {
                             lock(ms1s)
                             {
-                                ms1s.Add(scan_id, new SpectrumNode(spectrum_node, xnm));
+                                ms1s.Add(scan_id, new SpectrumNavigator(spectrum_navigator, xnm));
                             }
                         }
                     }
                 );
             }
 
-            int num_spectra = int.Parse(mzML.SelectSingleNode("//mzML:mzML/mzML:run/mzML:spectrumList", xnm).Attributes["count"].Value);
+            int num_spectra = int.Parse(mzML.SelectSingleNode("//mzML:mzML/mzML:run/mzML:spectrumList", xnm).GetAttribute("count", string.Empty));
 
             ProductSpectra spectra = new ProductSpectra();
 
@@ -120,11 +120,11 @@ namespace Morpheus
             int spectra_processed = 0;
             int old_progress = 0;
 
-            Parallel.ForEach(mzML.SelectNodes("//mzML:mzML/mzML:run/mzML:spectrumList/mzML:spectrum", xnm).Cast<XmlNode>(), parallel_options, spectrum_node =>
+            Parallel.ForEach(mzML.Select("//mzML:mzML/mzML:run/mzML:spectrumList/mzML:spectrum", xnm).Cast<XPathNavigator>(), parallel_options, spectrum_navigator =>
                 {
-                    int scan_index = int.Parse(spectrum_node.Attributes["index"].Value);
+                    int scan_index = int.Parse(spectrum_navigator.GetAttribute("index", string.Empty));
                     int scan_number = scan_index + 1;
-                    string scan_id = spectrum_node.Attributes["id"].Value;
+                    string scan_id = spectrum_navigator.GetAttribute("id", string.Empty);
                     int ms_level = -1;
                     double retention_time = double.NaN;
                     string precursor_scan_id = null;
@@ -135,71 +135,67 @@ namespace Morpheus
                     double[] mz = null;
                     double[] intensity = null;
 
-                    foreach(XmlNode spectrum_child_node in spectrum_node.ChildNodes)
+                    foreach(XPathNavigator spectrum_child_navigator in spectrum_navigator.SelectChildren(XPathNodeType.All))
                     {
-                        if(spectrum_child_node.Name == "cvParam")
+                        if(spectrum_child_navigator.Name == "cvParam")
                         {
-                            if(spectrum_child_node.Attributes["name"].Value == "ms level")
+                            if(spectrum_child_navigator.GetAttribute("name", string.Empty) == "ms level")
                             {
-                                ms_level = int.Parse(spectrum_child_node.Attributes["value"].Value);
+                                ms_level = int.Parse(spectrum_child_navigator.GetAttribute("value", string.Empty));
                             }
                         }
-                        else if(spectrum_child_node.Name == "referenceableParamGroupRef")
+                        else if(spectrum_child_navigator.Name == "referenceableParamGroupRef")
                         {
-                            foreach(XmlNode node in referenceable_param_groups[spectrum_child_node.Attributes["ref"].Value])
+                            foreach(XPathNavigator navigator in referenceable_param_groups[spectrum_child_navigator.GetAttribute("ref", string.Empty)])
                             {
-                                if(node.Name == "cvParam")
+                                if(navigator.Name == "cvParam")
                                 {
-                                    if(node.Attributes["name"].Value == "ms level")
+                                    if(navigator.GetAttribute("name", string.Empty) == "ms level")
                                     {
-                                        ms_level = int.Parse(node.Attributes["value"].Value);
+                                        ms_level = int.Parse(navigator.GetAttribute("value", string.Empty));
                                         break;
                                     }
                                 }
                             }
                         }
-                        else if(spectrum_child_node.Name == "scanList")
+                        else if(spectrum_child_navigator.Name == "scanList")
                         {
-                            foreach(XmlNode node in spectrum_child_node.SelectNodes("mzML:scan/mzML:cvParam", xnm))
+                            foreach(XPathNavigator navigator in spectrum_child_navigator.Select("mzML:scan/mzML:cvParam", xnm))
                             {
-                                if(node.Attributes["name"].Value == "scan start time")
+                                if(navigator.GetAttribute("name", string.Empty) == "scan start time")
                                 {
-                                    retention_time = double.Parse(node.Attributes["value"].Value);
+                                    retention_time = double.Parse(navigator.GetAttribute("value", string.Empty));
                                 }
                             }
                         }
-                        else if(spectrum_child_node.Name == "precursorList")
+                        else if(spectrum_child_navigator.Name == "precursorList")
                         {
-                            XmlNode precursor_node = spectrum_child_node.SelectSingleNode("mzML:precursor", xnm);
-                            XmlAttribute precursor_ref_attribute = precursor_node.Attributes["spectrumRef"];
-                            if(precursor_ref_attribute != null)
+                            XPathNavigator precursor_node = spectrum_child_navigator.SelectSingleNode("mzML:precursor", xnm);
+                            precursor_scan_id = precursor_node.GetAttribute("spectrumRef", string.Empty);
+                            foreach(XPathNavigator navigator in precursor_node.Select("mzML:selectedIonList/mzML:selectedIon/mzML:cvParam", xnm))
                             {
-                                precursor_scan_id = precursor_ref_attribute.Value;
-                            }
-                            foreach(XmlNode node in precursor_node.SelectNodes("mzML:selectedIonList/mzML:selectedIon/mzML:cvParam", xnm))
-                            {
-                                if(node.Attributes["name"].Value == "selected ion m/z")
+                                if(navigator.GetAttribute("name", string.Empty) == "selected ion m/z")
                                 {
-                                    precursor_mz = double.Parse(node.Attributes["value"].Value);
+                                    precursor_mz = double.Parse(navigator.GetAttribute("value", string.Empty));
                                 }
-                                else if(node.Attributes["name"].Value == "charge state")
+                                else if(navigator.GetAttribute("name", string.Empty) == "charge state")
                                 {
-                                    charge = int.Parse(node.Attributes["value"].Value);
+                                    charge = int.Parse(navigator.GetAttribute("value", string.Empty));
                                 }
-                                else if(node.Attributes["name"].Value == "peak intensity")
+                                else if(navigator.GetAttribute("name", string.Empty) == "peak intensity")
                                 {
-                                    precursor_intensity = double.Parse(node.Attributes["value"].Value);
+                                    precursor_intensity = double.Parse(navigator.GetAttribute("value", string.Empty));
                                 }
                             }
-                            XmlNode node2 = spectrum_child_node.SelectSingleNode("mzML:precursor/mzML:activation/mzML:cvParam", xnm);
-                            if(node2 != null)
+                            XPathNavigator navigator2 = spectrum_child_navigator.SelectSingleNode("mzML:precursor/mzML:activation/mzML:cvParam", xnm);
+                            if(navigator2 != null)
                             {
-                                fragmentation_method = node2.Attributes["name"].Value;
+                                fragmentation_method = navigator2.GetAttribute("name", string.Empty);
                             }
                         }
-                        else if(spectrum_child_node.Name == "binaryDataArrayList")
+                        else if(spectrum_child_navigator.Name == "binaryDataArrayList")
                         {
-                            ReadDataFromSpectrumNode(spectrum_child_node.SelectNodes("mzML:binaryDataArray/*", xnm), out mz, out intensity);
+                            ReadDataFromSpectrumNavigator(spectrum_child_navigator.Select("mzML:binaryDataArray/*", xnm), out mz, out intensity);
                         }
                         if(ms_level == 1)
                         {
@@ -211,7 +207,7 @@ namespace Morpheus
                     {
                         if(GET_PRECURSOR_MZ_AND_INTENSITY_FROM_MS1 && precursor_scan_id != null)
                         {
-                            SpectrumNode ms1;
+                            SpectrumNavigator ms1;
                             if(ms1s.TryGetValue(precursor_scan_id, out ms1))
                             {
                                 double[] ms1_mz;
@@ -306,7 +302,7 @@ namespace Morpheus
             return spectra;
         }
 
-        internal static void ReadDataFromSpectrumNode(XmlNodeList binaryDataArrayNodes, out double[] mz, out double[] intensity)
+        internal static void ReadDataFromSpectrumNavigator(XPathNodeIterator binaryDataArrayChildNodes, out double[] mz, out double[] intensity)
         {
             mz = null;
             intensity = null;
@@ -314,40 +310,40 @@ namespace Morpheus
             int word_length_in_bytes = 0;
             bool zlib_compressed = false;
             ArrayDataType array_data_type = ArrayDataType.Unknown;
-            foreach(XmlNode node in binaryDataArrayNodes)
+            foreach(XPathNavigator navigator in binaryDataArrayChildNodes)
             {
-                if(node.Name == "cvParam")
+                if(navigator.Name == "cvParam")
                 {
-                    if(node.Attributes["name"].Value == "32-bit float")
+                    if(navigator.GetAttribute("name", string.Empty) == "32-bit float")
                     {
                         word_length_in_bytes = 4;
                     }
-                    else if(node.Attributes["name"].Value == "64-bit float")
+                    else if(navigator.GetAttribute("name", string.Empty) == "64-bit float")
                     {
                         word_length_in_bytes = 8;
                     }
-                    else if(node.Attributes["name"].Value == "zlib compression")
+                    else if(navigator.GetAttribute("name", string.Empty) == "zlib compression")
                     {
                         zlib_compressed = true;
                     }
-                    else if(node.Attributes["name"].Value == "m/z array")
+                    else if(navigator.GetAttribute("name", string.Empty) == "m/z array")
                     {
                         array_data_type = ArrayDataType.MZ;
                     }
-                    else if(node.Attributes["name"].Value == "intensity array")
+                    else if(navigator.GetAttribute("name", string.Empty) == "intensity array")
                     {
                         array_data_type = ArrayDataType.Intensity;
                     }
                 }
-                else if(node.Name == "binary")
+                else if(navigator.Name == "binary")
                 {
                     if(array_data_type == ArrayDataType.MZ)
                     {
-                        mz = ReadBase64EncodedDoubleArray(node.InnerText, word_length_in_bytes, zlib_compressed);
+                        mz = ReadBase64EncodedDoubleArray(navigator.InnerXml, word_length_in_bytes, zlib_compressed);
                     }
                     else if(array_data_type == ArrayDataType.Intensity)
                     {
-                        intensity = ReadBase64EncodedDoubleArray(node.InnerText, word_length_in_bytes, zlib_compressed);
+                        intensity = ReadBase64EncodedDoubleArray(navigator.InnerXml, word_length_in_bytes, zlib_compressed);
                     }
                 }
             }
