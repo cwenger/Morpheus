@@ -46,12 +46,15 @@ namespace Morpheus
 
                     if(initiatorMethionineBehavior != InitiatorMethionineBehavior.Retain && indices[i] + 1 == 0 && this[0] == 'M')
                     {
-                        Peptide peptide_without_initiator_methionine = new Peptide(this, indices[i] + 1 + 1 + 1, indices[i + missed_cleavages + 1] + 1, missed_cleavages);
-
-                        if((!minimumPeptideLength.HasValue || peptide_without_initiator_methionine.Length >= minimumPeptideLength.Value)
-                            && (!maximumPeptideLength.HasValue || peptide_without_initiator_methionine.Length <= maximumPeptideLength.Value))
+                        if(indices[i + missed_cleavages + 1] + 1 >= indices[i] + 1 + 1 + 1)
                         {
-                            yield return peptide_without_initiator_methionine;
+                            Peptide peptide_without_initiator_methionine = new Peptide(this, indices[i] + 1 + 1 + 1, indices[i + missed_cleavages + 1] + 1, missed_cleavages);
+
+                            if((!minimumPeptideLength.HasValue || peptide_without_initiator_methionine.Length >= minimumPeptideLength.Value)
+                                && (!maximumPeptideLength.HasValue || peptide_without_initiator_methionine.Length <= maximumPeptideLength.Value))
+                            {
+                                yield return peptide_without_initiator_methionine;
+                            }
                         }
                     }
                 }
