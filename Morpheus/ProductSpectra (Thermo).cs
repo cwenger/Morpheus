@@ -83,24 +83,11 @@ namespace Morpheus
 
                         peaks = FilterPeaks(peaks, absoluteThreshold, relativeThresholdPercent, maximumNumberOfPeaks);
 
-                        if(charge == 0)
+                        for(int c = (charge == 0 ? minimumAssumedPrecursorChargeState : charge); c <= (charge == 0 ? maximumAssumedPrecursorChargeState : charge); c++)
                         {
-                            for(int c = minimumAssumedPrecursorChargeState; c <= maximumAssumedPrecursorChargeState; c++)
-                            {
-                                double precursor_mass = Utilities.MassFromMZ(precursor_mz, c);
+                            double precursor_mass = Utilities.MassFromMZ(precursor_mz, c);
 
-                                ProductSpectrum spectrum = new ProductSpectrum(rawFilepath, scan_id, scan_number, retention_time, fragmentation_method, precursor_mz, precursor_intensity, c, precursor_mass, peaks);
-                                lock(spectra)
-                                {
-                                    spectra.Add(spectrum);
-                                }
-                            }
-                        }
-                        else
-                        {
-                            double isolation_mass = Utilities.MassFromMZ(precursor_mz, charge);
-
-                            ProductSpectrum spectrum = new ProductSpectrum(rawFilepath, scan_id, scan_number, retention_time, fragmentation_method, precursor_mz, precursor_intensity, charge, isolation_mass, peaks);
+                            ProductSpectrum spectrum = new ProductSpectrum(rawFilepath, scan_id, scan_number, retention_time, fragmentation_method, precursor_mz, precursor_intensity, c, precursor_mass, peaks);
                             lock(spectra)
                             {
                                 spectra.Add(spectrum);
