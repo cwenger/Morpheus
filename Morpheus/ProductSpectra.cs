@@ -242,43 +242,21 @@ namespace Morpheus
 
                         peaks = FilterPeaks(peaks, absoluteThreshold, relativeThresholdPercent, maximumNumberOfPeaks);
 
-                        if(charge == 0)
+                        for(int c = (charge == 0 ? minimumAssumedPrecursorChargeState : charge); c <= (charge == 0 ? maximumAssumedPrecursorChargeState : charge); c++)
                         {
-                            for(int c = minimumAssumedPrecursorChargeState; c <= maximumAssumedPrecursorChargeState; c++)
-                            {
-                                List<MSPeak> new_peaks = peaks;
-                                if(assignChargeStates)
-                                {
-                                    new_peaks = AssignChargeStates(new_peaks, c, isotopicMzTolerance);
-                                    if(deisotope)
-                                    {
-                                        new_peaks = Deisotope(new_peaks, c, isotopicMzTolerance);
-                                    }
-                                }
-
-                                double precursor_mass = Utilities.MassFromMZ(precursor_mz, c);
-
-                                ProductSpectrum spectrum = new ProductSpectrum(mzmlFilepath, scan_id, scan_number, retention_time, fragmentation_method, precursor_mz, precursor_intensity, c, precursor_mass, new_peaks);
-                                lock(spectra)
-                                {
-                                    spectra.Add(spectrum);
-                                }
-                            }
-                        }
-                        else
-                        {
+                            List<MSPeak> new_peaks = peaks;
                             if(assignChargeStates)
                             {
-                                peaks = AssignChargeStates(peaks, charge, isotopicMzTolerance);
+                                new_peaks = AssignChargeStates(new_peaks, c, isotopicMzTolerance);
                                 if(deisotope)
                                 {
-                                    peaks = Deisotope(peaks, charge, isotopicMzTolerance);
+                                    new_peaks = Deisotope(new_peaks, c, isotopicMzTolerance);
                                 }
                             }
 
-                            double precursor_mass = Utilities.MassFromMZ(precursor_mz, charge);
+                            double precursor_mass = Utilities.MassFromMZ(precursor_mz, c);
 
-                            ProductSpectrum spectrum = new ProductSpectrum(mzmlFilepath, scan_id, scan_number, retention_time, fragmentation_method, precursor_mz, precursor_intensity, charge, precursor_mass, peaks);
+                            ProductSpectrum spectrum = new ProductSpectrum(mzmlFilepath, scan_id, scan_number, retention_time, fragmentation_method, precursor_mz, precursor_intensity, c, precursor_mass, new_peaks);
                             lock(spectra)
                             {
                                 spectra.Add(spectrum);

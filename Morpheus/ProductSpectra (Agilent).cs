@@ -91,57 +91,7 @@ namespace Morpheus
                             }
                         }
 
-                        if(charge == 0)
-                        {
-                            for(int c = minimumAssumedPrecursorChargeState; c <= maximumAssumedPrecursorChargeState; c++)
-                            {
-                                if(assignChargeStates)
-                                {
-                                    int[] peak_ids = new int[agilent_spectrum.TotalDataPoints];
-                                    double[] peak_mzs = new double[agilent_spectrum.TotalDataPoints];
-                                    double[] peak_intensities = new double[agilent_spectrum.TotalDataPoints];
-                                    for(int i = 0; i < agilent_spectrum.TotalDataPoints; i++)
-                                    {
-                                        peak_ids[i] = i;
-                                        peak_mzs[i] = agilent_spectrum.XArray[i];
-                                        peak_intensities[i] = agilent_spectrum.YArray[i];
-                                    }
-                                    int[] peak_charge_states = new int[agilent_spectrum.TotalDataPoints];
-                                    int[] peak_clusters = new int[agilent_spectrum.TotalDataPoints];
-
-                                    int num_peaks;
-                                    lock(csaw)
-                                    {
-                                        csaw.SetParameters(IsotopeModel.Peptidic, 1, (short)c, false, ACCURACY_C0, ACCURACY_C1);
-                                        num_peaks = csaw.AssignChargeStates(peak_ids, peak_mzs, peak_intensities, peak_charge_states, peak_clusters);
-                                    }
-
-                                    peaks = new List<MSPeak>(num_peaks);
-                                    HashSet<int> observed_peak_clusters = new HashSet<int>();
-                                    for(int i = 0; i < num_peaks; i++)
-                                    {
-                                        bool isotopic_peak = observed_peak_clusters.Contains(peak_clusters[i]);
-                                        if(!deisotope || !isotopic_peak)
-                                        {
-                                            peaks.Add(new MSPeak(peak_mzs[i], peak_intensities[i], peak_charge_states[i]));
-                                            if(peak_clusters[i] > 0 && !isotopic_peak)
-                                            {
-                                                observed_peak_clusters.Add(peak_clusters[i]);
-                                            }
-                                        }
-                                    }
-                                }
-
-                                double precursor_mass = Utilities.MassFromMZ(precursor_mz, c);
-
-                                ProductSpectrum spectrum = new ProductSpectrum(agilentDFolderPath, scan_id, scan_number, scan_record.RetentionTime, FRAGMENTATION_METHOD, precursor_mz, precursor_intensity, c, precursor_mass, peaks);
-                                lock(spectra)
-                                {
-                                    spectra.Add(spectrum);
-                                }
-                            }
-                        }
-                        else
+                        for(int c = (charge == 0 ? minimumAssumedPrecursorChargeState : charge); c <= (charge == 0 ? maximumAssumedPrecursorChargeState : charge); c++)
                         {
                             if(assignChargeStates)
                             {
@@ -160,7 +110,7 @@ namespace Morpheus
                                 int num_peaks;
                                 lock(csaw)
                                 {
-                                    csaw.SetParameters(IsotopeModel.Peptidic, 1, (short)charge, false, ACCURACY_C0, ACCURACY_C1);
+                                    csaw.SetParameters(IsotopeModel.Peptidic, 1, (short)c, false, ACCURACY_C0, ACCURACY_C1);
                                     num_peaks = csaw.AssignChargeStates(peak_ids, peak_mzs, peak_intensities, peak_charge_states, peak_clusters);
                                 }
 
@@ -180,9 +130,9 @@ namespace Morpheus
                                 }
                             }
 
-                            double precursor_mass = Utilities.MassFromMZ(precursor_mz, charge);
+                            double precursor_mass = Utilities.MassFromMZ(precursor_mz, c);
 
-                            ProductSpectrum spectrum = new ProductSpectrum(agilentDFolderPath, scan_id, scan_number, scan_record.RetentionTime, FRAGMENTATION_METHOD, precursor_mz, precursor_intensity, charge, precursor_mass, peaks);
+                            ProductSpectrum spectrum = new ProductSpectrum(agilentDFolderPath, scan_id, scan_number, scan_record.RetentionTime, FRAGMENTATION_METHOD, precursor_mz, precursor_intensity, c, precursor_mass, peaks);
                             lock(spectra)
                             {
                                 spectra.Add(spectrum);
