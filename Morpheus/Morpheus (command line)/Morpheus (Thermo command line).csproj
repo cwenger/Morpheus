@@ -9,18 +9,18 @@
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Morpheus</RootNamespace>
-    <AssemblyName>morpheus_cl</AssemblyName>
+    <AssemblyName>morpheus_tmo_cl</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <TargetFrameworkProfile>Client</TargetFrameworkProfile>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
     <PlatformTarget>AnyCPU</PlatformTarget>
-    <OutputPath>bin\Debug\</OutputPath>
+    <OutputPath>bin\Thermo\Debug\</OutputPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|AnyCPU'">
     <PlatformTarget>AnyCPU</PlatformTarget>
-    <OutputPath>bin\Release\</OutputPath>
+    <OutputPath>bin\Thermo\Release\</OutputPath>
   </PropertyGroup>
   <PropertyGroup>
     <ApplicationIcon>Morpheus.ico</ApplicationIcon>
@@ -38,9 +38,9 @@
       <Project>{E2EED323-9E53-4193-B0D6-FA3987FE9834}</Project>
       <Name>CommandLine</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Morpheus.csproj">
-      <Project>{288CC061-1067-4FBD-8E79-FB4C7B3F3FB4}</Project>
-      <Name>Morpheus</Name>
+    <ProjectReference Include="..\Morpheus %28Thermo%29.csproj">
+      <Project>{288cc061-1067-4fbd-8e79-fb4c7b3f3fb4}</Project>
+      <Name>Morpheus %28Thermo%29</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
