@@ -8,7 +8,7 @@ namespace Morpheus
 
         public bool Decoy
         {
-            get { return Description.Contains("DECOY"); }
+            get { return Description.Contains("DECOY_"); }
         }
 
         public bool Target
