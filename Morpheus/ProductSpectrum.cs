@@ -12,7 +12,7 @@ namespace Morpheus
 
         public string SpectrumTitle { get; private set; }
 
-        public double RetentionTime { get; private set; }
+        public double RetentionTimeMinutes { get; private set; }
 
         public string FragmentationMethod { get; private set; }
 
@@ -30,13 +30,13 @@ namespace Morpheus
 
         public double TotalIntensity { get; private set; }
 
-        public ProductSpectrum(string filename, int spectrumNumber, string spectrumID, string spectrumTitle, double retentionTime, string fragmentationMethod, double precursorMZ, double precursorIntensity, int precursorCharge, double precursorMass, List<MSPeak> peaks)
+        public ProductSpectrum(string filename, int spectrumNumber, string spectrumID, string spectrumTitle, double retentionTimeMinutes, string fragmentationMethod, double precursorMZ, double precursorIntensity, int precursorCharge, double precursorMass, List<MSPeak> peaks)
         {
             Filename = filename;
             SpectrumNumber = spectrumNumber;
             SpectrumID = spectrumID;
             SpectrumTitle = spectrumTitle;
-            RetentionTime = retentionTime;
+            RetentionTimeMinutes = retentionTimeMinutes;
             FragmentationMethod = fragmentationMethod;
             PrecursorMZ = precursorMZ;
             PrecursorIntensity = precursorIntensity;
