@@ -127,7 +127,7 @@ namespace Morpheus
 
         public static int AscendingSpectrumNumberComparison(PeptideSpectrumMatch left, PeptideSpectrumMatch right)
         {
-            return left.Spectrum.ScanNumber.CompareTo(right.Spectrum.ScanNumber);
+            return left.Spectrum.SpectrumNumber.CompareTo(right.Spectrum.SpectrumNumber);
         }
 
         public static int DescendingMorpheusScoreComparison(PeptideSpectrumMatch left, PeptideSpectrumMatch right)
@@ -143,7 +143,7 @@ namespace Morpheus
             }
         }
 
-        public static readonly string Header = "Filename\tScan Number\tRetention Time (min)\tPrecursor m/z\tPrecursor Intensity\tPrecursor Charge\tPrecursor Mass (Da)\tExperimental Peaks\tTotal Intensity"
+        public static readonly string Header = "Filename\tSpectrum Number\tSpectrum ID\tSpectrum Title\tRetention Time (min)\tPrecursor m/z\tPrecursor Intensity\tPrecursor Charge\tPrecursor Mass (Da)\tExperimental Peaks\tTotal Intensity"
             + "\tPeptide Sequence\tBase Peptide Sequence\tProtein Description\tStart Residue Number\tStop Residue Number\tMissed Cleavages"
             + "\tTheoretical Mass (Da)\tPrecursor Mass Error (Da)\tPrecursor Mass Error (ppm)"
             + "\tMatching Products\tTotal Products\tRatio of Matching Products\tMatching Intensity\tFraction of Intensity Matching\tMorpheus Score";
@@ -153,7 +153,9 @@ namespace Morpheus
             StringBuilder sb = new StringBuilder();
 
             sb.Append(Spectrum.Filename + '\t');
-            sb.Append(Spectrum.ScanNumber.ToString() + '\t');
+            sb.Append(Spectrum.SpectrumNumber.ToString() + '\t');
+            sb.Append(Spectrum.SpectrumID + '\t');
+            sb.Append(Spectrum.SpectrumTitle + '\t');
             sb.Append(Spectrum.RetentionTime.ToString() + '\t');
             sb.Append(Spectrum.PrecursorMZ.ToString() + '\t');
             sb.Append(Spectrum.PrecursorIntensity.ToString() + '\t');
