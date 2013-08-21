@@ -170,7 +170,7 @@ namespace Morpheus
                                 if(navigator.GetAttribute("name", string.Empty) == "scan start time")
                                 {
                                     retention_time_minutes = double.Parse(navigator.GetAttribute("value", string.Empty));
-                                    if(navigator.GetAttribute("unitName", string.Empty) != null && navigator.GetAttribute("unitName", string.Empty).StartsWith("s"))
+                                    if(navigator.GetAttribute("unitName", string.Empty).StartsWith("s", StringComparison.OrdinalIgnoreCase))
                                     {
                                         retention_time_minutes = TimeSpan.FromSeconds(retention_time_minutes).TotalMinutes;
                                     }
