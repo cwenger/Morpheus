@@ -50,7 +50,7 @@ namespace Morpheus
             double absoluteThreshold, double relativeThresholdPercent, int maximumNumberOfPeaks,
             bool assignChargeStates, bool deisotope, MassTolerance isotopicMzTolerance, int maximumThreads)
         {
-            OnReportTaskWithoutProgress(new EventArgs());
+            OnReportTaskWithoutProgress(EventArgs.Empty);
 
             XPathNavigator mzML = new XPathDocument(mzmlFilepath).CreateNavigator();
 
@@ -115,7 +115,7 @@ namespace Morpheus
 
             ProductSpectra spectra = new ProductSpectra();
 
-            OnReportTaskWithProgress(new EventArgs());
+            OnReportTaskWithProgress(EventArgs.Empty);
             object progress_lock = new object();
             int spectra_processed = 0;
             int old_progress = 0;

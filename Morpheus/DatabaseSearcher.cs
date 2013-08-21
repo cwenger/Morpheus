@@ -217,7 +217,7 @@ namespace Morpheus
             {
                 DateTime overall_start = DateTime.Now;
 
-                OnStarting(new EventArgs());
+                OnStarting(EventArgs.Empty);
 
                 OnUpdateProgress(new ProgressEventArgs(0));
 
@@ -367,7 +367,7 @@ namespace Morpheus
                     log.WriteLine(total_proteins.ToString("N0") + " total (" + target_proteins.ToString("N0") + " target + " + decoy_proteins.ToString("N0") + " decoy + " + on_the_fly_decoy_proteins.ToString("N0") + " on-the-fly decoy) proteins");
 
                     OnUpdateStatus(new StatusEventArgs("Extracting and preprocessing MS/MS spectra..."));
-                    OnReportTaskWithProgress(new EventArgs());
+                    OnReportTaskWithProgress(EventArgs.Empty);
                     OnUpdateProgress(new ProgressEventArgs(0));
 
                     ProductSpectra spectra = ProductSpectra.Load(data_filepath, minimumAssumedPrecursorChargeState, maximumAssumedPrecursorChargeState,
@@ -380,7 +380,7 @@ namespace Morpheus
                     total_spectra += spectra.Count;
 
                     OnUpdateStatus(new StatusEventArgs("Searching MS/MS spectra..."));
-                    OnReportTaskWithProgress(new EventArgs());
+                    OnReportTaskWithProgress(EventArgs.Empty);
                     OnUpdateProgress(new ProgressEventArgs(0));
 
                     PeptideSpectrumMatch[] psms = null;
@@ -555,7 +555,7 @@ namespace Morpheus
 #endif
 
                     OnUpdateStatus(new StatusEventArgs("Performing post-search analyses..."));
-                    OnReportTaskWithoutProgress(new EventArgs());
+                    OnReportTaskWithoutProgress(EventArgs.Empty);
                     OnUpdateProgress(new ProgressEventArgs(0));
 
                     log.WriteLine((num_target_peptides + num_decoy_peptides).ToString("N0") + " total (" + num_target_peptides.ToString("N0") + " target + " + num_decoy_peptides.ToString("N0") + " decoy) non-unique peptides");
@@ -668,7 +668,7 @@ namespace Morpheus
                 if(dataFilepaths.Count > 1)
                 {
                     OnUpdateStatus(new StatusEventArgs("Performing aggregate post-search analyses..."));
-                    OnReportTaskWithoutProgress(new EventArgs());
+                    OnReportTaskWithoutProgress(EventArgs.Empty);
                     OnUpdateProgress(new ProgressEventArgs(0));
 
                     aggregate_psms.Sort(PeptideSpectrumMatch.DescendingMorpheusScoreComparison);
@@ -841,7 +841,7 @@ namespace Morpheus
 
                 summary.Close();
 
-                OnFinished(new EventArgs());
+                OnFinished(EventArgs.Empty);
             }
             catch(Exception ex)
             {
