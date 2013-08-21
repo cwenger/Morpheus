@@ -241,9 +241,9 @@ namespace Morpheus
                 {
                     PeptideSpectrumMatch psm = psm_with_fdr.Identification;
                     output.WriteStartElement("spectrum_query");
-                    output.WriteAttributeString("spectrum", psm.Spectrum.ScanID);
-                    output.WriteAttributeString("start_scan", psm.Spectrum.ScanNumber.ToString());
-                    output.WriteAttributeString("end_scan", psm.Spectrum.ScanNumber.ToString());
+                    output.WriteAttributeString("spectrum", psm.Spectrum.SpectrumID);
+                    output.WriteAttributeString("start_scan", psm.Spectrum.SpectrumNumber.ToString());
+                    output.WriteAttributeString("end_scan", psm.Spectrum.SpectrumNumber.ToString());
                     if(!double.IsNaN(psm.Spectrum.RetentionTime))
                     {
                         output.WriteAttributeString("retention_time_sec", TimeSpan.FromMinutes(psm.Spectrum.RetentionTime).TotalSeconds.ToString());

@@ -122,9 +122,10 @@ namespace Morpheus
 
             Parallel.ForEach(mzML.Select("//mzML:mzML/mzML:run/mzML:spectrumList/mzML:spectrum", xnm).Cast<XPathNavigator>(), parallel_options, spectrum_navigator =>
                 {
-                    int scan_index = int.Parse(spectrum_navigator.GetAttribute("index", string.Empty));
-                    int scan_number = scan_index + 1;
-                    string scan_id = spectrum_navigator.GetAttribute("id", string.Empty);
+                    int spectrum_index = int.Parse(spectrum_navigator.GetAttribute("index", string.Empty));
+                    int spectrum_number = spectrum_index + 1;
+                    string spectrum_id = spectrum_navigator.GetAttribute("id", string.Empty);
+                    string spectrum_title = null;
                     int ms_level = -1;
                     double retention_time = double.NaN;
                     string precursor_scan_id = null;
@@ -142,6 +143,10 @@ namespace Morpheus
                             if(spectrum_child_navigator.GetAttribute("name", string.Empty) == "ms level")
                             {
                                 ms_level = int.Parse(spectrum_child_navigator.GetAttribute("value", string.Empty));
+                            }
+                            else if(spectrum_child_navigator.GetAttribute("name", string.Empty) == "spectrum title")
+                            {
+                                spectrum_title = spectrum_child_navigator.GetAttribute("value", string.Empty);
                             }
                         }
                         else if(spectrum_child_navigator.Name == "referenceableParamGroupRef")
@@ -256,7 +261,7 @@ namespace Morpheus
 
                             double precursor_mass = Utilities.MassFromMZ(precursor_mz, c);
 
-                            ProductSpectrum spectrum = new ProductSpectrum(mzmlFilepath, scan_id, scan_number, retention_time, fragmentation_method, precursor_mz, precursor_intensity, c, precursor_mass, new_peaks);
+                            ProductSpectrum spectrum = new ProductSpectrum(mzmlFilepath, spectrum_number, spectrum_id, spectrum_title, retention_time, fragmentation_method, precursor_mz, precursor_intensity, c, precursor_mass, new_peaks);
                             lock(spectra)
                             {
                                 spectra.Add(spectrum);

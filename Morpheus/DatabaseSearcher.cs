@@ -386,16 +386,16 @@ namespace Morpheus
                     PeptideSpectrumMatch[] psms = null;
                     if(spectra.Count > 0)
                     {
-                        int max_scan_number = 0;
+                        int max_spectrum_number = 0;
                         foreach(ProductSpectrum spectrum in spectra)
                         {
-                            if(spectrum.ScanNumber > max_scan_number)
+                            if(spectrum.SpectrumNumber > max_spectrum_number)
                             {
-                                max_scan_number = spectrum.ScanNumber;
+                                max_spectrum_number = spectrum.SpectrumNumber;
                             }
                         }
 
-                        psms = new PeptideSpectrumMatch[max_scan_number];
+                        psms = new PeptideSpectrumMatch[max_spectrum_number];
 
                         spectra.Sort(ProductSpectrum.AscendingPrecursorMassComparison);
                     }
@@ -530,10 +530,10 @@ namespace Morpheus
                                         PeptideSpectrumMatch psm = new PeptideSpectrumMatch(spectrum, modified_peptide, productMassTolerance);
                                         lock(psms)
                                         {
-                                            PeptideSpectrumMatch current_best_psm = psms[spectrum.ScanNumber - 1];
+                                            PeptideSpectrumMatch current_best_psm = psms[spectrum.SpectrumNumber - 1];
                                             if(current_best_psm == null || PeptideSpectrumMatch.DescendingMorpheusScoreComparison(psm, current_best_psm) < 0)
                                             {
-                                                psms[spectrum.ScanNumber - 1] = psm;
+                                                psms[spectrum.SpectrumNumber - 1] = psm;
                                             }
                                         }
                                     }
