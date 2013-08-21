@@ -127,7 +127,7 @@ namespace Morpheus
                     string spectrum_id = spectrum_navigator.GetAttribute("id", string.Empty);
                     string spectrum_title = null;
                     int ms_level = -1;
-                    double retention_time = double.NaN;
+                    double retention_time_minutes = double.NaN;
                     string precursor_scan_id = null;
                     double precursor_mz = double.NaN;
                     int charge = 0;
@@ -169,7 +169,11 @@ namespace Morpheus
                             {
                                 if(navigator.GetAttribute("name", string.Empty) == "scan start time")
                                 {
-                                    retention_time = double.Parse(navigator.GetAttribute("value", string.Empty));
+                                    retention_time_minutes = double.Parse(navigator.GetAttribute("value", string.Empty));
+                                    if(navigator.GetAttribute("unitName", string.Empty) != null && navigator.GetAttribute("unitName", string.Empty).StartsWith("s"))
+                                    {
+                                        retention_time_minutes = TimeSpan.FromSeconds(retention_time_minutes).TotalMinutes;
+                                    }
                                 }
                             }
                         }
@@ -261,7 +265,7 @@ namespace Morpheus
 
                             double precursor_mass = Utilities.MassFromMZ(precursor_mz, c);
 
-                            ProductSpectrum spectrum = new ProductSpectrum(mzmlFilepath, spectrum_number, spectrum_id, spectrum_title, retention_time, fragmentation_method, precursor_mz, precursor_intensity, c, precursor_mass, new_peaks);
+                            ProductSpectrum spectrum = new ProductSpectrum(mzmlFilepath, spectrum_number, spectrum_id, spectrum_title, retention_time_minutes, fragmentation_method, precursor_mz, precursor_intensity, c, precursor_mass, new_peaks);
                             lock(spectra)
                             {
                                 spectra.Add(spectrum);
