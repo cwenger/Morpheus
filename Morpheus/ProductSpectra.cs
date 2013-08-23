@@ -77,20 +77,20 @@ namespace Morpheus
 
                         foreach(XPathNavigator spectrum_child_navigator in spectrum_navigator.SelectChildren(XPathNodeType.All))
                         {
-                            if(spectrum_child_navigator.Name == "cvParam")
+                            if(spectrum_child_navigator.Name.Equals("cvParam", StringComparison.OrdinalIgnoreCase))
                             {
-                                if(spectrum_child_navigator.GetAttribute("name", string.Empty) == "ms level")
+                                if(spectrum_child_navigator.GetAttribute("name", string.Empty).Equals("ms level", StringComparison.OrdinalIgnoreCase))
                                 {
                                     ms_level = int.Parse(spectrum_child_navigator.GetAttribute("value", string.Empty));
                                 }
                             }
-                            else if(spectrum_child_navigator.Name == "referenceableParamGroupRef")
+                            else if(spectrum_child_navigator.Name.Equals("referenceableParamGroupRef", StringComparison.OrdinalIgnoreCase))
                             {
                                 foreach(XPathNavigator navigator in referenceable_param_groups[spectrum_child_navigator.GetAttribute("ref", string.Empty)])
                                 {
-                                    if(navigator.Name == "cvParam")
+                                    if(navigator.Name.Equals("cvParam", StringComparison.OrdinalIgnoreCase))
                                     {
-                                        if(navigator.GetAttribute("name", string.Empty) == "ms level")
+                                        if(navigator.GetAttribute("name", string.Empty).Equals("ms level", StringComparison.OrdinalIgnoreCase))
                                         {
                                             ms_level = int.Parse(navigator.GetAttribute("value", string.Empty));
                                             break;
@@ -138,24 +138,24 @@ namespace Morpheus
 
                     foreach(XPathNavigator spectrum_child_navigator in spectrum_navigator.SelectChildren(XPathNodeType.All))
                     {
-                        if(spectrum_child_navigator.Name == "cvParam")
+                        if(spectrum_child_navigator.Name.Equals("cvParam", StringComparison.OrdinalIgnoreCase))
                         {
-                            if(spectrum_child_navigator.GetAttribute("name", string.Empty) == "ms level")
+                            if(spectrum_child_navigator.GetAttribute("name", string.Empty).Equals("ms level", StringComparison.OrdinalIgnoreCase))
                             {
                                 ms_level = int.Parse(spectrum_child_navigator.GetAttribute("value", string.Empty));
                             }
-                            else if(spectrum_child_navigator.GetAttribute("name", string.Empty) == "spectrum title")
+                            else if(spectrum_child_navigator.GetAttribute("name", string.Empty).Equals("spectrum title", StringComparison.OrdinalIgnoreCase))
                             {
                                 spectrum_title = spectrum_child_navigator.GetAttribute("value", string.Empty);
                             }
                         }
-                        else if(spectrum_child_navigator.Name == "referenceableParamGroupRef")
+                        else if(spectrum_child_navigator.Name.Equals("referenceableParamGroupRef", StringComparison.OrdinalIgnoreCase))
                         {
                             foreach(XPathNavigator navigator in referenceable_param_groups[spectrum_child_navigator.GetAttribute("ref", string.Empty)])
                             {
-                                if(navigator.Name == "cvParam")
+                                if(navigator.Name.Equals("cvParam", StringComparison.OrdinalIgnoreCase))
                                 {
-                                    if(navigator.GetAttribute("name", string.Empty) == "ms level")
+                                    if(navigator.GetAttribute("name", string.Empty).Equals("ms level", StringComparison.OrdinalIgnoreCase))
                                     {
                                         ms_level = int.Parse(navigator.GetAttribute("value", string.Empty));
                                         break;
@@ -163,11 +163,11 @@ namespace Morpheus
                                 }
                             }
                         }
-                        else if(spectrum_child_navigator.Name == "scanList")
+                        else if(spectrum_child_navigator.Name.Equals("scanList", StringComparison.OrdinalIgnoreCase))
                         {
                             foreach(XPathNavigator navigator in spectrum_child_navigator.Select("mzML:scan/mzML:cvParam", xnm))
                             {
-                                if(navigator.GetAttribute("name", string.Empty) == "scan start time")
+                                if(navigator.GetAttribute("name", string.Empty).Equals("scan start time", StringComparison.OrdinalIgnoreCase))
                                 {
                                     retention_time_minutes = double.Parse(navigator.GetAttribute("value", string.Empty));
                                     if(navigator.GetAttribute("unitName", string.Empty).StartsWith("s", StringComparison.OrdinalIgnoreCase))
@@ -177,21 +177,21 @@ namespace Morpheus
                                 }
                             }
                         }
-                        else if(spectrum_child_navigator.Name == "precursorList")
+                        else if(spectrum_child_navigator.Name.Equals("precursorList", StringComparison.OrdinalIgnoreCase))
                         {
                             XPathNavigator precursor_node = spectrum_child_navigator.SelectSingleNode("mzML:precursor", xnm);
                             precursor_scan_id = precursor_node.GetAttribute("spectrumRef", string.Empty);
                             foreach(XPathNavigator navigator in precursor_node.Select("mzML:selectedIonList/mzML:selectedIon/mzML:cvParam", xnm))
                             {
-                                if(navigator.GetAttribute("name", string.Empty) == "selected ion m/z")
+                                if(navigator.GetAttribute("name", string.Empty).Equals("selected ion m/z", StringComparison.OrdinalIgnoreCase))
                                 {
                                     precursor_mz = double.Parse(navigator.GetAttribute("value", string.Empty));
                                 }
-                                else if(navigator.GetAttribute("name", string.Empty) == "charge state")
+                                else if(navigator.GetAttribute("name", string.Empty).Equals("charge state", StringComparison.OrdinalIgnoreCase))
                                 {
                                     charge = int.Parse(navigator.GetAttribute("value", string.Empty));
                                 }
-                                else if(navigator.GetAttribute("name", string.Empty) == "peak intensity")
+                                else if(navigator.GetAttribute("name", string.Empty).Equals("peak intensity", StringComparison.OrdinalIgnoreCase))
                                 {
                                     precursor_intensity = double.Parse(navigator.GetAttribute("value", string.Empty));
                                 }
@@ -202,7 +202,7 @@ namespace Morpheus
                                 fragmentation_method = navigator2.GetAttribute("name", string.Empty);
                             }
                         }
-                        else if(spectrum_child_navigator.Name == "binaryDataArrayList")
+                        else if(spectrum_child_navigator.Name.Equals("binaryDataArrayList", StringComparison.OrdinalIgnoreCase))
                         {
                             ReadDataFromSpectrumNavigator(spectrum_child_navigator.Select("mzML:binaryDataArray/*", xnm), out mz, out intensity);
                         }
@@ -299,30 +299,30 @@ namespace Morpheus
             ArrayDataType array_data_type = ArrayDataType.Unknown;
             foreach(XPathNavigator navigator in binaryDataArrayChildNodes)
             {
-                if(navigator.Name == "cvParam")
+                if(navigator.Name.Equals("cvParam", StringComparison.OrdinalIgnoreCase))
                 {
-                    if(navigator.GetAttribute("name", string.Empty) == "32-bit float")
+                    if(navigator.GetAttribute("name", string.Empty).Equals("32-bit float", StringComparison.OrdinalIgnoreCase))
                     {
                         word_length_in_bytes = 4;
                     }
-                    else if(navigator.GetAttribute("name", string.Empty) == "64-bit float")
+                    else if(navigator.GetAttribute("name", string.Empty).Equals("64-bit float", StringComparison.OrdinalIgnoreCase))
                     {
                         word_length_in_bytes = 8;
                     }
-                    else if(navigator.GetAttribute("name", string.Empty) == "zlib compression")
+                    else if(navigator.GetAttribute("name", string.Empty).Equals("zlib compression", StringComparison.OrdinalIgnoreCase))
                     {
                         zlib_compressed = true;
                     }
-                    else if(navigator.GetAttribute("name", string.Empty) == "m/z array")
+                    else if(navigator.GetAttribute("name", string.Empty).Equals("m/z array", StringComparison.OrdinalIgnoreCase))
                     {
                         array_data_type = ArrayDataType.MZ;
                     }
-                    else if(navigator.GetAttribute("name", string.Empty) == "intensity array")
+                    else if(navigator.GetAttribute("name", string.Empty).Equals("intensity array", StringComparison.OrdinalIgnoreCase))
                     {
                         array_data_type = ArrayDataType.Intensity;
                     }
                 }
-                else if(navigator.Name == "binary")
+                else if(navigator.Name.Equals("binary", StringComparison.OrdinalIgnoreCase))
                 {
                     if(array_data_type == ArrayDataType.MZ)
                     {

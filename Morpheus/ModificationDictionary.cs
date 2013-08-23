@@ -48,8 +48,8 @@ namespace Morpheus
                     double monoisotopic_mass_shift = double.Parse(fields[3]);
                     double average_mass_shift = double.Parse(fields[4]);
                     string default_mod = fields[5];
-                    bool default_fixed = default_mod.ToLower() == "fixed";
-                    bool default_variable = default_mod.ToLower() == "variable";
+                    bool default_fixed = default_mod.Equals("fixed", StringComparison.OrdinalIgnoreCase);
+                    bool default_variable = default_mod.Equals("variable", StringComparison.OrdinalIgnoreCase);
                     Modification modification = new Modification(description, modification_type, amino_acid, monoisotopic_mass_shift, average_mass_shift, default_fixed, default_variable);
                     Add(modification);
                 }
