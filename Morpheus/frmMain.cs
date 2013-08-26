@@ -797,11 +797,6 @@ namespace Morpheus
             tspbProgress.Value = tspbProgress.Minimum;
         }
 
-        private void ResetProgressBar(object sender, ItemCheckEventArgs e)
-        {
-            tspbProgress.Value = tspbProgress.Minimum;
-        }
-
         private void frmMain_FormClosing(object sender, FormClosingEventArgs e)
         {
             using(StreamWriter settings = new StreamWriter(Path.Combine(Application.UserAppDataPath, "settings.tsv")))
