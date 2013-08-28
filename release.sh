@@ -1,3 +1,5 @@
+rm -r release
+
 mkdir release
 mkdir "release/Morpheus (Linux)"
 mdtool build "Morpheus/Morpheus (MonoDevelop).sln" -t:Clean -c:Release
