@@ -457,10 +457,10 @@ namespace Morpheus
                                     spectra.GetProductSpectraInMassRange(precursorMassType == MassType.Average ? modified_peptide.AverageMass : modified_peptide.MonoisotopicMass, precursorMassTolerance))
                                 {
                                     PeptideSpectrumMatch psm = new PeptideSpectrumMatch(spectrum, modified_peptide, productMassTolerance);
-                                    PeptideSpectrumMatch current_best_psm = psms[spectrum.ScanNumber - 1];
+                                    PeptideSpectrumMatch current_best_psm = psms[spectrum.SpectrumNumber - 1];
                                     if(current_best_psm == null || PeptideSpectrumMatch.DescendingMorpheusScoreComparison(psm, current_best_psm) < 0)
                                     {
-                                        psms[spectrum.ScanNumber - 1] = psm;
+                                        psms[spectrum.SpectrumNumber - 1] = psm;
                                     }
                                 }
                             }
