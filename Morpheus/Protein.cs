@@ -25,35 +25,38 @@ namespace Morpheus
         public IEnumerable<Peptide> Digest(Protease protease, int maximumMissedCleavages, InitiatorMethionineBehavior initiatorMethionineBehavior,
             int? minimumPeptideLength, int? maximumPeptideLength)
         {
-            List<int> indices = protease.GetDigestionSiteIndices(this);
-            indices.Insert(0, -1);
-            indices.Add(Length - 1);
-
-            for(int missed_cleavages = 0; missed_cleavages <= maximumMissedCleavages; missed_cleavages++)
+            if(Length > 0)
             {
-                for(int i = 0; i < indices.Count - missed_cleavages - 1; i++)
+                List<int> indices = protease.GetDigestionSiteIndices(this);
+                indices.Insert(0, -1);
+                indices.Add(Length - 1);
+
+                for(int missed_cleavages = 0; missed_cleavages <= maximumMissedCleavages; missed_cleavages++)
                 {
-                    if(initiatorMethionineBehavior != InitiatorMethionineBehavior.Cleave || indices[i] + 1 != 0 || this[0] != 'M')
+                    for(int i = 0; i < indices.Count - missed_cleavages - 1; i++)
                     {
-                        Peptide peptide = new Peptide(this, indices[i] + 1 + 1, indices[i + missed_cleavages + 1] + 1, missed_cleavages);
-
-                        if((!minimumPeptideLength.HasValue || peptide.Length >= minimumPeptideLength.Value)
-                            && (!maximumPeptideLength.HasValue || peptide.Length <= maximumPeptideLength.Value))
+                        if(initiatorMethionineBehavior != InitiatorMethionineBehavior.Cleave || indices[i] + 1 != 0 || this[0] != 'M')
                         {
-                            yield return peptide;
-                        }
-                    }
+                            Peptide peptide = new Peptide(this, indices[i] + 1 + 1, indices[i + missed_cleavages + 1] + 1, missed_cleavages);
 
-                    if(initiatorMethionineBehavior != InitiatorMethionineBehavior.Retain && indices[i] + 1 == 0 && this[0] == 'M')
-                    {
-                        if(indices[i + missed_cleavages + 1] + 1 >= indices[i] + 1 + 1 + 1)
-                        {
-                            Peptide peptide_without_initiator_methionine = new Peptide(this, indices[i] + 1 + 1 + 1, indices[i + missed_cleavages + 1] + 1, missed_cleavages);
-
-                            if((!minimumPeptideLength.HasValue || peptide_without_initiator_methionine.Length >= minimumPeptideLength.Value)
-                                && (!maximumPeptideLength.HasValue || peptide_without_initiator_methionine.Length <= maximumPeptideLength.Value))
+                            if((!minimumPeptideLength.HasValue || peptide.Length >= minimumPeptideLength.Value)
+                                && (!maximumPeptideLength.HasValue || peptide.Length <= maximumPeptideLength.Value))
                             {
-                                yield return peptide_without_initiator_methionine;
+                                yield return peptide;
+                            }
+                        }
+
+                        if(initiatorMethionineBehavior != InitiatorMethionineBehavior.Retain && indices[i] + 1 == 0 && this[0] == 'M')
+                        {
+                            if(indices[i + missed_cleavages + 1] + 1 >= indices[i] + 1 + 1 + 1)
+                            {
+                                Peptide peptide_without_initiator_methionine = new Peptide(this, indices[i] + 1 + 1 + 1, indices[i + missed_cleavages + 1] + 1, missed_cleavages);
+
+                                if((!minimumPeptideLength.HasValue || peptide_without_initiator_methionine.Length >= minimumPeptideLength.Value)
+                                    && (!maximumPeptideLength.HasValue || peptide_without_initiator_methionine.Length <= maximumPeptideLength.Value))
+                                {
+                                    yield return peptide_without_initiator_methionine;
+                                }
                             }
                         }
                     }
