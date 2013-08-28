@@ -1,4 +1,9 @@
+rmdir /s /q release
+
+for /f %%i in ('svnversion -n') do set revision=%%i
+
 mkdir release
+copy nul "release\revision %revision%"
 mkdir release\Morpheus
 "C:\Program Files (x86)\Microsoft Visual Studio 11.0\Common7\IDE\devenv.exe" Morpheus\Morpheus.sln /rebuild Release /project "Morpheus (command line)"
 xcopy "Morpheus\Morpheus (command line)\bin\Release\*" /EXCLUDE:exclude.txt release\Morpheus
