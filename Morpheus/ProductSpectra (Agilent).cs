@@ -15,7 +15,7 @@ namespace Morpheus
 
         private const bool GET_PRECURSOR_MZ_AND_INTENSITY_FROM_MS1 = true;
 
-        public ProductSpectra() : base() { }
+        private ProductSpectra() : base() { }
 
         public static ProductSpectra Load(string agilentDFolderPath, int minimumAssumedPrecursorChargeState, int maximumAssumedPrecursorChargeState,
             double absoluteThreshold, double relativeThresholdPercent, int maximumNumberOfPeaks,
