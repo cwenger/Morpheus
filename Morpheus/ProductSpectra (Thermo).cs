@@ -16,7 +16,7 @@ namespace Morpheus
         private const PrecursorMassType PRECURSOR_MASS_TYPE = PrecursorMassType.Monoisotopic;
         private const bool GET_PRECURSOR_MZ_AND_INTENSITY_FROM_MS1 = true;
 
-        public ProductSpectra() : base() { }
+        private ProductSpectra() : base() { }
 
         public static ProductSpectra Load(string rawFilepath, int minimumAssumedPrecursorChargeState, int maximumAssumedPrecursorChargeState,
             double absoluteThreshold, double relativeThresholdPercent, int maximumNumberOfPeaks,
