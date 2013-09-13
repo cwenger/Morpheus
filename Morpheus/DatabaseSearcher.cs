@@ -584,12 +584,19 @@ namespace Morpheus
 
                     IEnumerable<IdentificationWithFalseDiscoveryRate<PeptideSpectrumMatch>> psms_with_fdr = FalseDiscoveryRate.DoFalseDiscoveryRateAnalysis(sorted_psms, decoys_over_targets_peptide_ratio);
                     Exporters.WriteToTabDelimitedTextFile(psms_with_fdr, Path.Combine(outputFolder, Path.GetFileNameWithoutExtension(data_filepath) + ".PSMs.tsv"));
-                    double psm_score_threshold;
-                    int target_psms;
-                    int decoy_psms;
-                    double psm_fdr;
-                    FalseDiscoveryRate.DetermineMaximumIdentifications(psms_with_fdr, false, maximumFalseDiscoveryRate, out psm_score_threshold, out target_psms, out decoy_psms, out psm_fdr);
-                    log.WriteLine(target_psms.ToString("N0") + " target (" + decoy_psms.ToString("N0") + " decoy) PSMs at " + psm_fdr.ToString("0.000%") + " PSM FDR (" + psm_score_threshold.ToString("0.000") + " Morpheus score threshold)");
+                    double psm_score_threshold = double.NegativeInfinity;
+                    int target_psms = sorted_psms.Count;
+                    int decoy_psms = 0;
+                    double psm_fdr = double.NaN;
+                    if(decoys_over_targets_peptide_ratio == 0.0)
+                    {
+                        log.WriteLine(sorted_psms.Count.ToString("N0") + " PSMs (unknown FDR)");
+                    }
+                    else
+                    {
+                        FalseDiscoveryRate.DetermineMaximumIdentifications(psms_with_fdr, false, maximumFalseDiscoveryRate, out psm_score_threshold, out target_psms, out decoy_psms, out psm_fdr);
+                        log.WriteLine(target_psms.ToString("N0") + " target (" + decoy_psms.ToString("N0") + " decoy) PSMs at " + psm_fdr.ToString("0.000%") + " PSM FDR (" + psm_score_threshold.ToString("0.000") + " Morpheus score threshold)");
+                    }
 
                     Exporters.WritePsmsToPepXmlFile(Path.Combine(outputFolder, Path.GetFileNameWithoutExtension(data_filepath) + ".pep.xml"),
                         data_filepath,
@@ -622,23 +629,37 @@ namespace Morpheus
 
                     IEnumerable<IdentificationWithFalseDiscoveryRate<PeptideSpectrumMatch>> peptides_with_fdr = FalseDiscoveryRate.DoFalseDiscoveryRateAnalysis(sorted_peptides, decoys_over_targets_peptide_ratio);
                     Exporters.WriteToTabDelimitedTextFile(peptides_with_fdr, Path.Combine(outputFolder, Path.GetFileNameWithoutExtension(data_filepath) + ".unique_peptides.tsv"));
-                    double peptide_score_threshold;
-                    int target_peptides;
-                    int decoy_peptides;
-                    double peptide_fdr;
-                    FalseDiscoveryRate.DetermineMaximumIdentifications(peptides_with_fdr, false, maximumFalseDiscoveryRate, out peptide_score_threshold, out target_peptides, out decoy_peptides, out peptide_fdr);
-                    log.WriteLine(target_peptides.ToString("N0") + " unique target (" + decoy_peptides.ToString("N0") + " decoy) peptides at " + peptide_fdr.ToString("0.000%") + " unique peptide FDR (" + peptide_score_threshold.ToString("0.000") + " Morpheus score threshold)");
+                    double peptide_score_threshold = double.NegativeInfinity;
+                    int target_peptides = sorted_peptides.Count;
+                    int decoy_peptides = 0;
+                    double peptide_fdr = double.NaN;
+                    if(decoys_over_targets_peptide_ratio == 0.0)
+                    {
+                        log.WriteLine(sorted_peptides.Count.ToString("N0") + " unique peptides (unknown FDR)");
+                    }
+                    else
+                    {
+                        FalseDiscoveryRate.DetermineMaximumIdentifications(peptides_with_fdr, false, maximumFalseDiscoveryRate, out peptide_score_threshold, out target_peptides, out decoy_peptides, out peptide_fdr);
+                        log.WriteLine(target_peptides.ToString("N0") + " unique target (" + decoy_peptides.ToString("N0") + " decoy) peptides at " + peptide_fdr.ToString("0.000%") + " unique peptide FDR (" + peptide_score_threshold.ToString("0.000") + " Morpheus score threshold)");
+                    }
 
                     List<ProteinGroup> protein_groups = ProteinGroup.ApplyProteinParsimony(sorted_psms, peptide_score_threshold, protein_fasta_database, onTheFlyDecoys, protease, maximumMissedCleavages, initiatorMethionineBehavior, maximumThreads);
 
                     IEnumerable<IdentificationWithFalseDiscoveryRate<ProteinGroup>> protein_groups_with_fdr = FalseDiscoveryRate.DoFalseDiscoveryRateAnalysis(protein_groups, decoys_over_targets_protein_ratio);
                     Exporters.WriteToTabDelimitedTextFile(protein_groups_with_fdr, Path.Combine(outputFolder, Path.GetFileNameWithoutExtension(data_filepath) + ".protein_groups.tsv"));
-                    double protein_group_score_threshold;
-                    int target_protein_groups;
-                    int decoy_protein_groups;
-                    double protein_group_fdr;
-                    FalseDiscoveryRate.DetermineMaximumIdentifications(protein_groups_with_fdr, false, maximumFalseDiscoveryRate, out protein_group_score_threshold, out target_protein_groups, out decoy_protein_groups, out protein_group_fdr);
-                    log.WriteLine(target_protein_groups.ToString("N0") + " target (" + decoy_protein_groups.ToString("N0") + " decoy) protein groups at " + protein_group_fdr.ToString("0.000%") + " protein group FDR (" + protein_group_score_threshold.ToString("0.000") + " summed Morpheus score threshold)");
+                    double protein_group_score_threshold = double.NegativeInfinity;
+                    int target_protein_groups = protein_groups.Count;
+                    int decoy_protein_groups = 0;
+                    double protein_group_fdr = double.NaN;
+                    if(decoys_over_targets_protein_ratio == 0.0)
+                    {
+                        log.WriteLine(protein_groups.Count.ToString("N0") + " protein groups (unknown FDR)");
+                    }
+                    else
+                    {
+                        FalseDiscoveryRate.DetermineMaximumIdentifications(protein_groups_with_fdr, false, maximumFalseDiscoveryRate, out protein_group_score_threshold, out target_protein_groups, out decoy_protein_groups, out protein_group_fdr);
+                        log.WriteLine(target_protein_groups.ToString("N0") + " target (" + decoy_protein_groups.ToString("N0") + " decoy) protein groups at " + protein_group_fdr.ToString("0.000%") + " protein group FDR (" + protein_group_score_threshold.ToString("0.000") + " summed Morpheus score threshold)");
+                    }
 
                     DateTime stop = DateTime.Now;
                     log.WriteLine((stop - start).TotalMinutes.ToString("0.00") + " minutes to analyze");
