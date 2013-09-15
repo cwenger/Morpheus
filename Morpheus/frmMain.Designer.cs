@@ -225,7 +225,7 @@
             // label8
             // 
             this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(211, 369);
+            this.label8.Location = new System.Drawing.Point(219, 368);
             this.label8.Name = "label8";
             this.label8.Size = new System.Drawing.Size(140, 13);
             this.label8.TabIndex = 9;
@@ -233,7 +233,7 @@
             // 
             // numMaxMissedCleavages
             // 
-            this.numMaxMissedCleavages.Location = new System.Drawing.Point(214, 386);
+            this.numMaxMissedCleavages.Location = new System.Drawing.Point(222, 385);
             this.numMaxMissedCleavages.Name = "numMaxMissedCleavages";
             this.numMaxMissedCleavages.Size = new System.Drawing.Size(46, 20);
             this.numMaxMissedCleavages.TabIndex = 10;
@@ -332,7 +332,7 @@
             // chkMinimizeMemoryUsage
             // 
             this.chkMinimizeMemoryUsage.AutoSize = true;
-            this.chkMinimizeMemoryUsage.Location = new System.Drawing.Point(214, 623);
+            this.chkMinimizeMemoryUsage.Location = new System.Drawing.Point(222, 623);
             this.chkMinimizeMemoryUsage.Name = "chkMinimizeMemoryUsage";
             this.chkMinimizeMemoryUsage.Size = new System.Drawing.Size(140, 17);
             this.chkMinimizeMemoryUsage.TabIndex = 49;
@@ -838,9 +838,11 @@
             // 
             this.clbVariableModifications.CheckOnClick = true;
             this.clbVariableModifications.FormattingEnabled = true;
-            this.clbVariableModifications.Location = new System.Drawing.Point(214, 439);
+            this.clbVariableModifications.HorizontalScrollbar = true;
+            this.clbVariableModifications.IntegralHeight = false;
+            this.clbVariableModifications.Location = new System.Drawing.Point(222, 439);
             this.clbVariableModifications.Name = "clbVariableModifications";
-            this.clbVariableModifications.Size = new System.Drawing.Size(186, 139);
+            this.clbVariableModifications.Size = new System.Drawing.Size(204, 141);
             this.clbVariableModifications.TabIndex = 16;
             this.clbVariableModifications.ItemCheck += new System.Windows.Forms.ItemCheckEventHandler(this.ResetProgressBar);
             // 
@@ -848,16 +850,18 @@
             // 
             this.clbFixedModifications.CheckOnClick = true;
             this.clbFixedModifications.FormattingEnabled = true;
+            this.clbFixedModifications.HorizontalScrollbar = true;
+            this.clbFixedModifications.IntegralHeight = false;
             this.clbFixedModifications.Location = new System.Drawing.Point(12, 439);
             this.clbFixedModifications.Name = "clbFixedModifications";
-            this.clbFixedModifications.Size = new System.Drawing.Size(186, 139);
+            this.clbFixedModifications.Size = new System.Drawing.Size(204, 141);
             this.clbFixedModifications.TabIndex = 14;
             this.clbFixedModifications.ItemCheck += new System.Windows.Forms.ItemCheckEventHandler(this.ResetProgressBar);
             // 
             // label12
             // 
             this.label12.AutoSize = true;
-            this.label12.Location = new System.Drawing.Point(211, 423);
+            this.label12.Location = new System.Drawing.Point(219, 423);
             this.label12.Name = "label12";
             this.label12.Size = new System.Drawing.Size(110, 13);
             this.label12.TabIndex = 15;
