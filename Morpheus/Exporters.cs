@@ -79,8 +79,8 @@ namespace Morpheus
                 output.WriteStartElement("search_summary");
                 output.WriteAttributeString("base_name", Path.ChangeExtension(dataFilepath, null));
                 output.WriteAttributeString("search_engine", "Morpheus");
-                output.WriteAttributeString("precursor_mass_type", precursorMassType.ToString());
-                output.WriteAttributeString("fragment_mass_type", productMassType.ToString());
+                output.WriteAttributeString("precursor_mass_type", precursorMassType.ToString().ToLower());
+                output.WriteAttributeString("fragment_mass_type", productMassType.ToString().ToLower());
                 output.WriteAttributeString("search_id", "1");  // not sure what this should be
                 output.WriteStartElement("search_database");
                 output.WriteAttributeString("local_path", proteinFastaDatabaseFilepath);
