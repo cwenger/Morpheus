@@ -10,3 +10,18 @@ deamidation of Q	amino acid residue	Q	0.9840155927	0.98476	none	H-1N-1O
 pyro-cmC	peptide N-terminus	C	-17.0265491015	-17.03052	none	H-3N-1
 pyro-E	peptide N-terminus	E	-18.0105646942	-18.01528	none	H-2O-1
 pyro-Q	peptide N-terminus	Q	-17.0265491015	-17.03052	none	H-3N-1
+TMT zero on peptide N-terminus	peptide N-terminus	n/a	224.1524779124	224.2994	none	C12H20N2O2
+TMT zero on K	amino acid residue	K	224.1524779124	224.2994	none	C12H20N2O2
+TMT zero on Y	amino acid residue	Y	224.1524779124	224.2994	none	C12H20N2O2
+TMT duplex on peptide N-terminus	peptide N-terminus	n/a	225.1558327502	225.2920548378	none	C11(13C)H20N2O2
+TMT duplex on K	amino acid residue	K	225.1558327502	225.2920548378	none	C11(13C)H20N2O2
+TMT duplex on Y	amino acid residue	Y	225.1558327502	225.2920548378	none	C11(13C)H20N2O2
+TMT sixplex/tenplex on peptide N-terminus	peptide N-terminus	n/a	229.1629321568	229.2634282496	none	C8(13C)4H20N(15N)O2
+TMT sixplex/tenplex on K	amino acid residue	K	229.1629321568	229.2634282496	none	C8(13C)4H20N(15N)O2
+TMT sixplex/tenplex on Y	amino acid residue	Y	229.1629321568	229.2634282496	none	C8(13C)4H20N(15N)O2
+iTRAQ 4-plex on peptide N-terminus	peptide N-terminus	n/a	144.10241041555	144.16139020885	none	114:C5(13C)2H12N2(18O) + 115:C6(13C)H12N(15N)(18O) + 116/117:C4(13C)3H12N(15N)O
+iTRAQ 4-plex on K	amino acid residue	K	144.10241041555	144.16139020885	none	114:C5(13C)2H12N2(18O) + 115:C6(13C)H12N(15N)(18O) + 116/117:C4(13C)3H12N(15N)O
+iTRAQ 4-plex on Y	amino acid residue	Y	144.10241041555	144.16139020885	none	114:C5(13C)2H12N2(18O) + 115:C6(13C)H12N(15N)(18O) + 116/117:C4(13C)3H12N(15N)O
+iTRAQ 8-plex on peptide N-terminus	peptide N-terminus	n/a	304.2021994667	304.3077297933	none	113/114/116/117:C7(13C)7H24N3(15N)O3 + 115/118/119/121:C8(13C)6H24N2(15N)2O3
+iTRAQ 8-plex on K	amino acid residue	K	304.2021994667	304.3077297933	none	113/114/116/117:C7(13C)7H24N3(15N)O3 + 115/118/119/121:C8(13C)6H24N2(15N)2O3
+iTRAQ 8-plex on Y	amino acid residue	Y	304.2021994667	304.3077297933	none	113/114/116/117:C7(13C)7H24N3(15N)O3 + 115/118/119/121:C8(13C)6H24N2(15N)2O3
