@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Threading.Tasks;
 using MSFileReaderLib;
 
@@ -264,7 +265,7 @@ namespace Morpheus
         private static double GetIsolationMZ(string scanFilter)
         {
             string temp_scan_filter = scanFilter.Substring(0, scanFilter.LastIndexOf('@'));
-            double isolation_mz = double.Parse(temp_scan_filter.Substring(temp_scan_filter.LastIndexOf(' ') + 1));
+            double isolation_mz = double.Parse(temp_scan_filter.Substring(temp_scan_filter.LastIndexOf(' ') + 1), CultureInfo.InvariantCulture);
 
             return isolation_mz;
         }
@@ -281,7 +282,7 @@ namespace Morpheus
             {
                 if(labels[i].StartsWith("Monoisotopic M/Z"))
                 {
-                    double monoisotopic_mz = double.Parse(values[i]);
+                    double monoisotopic_mz = double.Parse(values[i], CultureInfo.InvariantCulture);
                     if(monoisotopic_mz > 0.0)
                     {
                         return monoisotopic_mz;

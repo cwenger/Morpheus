@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 
 namespace Morpheus
@@ -32,7 +33,7 @@ namespace Morpheus
                     List<ProductType> frag_product_types = new List<ProductType>();
                     for(int i = 1; i < fields.Length; i++)
                     {
-                        if(double.Parse(fields[i]) > 0)
+                        if(double.Parse(fields[i], CultureInfo.InvariantCulture) > 0)
                         {
                             frag_product_types.Add(product_type_column_numbers[i]);
                         }

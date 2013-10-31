@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using System.IO;
 
 namespace Morpheus
@@ -21,9 +22,9 @@ namespace Morpheus
                     string[] fields = line.Split('\t');
 
                     ProductType product_type = (ProductType)Enum.Parse(typeof(ProductType), fields[0], true);
-                    double cap_monoisotopic_mass = double.Parse(fields[1]);
+                    double cap_monoisotopic_mass = double.Parse(fields[1], CultureInfo.InvariantCulture);
                     PRODUCT_CAP_MASSES[(int)product_type, (int)MassType.Monoisotopic] = cap_monoisotopic_mass;
-                    double cap_average_mass = double.Parse(fields[2]);
+                    double cap_average_mass = double.Parse(fields[2], CultureInfo.InvariantCulture);
                     PRODUCT_CAP_MASSES[(int)product_type, (int)MassType.Average] = cap_average_mass;
                 }
             }
