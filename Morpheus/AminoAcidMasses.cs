@@ -1,4 +1,5 @@
 using System;
+using System.Globalization;
 using System.IO;
 
 namespace Morpheus
@@ -24,9 +25,9 @@ namespace Morpheus
                     {
                         throw new ArgumentOutOfRangeException("Invalid amino acid abbreviation: " + one_letter_code);
                     }
-                    double monoisotopic_mass = double.Parse(fields[1]);
+                    double monoisotopic_mass = double.Parse(fields[1], CultureInfo.InvariantCulture);
                     MONOISOTOPIC_AMINO_ACID_MASSES[one_letter_code - 'A'] = monoisotopic_mass;
-                    double average_mass = double.Parse(fields[2]);
+                    double average_mass = double.Parse(fields[2], CultureInfo.InvariantCulture);
                     AVERAGE_AMINO_ACID_MASSES[one_letter_code - 'A'] = average_mass;
                 }
             }

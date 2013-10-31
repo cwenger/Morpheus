@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Text;
 using CommandLine.Utility;
 
@@ -30,12 +31,12 @@ namespace Morpheus
                 double abs_threshold = -1.0;
                 if(arguments["at"] != null)
                 {
-                    abs_threshold = double.Parse(arguments["at"]);
+                    abs_threshold = double.Parse(arguments["at"], CultureInfo.InvariantCulture);
                 }
                 double rel_threshold_percent = -1.0;
                 if(arguments["rt"] != null)
                 {
-                    rel_threshold_percent = double.Parse(arguments["rt"]);
+                    rel_threshold_percent = double.Parse(arguments["rt"], CultureInfo.InvariantCulture);
                 }
                 int max_peaks = 400;
                 if(arguments["mp"] != null)
@@ -103,7 +104,7 @@ namespace Morpheus
                 double precursor_mass_tolerance_value = 2.1;
                 if(arguments["precmtv"] != null)
                 {
-                    precursor_mass_tolerance_value = double.Parse(arguments["precmtv"]);
+                    precursor_mass_tolerance_value = double.Parse(arguments["precmtv"], CultureInfo.InvariantCulture);
                 }
                 MassToleranceUnits precursor_mass_tolerance_units = MassToleranceUnits.Da;
                 if(arguments["precmtu"] != null)
@@ -134,7 +135,7 @@ namespace Morpheus
                 double product_mass_tolerance_value = 0.015;
                 if(arguments["prodmtv"] != null)
                 {
-                    product_mass_tolerance_value = double.Parse(arguments["prodmtv"]);
+                    product_mass_tolerance_value = double.Parse(arguments["prodmtv"], CultureInfo.InvariantCulture);
                 }
                 MassToleranceUnits product_mass_tolerance_units = MassToleranceUnits.Da;
                 if(arguments["prodmtu"] != null)
@@ -150,7 +151,7 @@ namespace Morpheus
                 double max_fdr = 0.01;
                 if(arguments["fdr"] != null)
                 {
-                    max_fdr = double.Parse(arguments["fdr"]) / 100.0;
+                    max_fdr = double.Parse(arguments["fdr"], CultureInfo.InvariantCulture) / 100.0;
                 }
                 bool consider_mods_unique = false;
                 if(arguments["cmu"] != null)

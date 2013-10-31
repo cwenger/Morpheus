@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 
 namespace Morpheus
@@ -45,8 +46,8 @@ namespace Morpheus
                     }
                     char amino_acid;
                     char.TryParse(fields[2], out amino_acid);
-                    double monoisotopic_mass_shift = double.Parse(fields[3]);
-                    double average_mass_shift = double.Parse(fields[4]);
+                    double monoisotopic_mass_shift = double.Parse(fields[3], CultureInfo.InvariantCulture);
+                    double average_mass_shift = double.Parse(fields[4], CultureInfo.InvariantCulture);
                     string default_mod = fields[5];
                     bool default_fixed = default_mod.Equals("fixed", StringComparison.OrdinalIgnoreCase);
                     bool default_variable = default_mod.Equals("variable", StringComparison.OrdinalIgnoreCase);
