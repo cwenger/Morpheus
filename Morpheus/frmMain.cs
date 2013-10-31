@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Threading;
 using System.Windows.Forms;
@@ -157,7 +158,7 @@ namespace Morpheus
                                     numMaxVariableModIsoforms.Value = int.Parse(value);
                                     break;
                                 case "Precursor Mass Tolerance":
-                                    numPrecursorMassTolerance.Value = decimal.Parse(value);
+                                    numPrecursorMassTolerance.Value = decimal.Parse(value, CultureInfo.InvariantCulture);
                                     break;
                                 case "Precursor Mass Tolerance Units":
                                     cboPrecursorMassToleranceUnits.SelectedIndex = (int)Enum.Parse(typeof(MassToleranceUnits), value, true);
@@ -178,7 +179,7 @@ namespace Morpheus
                                     numMaxPrecursorMonoPeakOffset.Value = int.Parse(value);
                                     break;
                                 case "Product Mass Tolerance":
-                                    numProductMassTolerance.Value = decimal.Parse(value);
+                                    numProductMassTolerance.Value = decimal.Parse(value, CultureInfo.InvariantCulture);
                                     break;
                                 case "Product Mass Tolerance Units":
                                     cboProductMassToleranceUnits.SelectedIndex = (int)Enum.Parse(typeof(MassToleranceUnits), value, true);
@@ -187,7 +188,7 @@ namespace Morpheus
                                     cboProductMassType.SelectedIndex = (int)Enum.Parse(typeof(MassType), value, true);
                                     break;
                                 case "Maximum FDR (%)":
-                                    numMaximumFalseDiscoveryRatePercent.Value = decimal.Parse(value);
+                                    numMaximumFalseDiscoveryRatePercent.Value = decimal.Parse(value, CultureInfo.InvariantCulture);
                                     break;
                                 case "Consider Modified Forms as Unique Peptides":
                                     chkConsiderModifiedUnique.Checked = bool.Parse(value);
