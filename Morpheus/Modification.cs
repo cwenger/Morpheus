@@ -12,20 +12,20 @@
 
         public double AverageMassShift { get; private set; }
 
-        public bool DefaultFixedModification { get; private set; }
+        public bool DefaultFixed { get; private set; }
 
-        public bool DefaultVariableModification { get; private set; }
+        public bool DefaultVariable { get; private set; }
 
         public Modification(string description, ModificationType type, char aminoAcid, double monoisotopicMassShift,
-            double averageMassShift, bool defaultFixedModification, bool defaultVariableModification)
+            double averageMassShift, bool defaultFixed, bool defaultVariable)
         {
             Description = description;
             Type = type;
             AminoAcid = aminoAcid;
             MonoisotopicMassShift = monoisotopicMassShift;
             AverageMassShift = averageMassShift;
-            DefaultFixedModification = defaultFixedModification;
-            DefaultVariableModification = defaultVariableModification;
+            DefaultFixed = defaultFixed;
+            DefaultVariable = defaultVariable;
         }
 
         public override string ToString()
