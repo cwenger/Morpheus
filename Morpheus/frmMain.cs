@@ -76,8 +76,8 @@ namespace Morpheus
                 clbVariableModifications.BeginUpdate();
                 foreach(Modification modification in modifications.Values)
                 {
-                    clbFixedModifications.Items.Add(modification, modification.DefaultFixedModification);
-                    clbVariableModifications.Items.Add(modification, modification.DefaultVariableModification);
+                    clbFixedModifications.Items.Add(modification, modification.DefaultFixed);
+                    clbVariableModifications.Items.Add(modification, modification.DefaultVariable);
                 }
                 clbFixedModifications.EndUpdate();
                 clbVariableModifications.EndUpdate();
