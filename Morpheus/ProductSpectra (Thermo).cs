@@ -21,7 +21,7 @@ namespace Morpheus
 
         public static ProductSpectra Load(string rawFilepath, int minimumAssumedPrecursorChargeState, int maximumAssumedPrecursorChargeState,
             double absoluteThreshold, double relativeThresholdPercent, int maximumNumberOfPeaks,
-            bool assignChargeStates, bool deisotope, MassTolerance isotopicMzTolerance, int maximumThreads)
+            bool assignChargeStates, bool deisotope, MassTolerance isotopicMZTolerance, int maximumThreads)
         {
             return Load(rawFilepath, minimumAssumedPrecursorChargeState, maximumAssumedPrecursorChargeState,
                 absoluteThreshold, relativeThresholdPercent, maximumNumberOfPeaks, 
@@ -158,7 +158,7 @@ namespace Morpheus
             }
             if(GET_PRECURSOR_MZ_AND_INTENSITY_FROM_MS1)
             {
-                GetAccurateMzAndIntensity(raw, scanNumber, firstScanNumber, ref mz, out intensity);
+                GetAccurateMZAndIntensity(raw, scanNumber, firstScanNumber, ref mz, out intensity);
             }
             else
             {
@@ -168,7 +168,7 @@ namespace Morpheus
 
         private static Dictionary<int, double[,]> ms1s = new Dictionary<int, double[,]>();
 
-        private static bool GetAccurateMzAndIntensity(IXRawfile2 raw, int scanNumber, int firstScanNumber, ref double mz, out double intensity)
+        private static bool GetAccurateMZAndIntensity(IXRawfile2 raw, int scanNumber, int firstScanNumber, ref double mz, out double intensity)
         {
             scanNumber--;
             while(scanNumber >= firstScanNumber)
