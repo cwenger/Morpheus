@@ -154,7 +154,7 @@ namespace Morpheus
 
             sb.Append(Spectrum.Filename + '\t');
             sb.Append(Spectrum.SpectrumNumber.ToString() + '\t');
-            sb.Append(Spectrum.SpectrumID + '\t');
+            sb.Append(Spectrum.SpectrumId + '\t');
             sb.Append(Spectrum.SpectrumTitle + '\t');
             sb.Append(Spectrum.RetentionTimeMinutes.ToString() + '\t');
             sb.Append(Spectrum.PrecursorMZ.ToString() + '\t');

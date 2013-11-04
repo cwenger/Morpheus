@@ -49,7 +49,7 @@ namespace Morpheus
 
         public static ProductSpectra Load(string mzmlFilepath, int minimumAssumedPrecursorChargeState, int maximumAssumedPrecursorChargeState,
             double absoluteThreshold, double relativeThresholdPercent, int maximumNumberOfPeaks,
-            bool assignChargeStates, bool deisotope, MassTolerance isotopicMzTolerance, int maximumThreads)
+            bool assignChargeStates, bool deisotope, MassTolerance isotopicMZTolerance, int maximumThreads)
         {
             OnReportTaskWithoutProgress(EventArgs.Empty);
 
@@ -257,10 +257,10 @@ namespace Morpheus
                             List<MSPeak> new_peaks = peaks;
                             if(assignChargeStates)
                             {
-                                new_peaks = AssignChargeStates(new_peaks, c, isotopicMzTolerance);
+                                new_peaks = AssignChargeStates(new_peaks, c, isotopicMZTolerance);
                                 if(deisotope)
                                 {
-                                    new_peaks = Deisotope(new_peaks, c, isotopicMzTolerance);
+                                    new_peaks = Deisotope(new_peaks, c, isotopicMZTolerance);
                                 }
                             }
 
@@ -359,7 +359,7 @@ namespace Morpheus
             return doubles;
         }
 
-        private static List<MSPeak> AssignChargeStates(IList<MSPeak> peaks, int maxCharge, MassTolerance isotopicMzTolerance)
+        private static List<MSPeak> AssignChargeStates(IList<MSPeak> peaks, int maxCharge, MassTolerance isotopicMZTolerance)
         {
             List<MSPeak> new_peaks = new List<MSPeak>();
 
@@ -369,7 +369,7 @@ namespace Morpheus
                 List<int> charges = new List<int>();
                 while(j < peaks.Count)
                 {
-                    if(peaks[j].MZ > (peaks[i].MZ + Constants.C12_C13_MASS_DIFFERENCE) + isotopicMzTolerance)
+                    if(peaks[j].MZ > (peaks[i].MZ + Constants.C12_C13_MASS_DIFFERENCE) + isotopicMZTolerance)
                     {
                         break;
                     }
@@ -394,7 +394,7 @@ namespace Morpheus
                             }
                         }
 
-                        if(Math.Abs(MassTolerance.CalculateMassError(peaks[j].MZ, peaks[i].MZ + Constants.C12_C13_MASS_DIFFERENCE / c, isotopicMzTolerance.Units)) <= isotopicMzTolerance.Value)
+                        if(Math.Abs(MassTolerance.CalculateMassError(peaks[j].MZ, peaks[i].MZ + Constants.C12_C13_MASS_DIFFERENCE / c, isotopicMZTolerance.Units)) <= isotopicMZTolerance.Value)
                         {
                             new_peaks.Add(new MSPeak(peaks[i].MZ, peaks[i].Intensity, c));
                             charges.Add(c);
@@ -412,7 +412,7 @@ namespace Morpheus
             return new_peaks;
         }
 
-        private static List<MSPeak> Deisotope(IEnumerable<MSPeak> peaks, int maxCharge, MassTolerance isotopicMzTolerance)
+        private static List<MSPeak> Deisotope(IEnumerable<MSPeak> peaks, int maxCharge, MassTolerance isotopicMZTolerance)
         {
             List<MSPeak> new_peaks = new List<MSPeak>(peaks);
 
@@ -423,7 +423,7 @@ namespace Morpheus
                 bool removed = false;
                 while(q >= 0)
                 {
-                    if(new_peaks[p].MZ > (new_peaks[q].MZ + Constants.C12_C13_MASS_DIFFERENCE) + isotopicMzTolerance)
+                    if(new_peaks[p].MZ > (new_peaks[q].MZ + Constants.C12_C13_MASS_DIFFERENCE) + isotopicMZTolerance)
                     {
                         break;
                     }
@@ -432,7 +432,7 @@ namespace Morpheus
                     {
                         for(int c = 1; c <= maxCharge; c++)
                         {
-                            if(Math.Abs(MassTolerance.CalculateMassError(new_peaks[p].MZ, new_peaks[q].MZ + Constants.C12_C13_MASS_DIFFERENCE / c, isotopicMzTolerance.Units)) <= isotopicMzTolerance.Value)
+                            if(Math.Abs(MassTolerance.CalculateMassError(new_peaks[p].MZ, new_peaks[q].MZ + Constants.C12_C13_MASS_DIFFERENCE / c, isotopicMZTolerance.Units)) <= isotopicMZTolerance.Value)
                             {
                                 new_peaks.RemoveAt(p);
                                 removed = true;
