@@ -12,7 +12,7 @@ namespace Morpheus
         private string TITLE = null;
         private string EXTENSION = ".mzML";
         private bool DIRECTORY = false;
-        private string LABEL = "mzML data files";
+        private string LABEL = "mzML data files (*.mzML)";
         private string DIALOG_FILTER
         {
             get { return LABEL + "|*" + EXTENSION; }
@@ -31,7 +31,7 @@ namespace Morpheus
             {
                 EXTENSION = ".raw";
                 DIRECTORY = false;
-                LABEL = "Thermo data files";
+                LABEL = "Thermo data files (*.raw)";
             }
 
             InitializeComponent();
