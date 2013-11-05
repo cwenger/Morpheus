@@ -16,6 +16,7 @@ namespace Morpheus
     {
         private const PrecursorMassType PRECURSOR_MASS_TYPE = PrecursorMassType.Monoisotopic;
         private const bool GET_PRECURSOR_MZ_AND_INTENSITY_FROM_MS1 = true;
+        private const bool ALWAYS_USE_PRECURSOR_CHARGE_STATE_RANGE = false;
 
         private ProductSpectra() : base() { }
 
@@ -84,7 +85,8 @@ namespace Morpheus
 
                         peaks = FilterPeaks(peaks, absoluteThreshold, relativeThresholdPercent, maximumNumberOfPeaks);
 
-                        for(int c = (charge == 0 ? minimumAssumedPrecursorChargeState : charge); c <= (charge == 0 ? maximumAssumedPrecursorChargeState : charge); c++)
+                        for(int c = (ALWAYS_USE_PRECURSOR_CHARGE_STATE_RANGE || charge == 0 ? minimumAssumedPrecursorChargeState : charge); 
+                            c <= (ALWAYS_USE_PRECURSOR_CHARGE_STATE_RANGE || charge == 0 ? maximumAssumedPrecursorChargeState : charge); c++)
                         {
                             double precursor_mass = Utilities.MassFromMZ(precursor_mz, c);
 
