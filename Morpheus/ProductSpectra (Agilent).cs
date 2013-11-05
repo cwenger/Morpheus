@@ -8,12 +8,11 @@ namespace Morpheus
 {
     public partial class ProductSpectra : List<ProductSpectrum>
     {
+        private const bool GET_PRECURSOR_MZ_AND_INTENSITY_FROM_MS1 = true;
+        private const bool ALWAYS_USE_PRECURSOR_CHARGE_STATE_RANGE = false;
         private const double ACCURACY_C0 = 0.0025;
         private const double ACCURACY_C1 = 7.0 / 1000000;
-
         private const string FRAGMENTATION_METHOD = "collision-induced dissociation";
-
-        private const bool GET_PRECURSOR_MZ_AND_INTENSITY_FROM_MS1 = true;
 
         private ProductSpectra() : base() { }
 
@@ -91,7 +90,8 @@ namespace Morpheus
                             }
                         }
 
-                        for(int c = (charge == 0 ? minimumAssumedPrecursorChargeState : charge); c <= (charge == 0 ? maximumAssumedPrecursorChargeState : charge); c++)
+                        for(int c = (ALWAYS_USE_PRECURSOR_CHARGE_STATE_RANGE || charge == 0 ? minimumAssumedPrecursorChargeState : charge); 
+                            c <= (ALWAYS_USE_PRECURSOR_CHARGE_STATE_RANGE || charge == 0 ? maximumAssumedPrecursorChargeState : charge); c++)
                         {
                             if(assignChargeStates)
                             {
