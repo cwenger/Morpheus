@@ -3,14 +3,14 @@ using System.Collections.Generic;
 
 namespace Morpheus
 {
-    public partial class ProductSpectra
+    public partial class TandemMassSpectra
     {
-        public IEnumerable<ProductSpectrum> GetProductSpectraInMassRange(double precursorMass, MassTolerance precursorMassTolerance)
+        public IEnumerable<TandemMassSpectrum> GetTandemMassSpectraInMassRange(double precursorMass, MassTolerance precursorMassTolerance)
         {
-            return GetProductSpectraInMassRange(precursorMass, precursorMassTolerance, 0, 0);
+            return GetTandemMassSpectraInMassRange(precursorMass, precursorMassTolerance, 0, 0);
         }
 
-        public IEnumerable<ProductSpectrum> GetProductSpectraInMassRange(double precursorMass, MassTolerance precursorMassTolerance, 
+        public IEnumerable<TandemMassSpectrum> GetTandemMassSpectraInMassRange(double precursorMass, MassTolerance precursorMassTolerance, 
             int minimumMonoisotopicPeakOffset, int maximumMonoisotopicPeakOffset)
         {
             for(int i = minimumMonoisotopicPeakOffset; i <= maximumMonoisotopicPeakOffset; i++)

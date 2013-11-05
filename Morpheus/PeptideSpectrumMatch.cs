@@ -7,7 +7,7 @@ namespace Morpheus
     {
         private static MassType precursorMassType = MassType.Monoisotopic;
 
-        public ProductSpectrum Spectrum { get; private set; }
+        public TandemMassSpectrum Spectrum { get; private set; }
 
         public Peptide Peptide { get; private set; }
 
@@ -46,7 +46,7 @@ namespace Morpheus
             PeptideSpectrumMatch.precursorMassType = precursorMassType;
         }
 
-        public PeptideSpectrumMatch(ProductSpectrum spectrum, Peptide peptide, MassTolerance productMassTolerance)
+        public PeptideSpectrumMatch(TandemMassSpectrum spectrum, Peptide peptide, MassTolerance productMassTolerance)
         {
             Spectrum = spectrum;
             Peptide = peptide;

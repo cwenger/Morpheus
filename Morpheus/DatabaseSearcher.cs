@@ -221,9 +221,9 @@ namespace Morpheus
 
                 OnUpdateProgress(new ProgressEventArgs(0));
 
-                ProductSpectra.ReportTaskWithoutProgress += new EventHandler(HandleReportTaskWithoutProgress);
-                ProductSpectra.ReportTaskWithProgress += new EventHandler(HandleReportTaskWithProgress);
-                ProductSpectra.UpdateProgress += new EventHandler<ProgressEventArgs>(HandleUpdateProgress);
+                TandemMassSpectra.ReportTaskWithoutProgress += new EventHandler(HandleReportTaskWithoutProgress);
+                TandemMassSpectra.ReportTaskWithProgress += new EventHandler(HandleReportTaskWithProgress);
+                TandemMassSpectra.UpdateProgress += new EventHandler<ProgressEventArgs>(HandleUpdateProgress);
 
                 PeptideSpectrumMatch.SetPrecursorMassType(precursorMassType);
                 AminoAcidPolymer.SetProductMassType(productMassType);
@@ -370,7 +370,7 @@ namespace Morpheus
                     OnReportTaskWithProgress(EventArgs.Empty);
                     OnUpdateProgress(new ProgressEventArgs(0));
 
-                    ProductSpectra spectra = ProductSpectra.Load(data_filepath, minimumAssumedPrecursorChargeState, maximumAssumedPrecursorChargeState,
+                    TandemMassSpectra spectra = TandemMassSpectra.Load(data_filepath, minimumAssumedPrecursorChargeState, maximumAssumedPrecursorChargeState,
                         absoluteThreshold, relativeThresholdPercent, maximumNumberOfPeaks,
                         assignChargeStates, deisotope, productMassTolerance, maximumThreads);
 
@@ -387,7 +387,7 @@ namespace Morpheus
                     if(spectra.Count > 0)
                     {
                         int max_spectrum_number = 0;
-                        foreach(ProductSpectrum spectrum in spectra)
+                        foreach(TandemMassSpectrum spectrum in spectra)
                         {
                             if(spectrum.SpectrumNumber > max_spectrum_number)
                             {
@@ -397,7 +397,7 @@ namespace Morpheus
 
                         psms = new PeptideSpectrumMatch[max_spectrum_number];
 
-                        spectra.Sort(ProductSpectrum.AscendingPrecursorMassComparison);
+                        spectra.Sort(TandemMassSpectrum.AscendingPrecursorMassComparison);
                     }
 
                     Dictionary<string, bool> peptides_observed = null;
@@ -452,9 +452,9 @@ namespace Morpheus
                             peptide.SetFixedModifications(fixedModifications);
                             foreach(Peptide modified_peptide in peptide.GetVariablyModifiedPeptides(variableModifications, maximumVariableModificationIsoforms))
                             {
-                                foreach(ProductSpectrum spectrum in precursorMonoisotopicPeakCorrection ?
-                                    spectra.GetProductSpectraInMassRange(precursorMassType == MassType.Average ? modified_peptide.AverageMass : modified_peptide.MonoisotopicMass, precursorMassTolerance, minimumPrecursorMonoisotopicPeakOffset, maximumPrecursorMonoisotopicPeakOffset) :
-                                    spectra.GetProductSpectraInMassRange(precursorMassType == MassType.Average ? modified_peptide.AverageMass : modified_peptide.MonoisotopicMass, precursorMassTolerance))
+                                foreach(TandemMassSpectrum spectrum in precursorMonoisotopicPeakCorrection ?
+                                    spectra.GetTandemMassSpectraInMassRange(precursorMassType == MassType.Average ? modified_peptide.AverageMass : modified_peptide.MonoisotopicMass, precursorMassTolerance, minimumPrecursorMonoisotopicPeakOffset, maximumPrecursorMonoisotopicPeakOffset) :
+                                    spectra.GetTandemMassSpectraInMassRange(precursorMassType == MassType.Average ? modified_peptide.AverageMass : modified_peptide.MonoisotopicMass, precursorMassTolerance))
                                 {
                                     PeptideSpectrumMatch psm = new PeptideSpectrumMatch(spectrum, modified_peptide, productMassTolerance);
                                     PeptideSpectrumMatch current_best_psm = psms[spectrum.SpectrumNumber - 1];
@@ -523,9 +523,9 @@ namespace Morpheus
                                 peptide.SetFixedModifications(fixedModifications);
                                 foreach(Peptide modified_peptide in peptide.GetVariablyModifiedPeptides(variableModifications, maximumVariableModificationIsoforms))
                                 {
-                                    foreach(ProductSpectrum spectrum in precursorMonoisotopicPeakCorrection ?
-                                        spectra.GetProductSpectraInMassRange(precursorMassType == MassType.Average ? modified_peptide.AverageMass : modified_peptide.MonoisotopicMass, precursorMassTolerance, minimumPrecursorMonoisotopicPeakOffset, maximumPrecursorMonoisotopicPeakOffset) :
-                                        spectra.GetProductSpectraInMassRange(precursorMassType == MassType.Average ? modified_peptide.AverageMass : modified_peptide.MonoisotopicMass, precursorMassTolerance))
+                                    foreach(TandemMassSpectrum spectrum in precursorMonoisotopicPeakCorrection ?
+                                        spectra.GetTandemMassSpectraInMassRange(precursorMassType == MassType.Average ? modified_peptide.AverageMass : modified_peptide.MonoisotopicMass, precursorMassTolerance, minimumPrecursorMonoisotopicPeakOffset, maximumPrecursorMonoisotopicPeakOffset) :
+                                        spectra.GetTandemMassSpectraInMassRange(precursorMassType == MassType.Average ? modified_peptide.AverageMass : modified_peptide.MonoisotopicMass, precursorMassTolerance))
                                     {
                                         PeptideSpectrumMatch psm = new PeptideSpectrumMatch(spectrum, modified_peptide, productMassTolerance);
                                         lock(psms)
@@ -895,9 +895,9 @@ namespace Morpheus
                     protein_fasta_database.Close();
                 }
 
-                ProductSpectra.ReportTaskWithoutProgress -= HandleReportTaskWithoutProgress;
-                ProductSpectra.ReportTaskWithProgress -= HandleReportTaskWithProgress;
-                ProductSpectra.UpdateProgress -= HandleUpdateProgress;
+                TandemMassSpectra.ReportTaskWithoutProgress -= HandleReportTaskWithoutProgress;
+                TandemMassSpectra.ReportTaskWithProgress -= HandleReportTaskWithProgress;
+                TandemMassSpectra.UpdateProgress -= HandleUpdateProgress;
             }
         }
 

@@ -2,7 +2,7 @@
 
 namespace Morpheus
 {
-    public partial class ProductSpectra
+    public partial class TandemMassSpectra
     {
         public static event EventHandler ReportTaskWithoutProgress;
 
