@@ -6,7 +6,7 @@ using Agilent.MassSpectrometry.DataAnalysis;
 
 namespace Morpheus
 {
-    public partial class ProductSpectra : List<ProductSpectrum>
+    public partial class TandemMassSpectra : List<TandemMassSpectrum>
     {
         private const bool GET_PRECURSOR_MZ_AND_INTENSITY_FROM_MS1 = true;
         private const bool ALWAYS_USE_PRECURSOR_CHARGE_STATE_RANGE = false;
@@ -14,9 +14,9 @@ namespace Morpheus
         private const double ACCURACY_C1 = 7.0 / 1000000;
         private const string FRAGMENTATION_METHOD = "collision-induced dissociation";
 
-        private ProductSpectra() : base() { }
+        private TandemMassSpectra() : base() { }
 
-        public static ProductSpectra Load(string agilentDFolderPath, int minimumAssumedPrecursorChargeState, int maximumAssumedPrecursorChargeState,
+        public static TandemMassSpectra Load(string agilentDFolderPath, int minimumAssumedPrecursorChargeState, int maximumAssumedPrecursorChargeState,
             double absoluteThreshold, double relativeThresholdPercent, int maximumNumberOfPeaks,
             bool assignChargeStates, bool deisotope, MassTolerance isotopicMZTolerance, int maximumThreads)
         {
@@ -25,7 +25,7 @@ namespace Morpheus
                 assignChargeStates, deisotope, maximumThreads);
         }
 
-        public static ProductSpectra Load(string agilentDFolderPath, int minimumAssumedPrecursorChargeState, int maximumAssumedPrecursorChargeState,
+        public static TandemMassSpectra Load(string agilentDFolderPath, int minimumAssumedPrecursorChargeState, int maximumAssumedPrecursorChargeState,
             double absoluteThreshold, double relativeThresholdPercent, int maximumNumberOfPeaks,
             bool assignChargeStates, bool deisotope, int maximumThreads)
         {
@@ -42,7 +42,7 @@ namespace Morpheus
             ms2_peak_filter.MaxNumPeaks = maximumNumberOfPeaks;
             ChargeStateAssignmentWrapper csaw = new ChargeStateAssignmentWrapper();
 
-            ProductSpectra spectra = new ProductSpectra();
+            TandemMassSpectra spectra = new TandemMassSpectra();
 
             OnReportTaskWithProgress(new EventArgs());
             object progress_lock = new object();
@@ -132,7 +132,7 @@ namespace Morpheus
 
                             double precursor_mass = Utilities.MassFromMZ(precursor_mz, c);
 
-                            ProductSpectrum spectrum = new ProductSpectrum(agilentDFolderPath, spectrum_number, scan_id, null, scan_record.RetentionTime, FRAGMENTATION_METHOD, precursor_mz, precursor_intensity, c, precursor_mass, peaks);
+                            TandemMassSpectrum spectrum = new TandemMassSpectrum(agilentDFolderPath, spectrum_number, scan_id, null, scan_record.RetentionTime, FRAGMENTATION_METHOD, precursor_mz, precursor_intensity, c, precursor_mass, peaks);
                             lock(spectra)
                             {
                                 spectra.Add(spectrum);

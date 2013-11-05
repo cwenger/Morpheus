@@ -2,7 +2,7 @@
 
 namespace Morpheus
 {
-    public class ProductSpectrum
+    public class TandemMassSpectrum
     {
         public string Filename { get; private set; }
 
@@ -30,7 +30,7 @@ namespace Morpheus
 
         public double TotalIntensity { get; private set; }
 
-        public ProductSpectrum(string filename, int spectrumNumber, string spectrumId, string spectrumTitle, double retentionTimeMinutes, string fragmentationMethod, double precursorMZ, double precursorIntensity, int precursorCharge, double precursorMass, List<MSPeak> peaks)
+        public TandemMassSpectrum(string filename, int spectrumNumber, string spectrumId, string spectrumTitle, double retentionTimeMinutes, string fragmentationMethod, double precursorMZ, double precursorIntensity, int precursorCharge, double precursorMass, List<MSPeak> peaks)
         {
             Filename = filename;
             SpectrumNumber = spectrumNumber;
@@ -58,7 +58,7 @@ namespace Morpheus
             }
         }
 
-        public static int AscendingPrecursorMassComparison(ProductSpectrum left, ProductSpectrum right)
+        public static int AscendingPrecursorMassComparison(TandemMassSpectrum left, TandemMassSpectrum right)
         {
             return left.PrecursorMass.CompareTo(right.PrecursorMass);
         }

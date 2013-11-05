@@ -140,14 +140,14 @@
     <Compile Include="PeptideSpectrumMatch.cs" />
     <Compile Include="Product.cs" />
     <Compile Include="ProductCaps.cs" />
-    <Compile Include="ProductSpectra %28Agilent%29.cs" />
-    <Compile Include="ProductSpectra.BinarySearch.cs">
-      <DependentUpon>ProductSpectra %28Agilent%29.cs</DependentUpon>
+    <Compile Include="TandemMassSpectra.Agilent.cs" />
+    <Compile Include="TandemMassSpectra.BinarySearch.cs">
+      <DependentUpon>TandemMassSpectra.Agilent.cs</DependentUpon>
     </Compile>
-    <Compile Include="ProductSpectra.Events.cs">
-      <DependentUpon>ProductSpectra %28Agilent%29.cs</DependentUpon>
+    <Compile Include="TandemMassSpectra.Events.cs">
+      <DependentUpon>TandemMassSpectra.Agilent.cs</DependentUpon>
     </Compile>
-    <Compile Include="ProductSpectrum.cs" />
+    <Compile Include="TandemMassSpectrum.cs" />
     <Compile Include="ProductType.cs" />
     <Compile Include="ProductTypes.cs" />
     <Compile Include="ProgressEventArgs.cs" />

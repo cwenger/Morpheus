@@ -60,22 +60,22 @@
     <Compile Include="FilepathEventArgs.cs" />
     <Compile Include="IdentificationWithFalseDiscoveryRate.cs" />
     <Compile Include="ITargetDecoy.cs" />
-    <Compile Include="ProductSpectra.BinarySearch.cs">
-      <DependentUpon>ProductSpectra.cs</DependentUpon>
+    <Compile Include="TandemMassSpectra.BinarySearch.cs">
+      <DependentUpon>TandemMassSpectra.cs</DependentUpon>
     </Compile>
-    <Compile Include="ProductSpectra.cs" />
-    <Compile Include="ProductSpectra.Events.cs">
-      <DependentUpon>ProductSpectra.cs</DependentUpon>
+    <Compile Include="TandemMassSpectra.cs" />
+    <Compile Include="TandemMassSpectra.Events.cs">
+      <DependentUpon>TandemMassSpectra.cs</DependentUpon>
     </Compile>
-    <Compile Include="ProductSpectra.Filtering.cs">
-      <DependentUpon>ProductSpectra.cs</DependentUpon>
+    <Compile Include="TandemMassSpectra.Filtering.cs">
+      <DependentUpon>TandemMassSpectra.cs</DependentUpon>
     </Compile>
     <Compile Include="ProductTypes.cs" />
     <Compile Include="InitiatorMethionineBehavior.cs" />
     <Compile Include="Modification.cs" />
     <Compile Include="ModificationDictionary.cs" />
     <Compile Include="ModificationType.cs" />
-    <Compile Include="ProductSpectrum.cs" />
+    <Compile Include="TandemMassSpectrum.cs" />
     <Compile Include="ProductType.cs" />
     <Compile Include="Product.cs" />
     <Compile Include="ProductCaps.cs" />

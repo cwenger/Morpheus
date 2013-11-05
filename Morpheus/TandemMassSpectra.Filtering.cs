@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Morpheus
 {
-    public partial class ProductSpectra
+    public partial class TandemMassSpectra
     {
         private static List<MSPeak> FilterPeaks(List<MSPeak> peaks, double absoluteThreshold, double relativeThresholdPercent, int maximumNumberOfPeaks)
         {

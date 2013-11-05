@@ -32,22 +32,22 @@ namespace Morpheus
 
         internal void ConvertSpectrum(out double[] mz, out double[] intensity)
         {
-            ProductSpectra.ReadDataFromSpectrumNavigator(Navigator.Select("mzML:binaryDataArrayList/mzML:binaryDataArray/*", XmlNamespaceManager), out mz, out intensity);
+            TandemMassSpectra.ReadDataFromSpectrumNavigator(Navigator.Select("mzML:binaryDataArrayList/mzML:binaryDataArray/*", XmlNamespaceManager), out mz, out intensity);
             MZ = mz;
             Intensity = intensity;
             SpectrumConverted = true;
         }
     }
 
-    public partial class ProductSpectra : List<ProductSpectrum>
+    public partial class TandemMassSpectra : List<TandemMassSpectrum>
     {
         private const bool GET_PRECURSOR_MZ_AND_INTENSITY_FROM_MS1 = true;
         private const bool ALWAYS_USE_PRECURSOR_CHARGE_STATE_RANGE = false;
         private const bool HARMONIC_CHARGE_DETECTION = false;
 
-        private ProductSpectra() : base() { }
+        private TandemMassSpectra() : base() { }
 
-        public static ProductSpectra Load(string mzmlFilepath, int minimumAssumedPrecursorChargeState, int maximumAssumedPrecursorChargeState,
+        public static TandemMassSpectra Load(string mzmlFilepath, int minimumAssumedPrecursorChargeState, int maximumAssumedPrecursorChargeState,
             double absoluteThreshold, double relativeThresholdPercent, int maximumNumberOfPeaks,
             bool assignChargeStates, bool deisotope, MassTolerance isotopicMZTolerance, int maximumThreads)
         {
@@ -114,7 +114,7 @@ namespace Morpheus
 
             int num_spectra = int.Parse(mzML.SelectSingleNode("//mzML:mzML/mzML:run/mzML:spectrumList", xnm).GetAttribute("count", string.Empty));
 
-            ProductSpectra spectra = new ProductSpectra();
+            TandemMassSpectra spectra = new TandemMassSpectra();
 
             OnReportTaskWithProgress(EventArgs.Empty);
             object progress_lock = new object();
@@ -267,7 +267,7 @@ namespace Morpheus
 
                             double precursor_mass = Utilities.MassFromMZ(precursor_mz, c);
 
-                            ProductSpectrum spectrum = new ProductSpectrum(mzmlFilepath, spectrum_number, spectrum_id, spectrum_title, retention_time_minutes, fragmentation_method, precursor_mz, precursor_intensity, c, precursor_mass, new_peaks);
+                            TandemMassSpectrum spectrum = new TandemMassSpectrum(mzmlFilepath, spectrum_number, spectrum_id, spectrum_title, retention_time_minutes, fragmentation_method, precursor_mz, precursor_intensity, c, precursor_mass, new_peaks);
                             lock(spectra)
                             {
                                 spectra.Add(spectrum);

@@ -73,17 +73,17 @@
     <Compile Include="PeptideSpectrumMatch.cs" />
     <Compile Include="Product.cs" />
     <Compile Include="ProductCaps.cs" />
-    <Compile Include="ProductSpectra %28Thermo%29.cs" />
-    <Compile Include="ProductSpectra.BinarySearch.cs">
-      <DependentUpon>ProductSpectra %28Thermo%29.cs</DependentUpon>
+    <Compile Include="TandemMassSpectra.Thermo.cs" />
+    <Compile Include="TandemMassSpectra.BinarySearch.cs">
+      <DependentUpon>TandemMassSpectra.Thermo.cs</DependentUpon>
     </Compile>
-    <Compile Include="ProductSpectra.Events.cs">
-      <DependentUpon>ProductSpectra %28Thermo%29.cs</DependentUpon>
+    <Compile Include="TandemMassSpectra.Events.cs">
+      <DependentUpon>TandemMassSpectra.Thermo.cs</DependentUpon>
     </Compile>
-    <Compile Include="ProductSpectra.Filtering.cs">
-      <DependentUpon>ProductSpectra %28Thermo%29.cs</DependentUpon>
+    <Compile Include="TandemMassSpectra.Filtering.cs">
+      <DependentUpon>TandemMassSpectra.Thermo.cs</DependentUpon>
     </Compile>
-    <Compile Include="ProductSpectrum.cs" />
+    <Compile Include="TandemMassSpectrum.cs" />
     <Compile Include="ProductType.cs" />
     <Compile Include="ProductTypes.cs" />
     <Compile Include="ProgressEventArgs.cs" />
