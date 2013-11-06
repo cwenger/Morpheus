@@ -13,15 +13,14 @@ namespace Morpheus
                 while(!fasta.EndOfStream)
                 {
                     string line = fasta.ReadLine();
-
                     if(line.StartsWith(">") && line.Contains(Protein.DECOY_IDENTIFIER))
                     {
                         return true;
                     }
                 }
-
-                return false;
             }
+
+            return false;
         }
 
         public static int CountProteins(FileStream proteinFastaDatabase, bool onTheFlyDecoys, out int targetProteins, out int decoyProteins, out int onTheFlyDecoyProteins)
