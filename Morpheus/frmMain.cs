@@ -440,19 +440,7 @@ namespace Morpheus
 
         private void CheckDatabase()
         {
-            using(FileStream protein_fasta_database = new FileStream(txtFastaFile.Text, FileMode.Open, FileAccess.Read))
-            {
-                foreach(Protein protein in ProteinFastaReader.ReadProteins(protein_fasta_database, false))
-                {
-                    if(protein.Decoy)
-                    {
-                        chkOnTheFlyDecoys.Checked = false;
-                        return;
-                    }
-                }
-            }
-
-            chkOnTheFlyDecoys.Checked = true;
+            chkOnTheFlyDecoys.Checked = !ProteinFastaReader.HasDecoyProteins(txtFastaFile.Text);
         }
 
         private void cboProtease_SelectedIndexChanged(object sender, EventArgs e)
