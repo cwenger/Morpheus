@@ -6,6 +6,24 @@ namespace Morpheus
 {
     public static class ProteinFastaReader
     {
+        public static bool HasDecoyProteins(string proteinFastaDatabaseFilepath)
+        {
+            using(StreamReader fasta = new StreamReader(proteinFastaDatabaseFilepath))
+            {
+                while(!fasta.EndOfStream)
+                {
+                    string line = fasta.ReadLine();
+
+                    if(line.StartsWith(">") && line.Contains(Protein.DECOY_IDENTIFIER))
+                    {
+                        return true;
+                    }
+                }
+
+                return false;
+            }
+        }
+
         public static int CountProteins(FileStream proteinFastaDatabase, bool onTheFlyDecoys, out int targetProteins, out int decoyProteins, out int onTheFlyDecoyProteins)
         {
             targetProteins = 0;
