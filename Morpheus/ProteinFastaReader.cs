@@ -101,7 +101,7 @@ namespace Morpheus
                             Array.Reverse(sequence_array);
                         }
                         string reversed_sequence = new string(sequence_array);
-                        Protein decoy_protein = new Protein(reversed_sequence, description[2] == '|' ? description.Insert(3, "DECOY_") : "DECOY_" + description);
+                        Protein decoy_protein = new Protein(reversed_sequence, description[2] == '|' ? description.Insert(3, Protein.DECOY_IDENTIFIER) : Protein.DECOY_IDENTIFIER + description);
                         yield return decoy_protein;
                     }
 
