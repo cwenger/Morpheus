@@ -6,7 +6,7 @@ namespace Morpheus
     {
         public string Description { get; private set; }
 
-        public const string DECOY_IDENTIFIER = "DECOY_"; 
+        public const string DECOY_IDENTIFIER = "DECOY_";
 
         public bool Decoy
         {
