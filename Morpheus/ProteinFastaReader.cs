@@ -44,14 +44,13 @@ namespace Morpheus
 
                 if(fasta.Peek() == '>' || fasta.Peek() == -1)
                 {
-                    Protein protein = new Protein(string.Empty, description);
-                    if(protein.Decoy)
+                    if(description.Contains(Protein.DECOY_IDENTIFIER))
                     {
-                        decoyProteins++;
                         if(onTheFlyDecoys)
                         {
                             throw new ArgumentException(proteinFastaDatabase.Name + " contains decoy proteins; database should not contain decoy proteins when \"create target–decoy database on the fly\" option is enabled");
                         }
+                        decoyProteins++;
                     }
                     else
                     {
