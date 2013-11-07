@@ -713,7 +713,7 @@ namespace Morpheus
                         {
                             semi_aggregate_spectra += num_spectra[data_filepath];
                         }
-                        overall_log.WriteLine(semi_aggregate_spectra.ToString() + " MS/MS spectra in " + kvp.Key);
+                        overall_log.WriteLine(semi_aggregate_spectra.ToString("N0") + " MS/MS spectra in " + kvp.Key);
 
                         List<PeptideSpectrumMatch> semi_aggregate_psms = new List<PeptideSpectrumMatch>(aggregate_psms);
                         int l = 0;
