@@ -789,7 +789,7 @@ namespace Morpheus
                         summary.WriteLine();
                     }
 
-                    overall_log.WriteLine(total_spectra.ToString() + " MS/MS spectra");
+                    overall_log.WriteLine(total_spectra.ToString("N0") + " MS/MS spectra");
 
                     overall_log.WriteLine((num_target_peptides + num_decoy_peptides).ToString("N0") + " total (" + num_target_peptides.ToString("N0") + " target + " + num_decoy_peptides.ToString("N0") + " decoy) non-unique peptides");
 
