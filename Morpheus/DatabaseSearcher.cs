@@ -374,8 +374,6 @@ namespace Morpheus
                         absoluteThreshold, relativeThresholdPercent, maximumNumberOfPeaks,
                         assignChargeStates, deisotope, productMassTolerance, maximumThreads);
 
-                    log.WriteLine(spectra.Count.ToString("N0") + " MS/MS spectra");
-
                     num_spectra.Add(data_filepath, spectra.Count);
                     total_spectra += spectra.Count;
 
@@ -561,6 +559,8 @@ namespace Morpheus
                     log.WriteLine((num_target_peptides + num_decoy_peptides).ToString("N0") + " total (" + num_target_peptides.ToString("N0") + " target + " + num_decoy_peptides.ToString("N0") + " decoy) non-unique peptides");
                     decoys_over_targets_peptide_ratio = (double)num_decoy_peptides / num_target_peptides;
 
+                    log.WriteLine(spectra.Count.ToString("N0") + " MS/MS spectra");
+
                     List<PeptideSpectrumMatch> psms_no_nulls;
                     if(psms != null)
                     {
@@ -686,6 +686,8 @@ namespace Morpheus
                     OnFinishedFile(new FilepathEventArgs(data_filepath));
                 }
 
+                overall_log.WriteLine((num_target_peptides + num_decoy_peptides).ToString("N0") + " total (" + num_target_peptides.ToString("N0") + " target + " + num_decoy_peptides.ToString("N0") + " decoy) non-unique peptides");
+
                 if(dataFilepaths.Count > 1)
                 {
                     OnUpdateStatus(new StatusEventArgs("Performing aggregate post-search analyses..."));
@@ -790,8 +792,6 @@ namespace Morpheus
                     }
 
                     overall_log.WriteLine(total_spectra.ToString("N0") + " MS/MS spectra");
-
-                    overall_log.WriteLine((num_target_peptides + num_decoy_peptides).ToString("N0") + " total (" + num_target_peptides.ToString("N0") + " target + " + num_decoy_peptides.ToString("N0") + " decoy) non-unique peptides");
 
                     IEnumerable<IdentificationWithFalseDiscoveryRate<PeptideSpectrumMatch>> aggregate_psms_with_fdr = FalseDiscoveryRate.DoFalseDiscoveryRateAnalysis(aggregate_psms, decoys_over_targets_peptide_ratio);
                     Exporters.WriteToTabDelimitedTextFile(aggregate_psms_with_fdr, Path.Combine(outputFolder, "PSMs.tsv"));
