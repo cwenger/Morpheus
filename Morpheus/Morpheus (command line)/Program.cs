@@ -13,11 +13,7 @@ namespace Morpheus
             if(args.Length > 0)
             {
                 Arguments arguments = new Arguments(args);
-                List<string> data = null;
-                if(arguments["d"] != null)
-                {
-                    data = new List<string>(arguments["d"].Split(','));
-                }
+                List<string> data = new List<string>(arguments["d"].Split(','));
                 int min_assumed_precursor_charge_state = 2;
                 if(arguments["minprecz"] != null)
                 {
@@ -53,11 +49,7 @@ namespace Morpheus
                 {
                     deisotope = bool.Parse(arguments["di"]);
                 }
-                string database = null;
-                if(arguments["db"] != null)
-                {
-                    database = arguments["db"];
-                }
+                string database = arguments["db"];
                 bool append_decoys = false;
                 if(arguments["ad"] != null)
                 {
@@ -132,7 +124,7 @@ namespace Morpheus
                 {
                     max_prec_mono_offset = int.Parse(arguments["maxpmo"]);
                 }
-                double product_mass_tolerance_value = 0.015;
+                double product_mass_tolerance_value = 0.025;
                 if(arguments["prodmtv"] != null)
                 {
                     product_mass_tolerance_value = double.Parse(arguments["prodmtv"], CultureInfo.InvariantCulture);
