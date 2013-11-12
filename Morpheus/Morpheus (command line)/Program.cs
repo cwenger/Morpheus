@@ -50,10 +50,14 @@ namespace Morpheus
                     deisotope = bool.Parse(arguments["di"]);
                 }
                 string database = arguments["db"];
-                bool append_decoys = false;
+                bool append_decoys;
                 if(arguments["ad"] != null)
                 {
                     append_decoys = bool.Parse(arguments["ad"]);
+                }
+                else
+                {
+                    append_decoys = !ProteinFastaReader.HasDecoyProteins(database);
                 }
                 ProteaseDictionary proteases = ProteaseDictionary.Instance;
                 Protease protease = proteases["trypsin (no proline rule)"];
