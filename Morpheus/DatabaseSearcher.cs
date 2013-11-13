@@ -268,11 +268,11 @@ namespace Morpheus
                 }
 
                 int total_spectra = 0;
-                List<PeptideSpectrumMatch> aggregate_psms = new List<PeptideSpectrumMatch>();
+                List<PeptideSpectrumMatch> aggregate_psms = null;
 
                 SortedList<string, HashSet<string>> parents = null;
                 Dictionary<string, int> num_spectra = null;
-                Dictionary<string, List<PeptideSpectrumMatch>> grouped_aggregate_psms = new Dictionary<string, List<PeptideSpectrumMatch>>(dataFilepaths.Count);
+                Dictionary<string, List<PeptideSpectrumMatch>> grouped_aggregate_psms = null;
 
                 if(dataFilepaths.Count > 1)
                 {
@@ -321,8 +321,11 @@ namespace Morpheus
                     aggregate_psms = new List<PeptideSpectrumMatch>();
 
                     parents = DetermineSemiAggregateParentFolders(dataFilepaths);
-                    num_spectra = new Dictionary<string, int>(dataFilepaths.Count);
-                    grouped_aggregate_psms = new Dictionary<string, List<PeptideSpectrumMatch>>(dataFilepaths.Count);
+                    if(parents.Count > 0)
+                    {
+                        num_spectra = new Dictionary<string, int>(dataFilepaths.Count);
+                        grouped_aggregate_psms = new Dictionary<string, List<PeptideSpectrumMatch>>(dataFilepaths.Count);
+                    }
                 }
 
                 summary = new StreamWriter(Path.Combine(outputFolder, "summary.tsv"));
@@ -385,7 +388,7 @@ namespace Morpheus
                     if(dataFilepaths.Count > 1)
                     {
                         total_spectra += spectra.Count;
-                        if(parents != null && parents.Count > 0)
+                        if(parents.Count > 0)
                         {
                             num_spectra.Add(data_filepath, spectra.Count);
                         }
@@ -586,18 +589,19 @@ namespace Morpheus
                                 psms_no_nulls.Add(psm);
                             }
                         }
+
+                        if(dataFilepaths.Count > 1)
+                        {
+                            aggregate_psms.AddRange(psms_no_nulls);
+                            if(parents.Count > 0)
+                            {
+                                grouped_aggregate_psms.Add(data_filepath, psms_no_nulls);
+                            }
+                        }
                     }
                     else
                     {
                         psms_no_nulls = new List<PeptideSpectrumMatch>(0);
-                    }
-                    if(dataFilepaths.Count > 1)
-                    {
-                        aggregate_psms.AddRange(psms_no_nulls);
-                        if(parents != null && parents.Count > 0)
-                        {
-                            grouped_aggregate_psms.Add(data_filepath, psms_no_nulls);
-                        }
                     }
 
                     List<PeptideSpectrumMatch> sorted_psms = new List<PeptideSpectrumMatch>(psms_no_nulls);
