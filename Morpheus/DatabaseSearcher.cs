@@ -711,13 +711,13 @@ namespace Morpheus
                     OnFinishedFile(new FilepathEventArgs(data_filepath));
                 }
 
-                overall_log.WriteLine((num_target_peptides + num_decoy_peptides).ToString("N0") + " total (" + num_target_peptides.ToString("N0") + " target + " + num_decoy_peptides.ToString("N0") + " decoy) non-unique peptides");
-
                 if(dataFilepaths.Count > 1)
                 {
                     OnUpdateStatus(new StatusEventArgs("Performing aggregate post-search analyses..."));
                     OnReportTaskWithoutProgress(EventArgs.Empty);
                     OnUpdateProgress(new ProgressEventArgs(0));
+
+                    overall_log.WriteLine((num_target_peptides + num_decoy_peptides).ToString("N0") + " total (" + num_target_peptides.ToString("N0") + " target + " + num_decoy_peptides.ToString("N0") + " decoy) non-unique peptides");
 
                     HashSet<string> prefixes = new HashSet<string>();
                     foreach(KeyValuePair<string, HashSet<string>> kvp in parents)
