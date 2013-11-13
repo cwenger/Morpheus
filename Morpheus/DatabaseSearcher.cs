@@ -267,6 +267,13 @@ namespace Morpheus
                     variable_modifications = "none";
                 }
 
+                int total_spectra;
+                List<PeptideSpectrumMatch> aggregate_psms = new List<PeptideSpectrumMatch>();
+
+                SortedList<string, HashSet<string>> parents = null;
+                Dictionary<string, int> num_spectra = null;
+                Dictionary<string, List<PeptideSpectrumMatch>> grouped_aggregate_psms = new Dictionary<string, List<PeptideSpectrumMatch>>(dataFilepaths.Count);
+
                 if(dataFilepaths.Count > 1)
                 {
                     overall_log = new StreamWriter(Path.Combine(outputFolder, "log.txt"));
@@ -310,17 +317,19 @@ namespace Morpheus
                     overall_log.WriteLine("RESULTS");
 
                     overall_log.WriteLine(total_proteins.ToString("N0") + " total (" + target_proteins.ToString("N0") + " target + " + decoy_proteins.ToString("N0") + " decoy + " + on_the_fly_decoy_proteins.ToString("N0") + " on-the-fly decoy) proteins");
+
+                    total_spectra = 0;
+                    aggregate_psms = new List<PeptideSpectrumMatch>();
+
+                    parents = DetermineSemiAggregateParentFolders(dataFilepaths);
+                    num_spectra = new Dictionary<string, int>(dataFilepaths.Count);
+                    grouped_aggregate_psms = new Dictionary<string, List<PeptideSpectrumMatch>>(dataFilepaths.Count);
                 }
 
                 summary = new StreamWriter(Path.Combine(outputFolder, "summary.tsv"));
                 summary.AutoFlush = true;
 
                 summary.WriteLine("Dataset\tProteins\tMS/MS Spectra\tPSM Morpheus Score Threshold\tTarget PSMs\tDecoy PSMs\tPSM FDR (%)\tUnique Peptide Morpheus Score Threshold\tUnique Target Peptides\tUnique Decoy Peptides\tUnique Peptide FDR (%)\tProtein Group Summed Morpheus Score Threshold\tTarget Protein Groups\tDecoy Protein Groups\tProtein Group FDR (%)");
-
-                int total_spectra = 0;
-
-                Dictionary<string, int> num_spectra = new Dictionary<string, int>(dataFilepaths.Count);
-                List<PeptideSpectrumMatch> aggregate_psms = new List<PeptideSpectrumMatch>();
 
                 foreach(string data_filepath in dataFilepaths)
                 {
@@ -374,8 +383,14 @@ namespace Morpheus
                         absoluteThreshold, relativeThresholdPercent, maximumNumberOfPeaks,
                         assignChargeStates, deisotope, productMassTolerance, maximumThreads);
 
-                    num_spectra.Add(data_filepath, spectra.Count);
-                    total_spectra += spectra.Count;
+                    if(dataFilepaths.Count > 1)
+                    {
+                        total_spectra += spectra.Count;
+                        if(parents != null && parents.Count > 0)
+                        {
+                            num_spectra.Add(data_filepath, spectra.Count);
+                        }
+                    }
 
                     OnUpdateStatus(new StatusEventArgs("Searching MS/MS spectra..."));
                     OnReportTaskWithProgress(EventArgs.Empty);
@@ -570,13 +585,20 @@ namespace Morpheus
                             if(psm != null)
                             {
                                 psms_no_nulls.Add(psm);
-                                aggregate_psms.Add(psm);
                             }
                         }
                     }
                     else
                     {
                         psms_no_nulls = new List<PeptideSpectrumMatch>(0);
+                    }
+                    if(dataFilepaths.Count > 1)
+                    {
+                        aggregate_psms.AddRange(psms_no_nulls);
+                        if(parents != null && parents.Count > 0)
+                        {
+                            grouped_aggregate_psms.Add(data_filepath, psms_no_nulls);
+                        }
                     }
 
                     List<PeptideSpectrumMatch> sorted_psms = new List<PeptideSpectrumMatch>(psms_no_nulls);
@@ -694,10 +716,6 @@ namespace Morpheus
                     OnReportTaskWithoutProgress(EventArgs.Empty);
                     OnUpdateProgress(new ProgressEventArgs(0));
 
-                    aggregate_psms.Sort(PeptideSpectrumMatch.DescendingMorpheusScoreComparison);
-
-                    SortedList<string, HashSet<string>> parents = DetermineSemiAggregateParentFolders(dataFilepaths);
-
                     HashSet<string> prefixes = new HashSet<string>();
                     foreach(KeyValuePair<string, HashSet<string>> kvp in parents)
                     {
@@ -711,25 +729,16 @@ namespace Morpheus
                         }
 
                         int semi_aggregate_spectra = 0;
+                        List<PeptideSpectrumMatch> semi_aggregate_psms = new List<PeptideSpectrumMatch>();
                         foreach(string data_filepath in kvp.Value)
                         {
                             semi_aggregate_spectra += num_spectra[data_filepath];
+                            semi_aggregate_psms.AddRange(grouped_aggregate_psms[data_filepath]);
                         }
+
                         overall_log.WriteLine(semi_aggregate_spectra.ToString("N0") + " MS/MS spectra in " + kvp.Key);
 
-                        List<PeptideSpectrumMatch> semi_aggregate_psms = new List<PeptideSpectrumMatch>(aggregate_psms);
-                        int l = 0;
-                        while(l < semi_aggregate_psms.Count)
-                        {
-                            if(!kvp.Value.Contains(semi_aggregate_psms[l].Spectrum.Filename))
-                            {
-                                semi_aggregate_psms.RemoveAt(l);
-                            }
-                            else
-                            {
-                                l++;
-                            }
-                        }
+                        semi_aggregate_psms.Sort(PeptideSpectrumMatch.DescendingMorpheusScoreComparison);
 
                         IEnumerable<IdentificationWithFalseDiscoveryRate<PeptideSpectrumMatch>> semi_aggregate_psms_with_fdr = FalseDiscoveryRate.DoFalseDiscoveryRateAnalysis(semi_aggregate_psms, decoys_over_targets_peptide_ratio);
                         Exporters.WriteToTabDelimitedTextFile(semi_aggregate_psms_with_fdr, Path.Combine(outputFolder, prefix + ".PSMs.tsv"));
@@ -792,6 +801,8 @@ namespace Morpheus
                     }
 
                     overall_log.WriteLine(total_spectra.ToString("N0") + " MS/MS spectra");
+
+                    aggregate_psms.Sort(PeptideSpectrumMatch.DescendingMorpheusScoreComparison);
 
                     IEnumerable<IdentificationWithFalseDiscoveryRate<PeptideSpectrumMatch>> aggregate_psms_with_fdr = FalseDiscoveryRate.DoFalseDiscoveryRateAnalysis(aggregate_psms, decoys_over_targets_peptide_ratio);
                     Exporters.WriteToTabDelimitedTextFile(aggregate_psms_with_fdr, Path.Combine(outputFolder, "PSMs.tsv"));
