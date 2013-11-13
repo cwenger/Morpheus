@@ -267,7 +267,7 @@ namespace Morpheus
                     variable_modifications = "none";
                 }
 
-                int total_spectra;
+                int total_spectra = 0;
                 List<PeptideSpectrumMatch> aggregate_psms = new List<PeptideSpectrumMatch>();
 
                 SortedList<string, HashSet<string>> parents = null;
@@ -318,7 +318,6 @@ namespace Morpheus
 
                     overall_log.WriteLine(total_proteins.ToString("N0") + " total (" + target_proteins.ToString("N0") + " target + " + decoy_proteins.ToString("N0") + " decoy + " + on_the_fly_decoy_proteins.ToString("N0") + " on-the-fly decoy) proteins");
 
-                    total_spectra = 0;
                     aggregate_psms = new List<PeptideSpectrumMatch>();
 
                     parents = DetermineSemiAggregateParentFolders(dataFilepaths);
