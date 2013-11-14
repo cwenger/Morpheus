@@ -10,7 +10,7 @@ namespace Morpheus
 {
     public class DatabaseSearcher
     {
-        private ICollection<string> dataFilepaths;
+        private IList<string> dataFilepaths;
         private int minimumAssumedPrecursorChargeState;
         private int maximumAssumedPrecursorChargeState;
         private double absoluteThreshold;
@@ -39,7 +39,7 @@ namespace Morpheus
         private bool minimizeMemoryUsage;
         private string outputFolder;
 
-        public DatabaseSearcher(ICollection<string> dataFilepaths,
+        public DatabaseSearcher(IList<string> dataFilepaths,
             int minimumAssumedPrecursorChargeState, int maximumAssumedPrecursorChargeState,
             double absoluteThreshold, double relativeThresholdPercent, int maximumNumberOfPeaks,
             bool assignChargeStates, bool deisotope,
@@ -224,6 +224,14 @@ namespace Morpheus
                 TandemMassSpectra.ReportTaskWithoutProgress += new EventHandler(HandleReportTaskWithoutProgress);
                 TandemMassSpectra.ReportTaskWithProgress += new EventHandler(HandleReportTaskWithProgress);
                 TandemMassSpectra.UpdateProgress += new EventHandler<ProgressEventArgs>(HandleUpdateProgress);
+
+                // convert all paths to absolute for outputs
+                for(int i = 0; i < dataFilepaths.Count; i++)
+                {
+                    dataFilepaths[i] = Path.GetFullPath(dataFilepaths[i]);
+                }
+                proteinFastaDatabaseFilepath = Path.GetFullPath(proteinFastaDatabaseFilepath);
+                outputFolder = Path.GetFullPath(outputFolder);
 
                 PeptideSpectrumMatch.SetPrecursorMassType(precursorMassType);
                 AminoAcidPolymer.SetProductMassType(productMassType);
