@@ -71,6 +71,32 @@ namespace Morpheus
             }
         }
 
+        public double SummedPeptideSpectrumMatchPrecursorIntensity
+        {
+            get
+            {
+                double intensity = 0.0;
+                foreach(PeptideSpectrumMatch psm in PeptideSpectrumMatches)
+                {
+                    intensity += psm.Spectrum.PrecursorIntensity;
+                }
+                return intensity;
+            }
+        }
+
+        public double SummedUniquePeptidePrecursorIntensity
+        {
+            get
+            {
+                double intensity = 0.0;
+                foreach(PeptideSpectrumMatch psm in UniquePeptides)
+                {
+                    intensity += psm.Spectrum.PrecursorIntensity;
+                }
+                return intensity;
+            }
+        }
+
         public double SummedMorpheusScore
         {
             get
@@ -101,7 +127,7 @@ namespace Morpheus
             }
         }
 
-        public static readonly string Header = "Protein Description\tProtein Sequence\tProtein Length\tNumber of Proteins in Group\tNumber of Peptide-Spectrum Matches\tNumber of Unique Peptides\tProtein Sequence Coverage (%)\tSummed Morpheus Score";
+        public static readonly string Header = "Protein Description\tProtein Sequence\tProtein Length\tNumber of Proteins in Group\tNumber of Peptide-Spectrum Matches\tNumber of Unique Peptides\tSummed Peptide-Spectrum Match Precursor Intensity\tSummed Unique Peptide Precursor Intensity\tProtein Sequence Coverage (%)\tSummed Morpheus Score";
 
         public override string ToString()
         {
@@ -126,6 +152,8 @@ namespace Morpheus
             sb.Append(Count.ToString() + '\t');
             sb.Append(PeptideSpectrumMatches.Count.ToString() + '\t');
             sb.Append(UniquePeptides.Count.ToString() + '\t');
+            sb.Append(SummedPeptideSpectrumMatchPrecursorIntensity.ToString() + '\t');
+            sb.Append(SummedUniquePeptidePrecursorIntensity.ToString() + '\t');
             StringBuilder sequence_coverage = new StringBuilder();
             foreach(Protein protein in this)
             {
