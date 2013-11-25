@@ -1,8 +1,9 @@
+using System;
 using System.Collections.Generic;
 
 namespace Morpheus
 {
-    public class Protein : AminoAcidPolymer
+    public class Protein : AminoAcidPolymer, IComparable<Protein>
     {
         public string Description { get; private set; }
 
@@ -147,6 +148,20 @@ namespace Morpheus
                 }
             }
             return (double)covered_residues.Count / Length;
+        }
+
+        public int CompareTo(Protein other)
+        {
+            int comparison = -(Length.CompareTo(other.Length));
+            if(comparison == 0)
+            {
+                comparison = Description.Length.CompareTo(other.Description.Length);
+                if(comparison == 0)
+                {
+                    comparison = Description.CompareTo(other.Description);
+                }
+            }
+            return comparison;
         }
     }
 }
