@@ -5,8 +5,7 @@ using System.Threading.Tasks;
 
 namespace Morpheus
 {
-    // sort proteins by descending length?
-    public class ProteinGroup : List<Protein>, ITargetDecoy
+    public class ProteinGroup : SortedSet<Protein>, ITargetDecoy
     {
         public ProteinGroup()
             : base()
@@ -241,7 +240,7 @@ namespace Morpheus
 
                     if(lower_protein_group.BaseLeucinePeptideSequences.SetEquals(protein_group.BaseLeucinePeptideSequences))
                     {
-                        protein_group.AddRange(lower_protein_group);  // should only ever be one protein in the group to add
+                        protein_group.UnionWith(lower_protein_group);  // should only ever be one protein in the group to add
                         protein_groups.RemoveAt(j);
                     }
                     else
