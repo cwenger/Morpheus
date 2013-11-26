@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -14,7 +15,7 @@ namespace Morpheus
             get { return CleavageTerminus.ToString(); }
         }
 
-        public IEnumerable<char> AminoAcidsInducingCleavage { get; private set; }
+        public IEnumerable<string> SequencesInducingCleavage { get; private set; }
 
         public string Cut
         {
@@ -22,7 +23,7 @@ namespace Morpheus
             {
                 StringBuilder cut = new StringBuilder();
 
-                foreach(char c in AminoAcidsInducingCleavage)
+                foreach(string c in SequencesInducingCleavage)
                 {
                     cut.Append(c);
                 }
@@ -31,7 +32,7 @@ namespace Morpheus
             }
         }
 
-        public IEnumerable<char> AminoAcidsPreventingCleavage { get; private set; }
+        public IEnumerable<string> SequencesPreventingCleavage { get; private set; }
 
         public string NoCut
         {
@@ -39,7 +40,7 @@ namespace Morpheus
             {
                 StringBuilder no_cut = new StringBuilder();
 
-                foreach(char c in AminoAcidsPreventingCleavage)
+                foreach(string c in SequencesPreventingCleavage)
                 {
                     no_cut.Append(c);
                 }
@@ -50,11 +51,11 @@ namespace Morpheus
 
         public CleavageSpecificity CleavageSpecificity { get; private set; }
 
-        public Protease(string name, IEnumerable<char> aminoAcidsInducingCleavage, IEnumerable<char> aminoAcidsPreventingCleavage, Terminus cleavageTerminus, CleavageSpecificity cleavageSpecificity)
+        public Protease(string name, IEnumerable<string> sequencesInducingCleavage, IEnumerable<string> sequencesPreventingCleavage, Terminus cleavageTerminus, CleavageSpecificity cleavageSpecificity)
         {
             Name = name;
-            AminoAcidsInducingCleavage = aminoAcidsInducingCleavage;
-            AminoAcidsPreventingCleavage = aminoAcidsPreventingCleavage;
+            SequencesInducingCleavage = sequencesInducingCleavage;
+            SequencesPreventingCleavage = sequencesPreventingCleavage;
             CleavageTerminus = cleavageTerminus;
             CleavageSpecificity = cleavageSpecificity;
         }
@@ -70,16 +71,16 @@ namespace Morpheus
 
             for(int i = 0; i < aminoAcidPolymer.Length - 1; i++)
             {
-                foreach(char c in AminoAcidsInducingCleavage)
+                foreach(string c in SequencesInducingCleavage)
                 {
-                    if((CleavageTerminus != Terminus.N && aminoAcidPolymer[i] == c)
-                        || (CleavageTerminus == Terminus.N && i + 1 < aminoAcidPolymer.Length && aminoAcidPolymer[i + 1] == c))
+                    if((CleavageTerminus != Terminus.N && i - c.Length + 1 >= 0 && aminoAcidPolymer.BaseSequence.Substring(i - c.Length + 1, c.Length).Equals(c, StringComparison.InvariantCultureIgnoreCase))
+                        || (CleavageTerminus == Terminus.N && i + 1 + c.Length <= aminoAcidPolymer.Length && aminoAcidPolymer.BaseSequence.Substring(i + 1, c.Length).Equals(c, StringComparison.InvariantCultureIgnoreCase)))
                     {
                         bool cleave = true;
-                        foreach(char nc in AminoAcidsPreventingCleavage)
+                        foreach(string nc in SequencesPreventingCleavage)
                         {
-                            if((CleavageTerminus != Terminus.N && i + 1 < aminoAcidPolymer.Length && aminoAcidPolymer[i + 1] == nc) 
-                                || (CleavageTerminus == Terminus.N && i - 1 >= 0 && aminoAcidPolymer[i - 1] == nc))
+                            if((CleavageTerminus != Terminus.N && i + 1 + nc.Length <= aminoAcidPolymer.Length && aminoAcidPolymer.BaseSequence.Substring(i + 1, nc.Length).Equals(nc, StringComparison.InvariantCultureIgnoreCase)) 
+                                || (CleavageTerminus == Terminus.N && i - nc.Length + 1 >= 0 && aminoAcidPolymer.BaseSequence.Substring(i - nc.Length + 1, nc.Length).Equals(nc, StringComparison.InvariantCultureIgnoreCase)))
                             {
                                 cleave = false;
                                 break;
