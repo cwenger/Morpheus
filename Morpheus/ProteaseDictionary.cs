@@ -21,11 +21,11 @@ namespace Morpheus
                     string[] fields = line.Split('\t');
 
                     string name = fields[0];
-                    string amino_acids_inducing_cleavage = fields[1];
-                    string amino_acids_preventing_cleavage = fields[2];
+                    string[] sequences_inducing_cleavage = fields[1].Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+                    string[] sequences_preventing_cleavage = fields[2].Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
                     Terminus cleavage_terminus = (Terminus)Enum.Parse(typeof(Terminus), fields[3]);
                     CleavageSpecificity cleavage_specificity = (CleavageSpecificity)Enum.Parse(typeof(CleavageSpecificity), fields[4]);
-                    Protease protease = new Protease(name, amino_acids_inducing_cleavage, amino_acids_preventing_cleavage, cleavage_terminus, cleavage_specificity);
+                    Protease protease = new Protease(name, sequences_inducing_cleavage, sequences_preventing_cleavage, cleavage_terminus, cleavage_specificity);
                     Add(protease);
                 }
             }
