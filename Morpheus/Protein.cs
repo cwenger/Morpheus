@@ -30,37 +30,136 @@ namespace Morpheus
         {
             if(Length > 0)
             {
-                List<int> indices = protease.GetDigestionSiteIndices(this);
-                indices.Insert(0, -1);
-                indices.Add(Length - 1);
-
-                for(int missed_cleavages = 0; missed_cleavages <= maximumMissedCleavages; missed_cleavages++)
+                if(protease.CleavageSpecificity != CleavageSpecificity.None)
                 {
-                    for(int i = 0; i < indices.Count - missed_cleavages - 1; i++)
+                    // these are the 0-based residue indices the protease cleaves AFTER
+                    List<int> indices = protease.GetDigestionSiteIndices(this);
+                    indices.Insert(0, -1);
+                    indices.Add(Length - 1);
+
+                    if(protease.CleavageSpecificity == CleavageSpecificity.Full)
                     {
-                        if(initiatorMethionineBehavior != InitiatorMethionineBehavior.Cleave || indices[i] + 1 != 0 || this[0] != 'M')
+                        for(int missed_cleavages = 0; missed_cleavages <= maximumMissedCleavages; missed_cleavages++)
                         {
-                            Peptide peptide = new Peptide(this, indices[i] + 1 + 1, indices[i + missed_cleavages + 1] + 1, missed_cleavages);
-
-                            if((!minimumPeptideLength.HasValue || peptide.Length >= minimumPeptideLength.Value)
-                                && (!maximumPeptideLength.HasValue || peptide.Length <= maximumPeptideLength.Value))
+                            for(int i = 0; i < indices.Count - missed_cleavages - 1; i++)
                             {
-                                yield return peptide;
-                            }
-                        }
-
-                        if(initiatorMethionineBehavior != InitiatorMethionineBehavior.Retain && indices[i] + 1 == 0 && this[0] == 'M')
-                        {
-                            if(indices[i + missed_cleavages + 1] + 1 >= indices[i] + 1 + 1 + 1)
-                            {
-                                Peptide peptide_without_initiator_methionine = new Peptide(this, indices[i] + 1 + 1 + 1, indices[i + missed_cleavages + 1] + 1, missed_cleavages);
-
-                                if((!minimumPeptideLength.HasValue || peptide_without_initiator_methionine.Length >= minimumPeptideLength.Value)
-                                    && (!maximumPeptideLength.HasValue || peptide_without_initiator_methionine.Length <= maximumPeptideLength.Value))
+                                if(initiatorMethionineBehavior != InitiatorMethionineBehavior.Cleave || indices[i] + 1 != 0 || this[0] != 'M')
                                 {
-                                    yield return peptide_without_initiator_methionine;
+                                    int length = indices[i + missed_cleavages + 1] - indices[i];
+                                    if((!minimumPeptideLength.HasValue || length >= minimumPeptideLength.Value) && (!maximumPeptideLength.HasValue || length <= maximumPeptideLength.Value))
+                                    {
+                                        // start residue number: +1 for starting at the next residue after the cleavage, +1 for 0->1 indexing
+                                        // end residue number: +1 for 0->1 indexing
+                                        Peptide peptide = new Peptide(this, indices[i] + 1 + 1, indices[i + missed_cleavages + 1] + 1, missed_cleavages);
+                                        yield return peptide;
+                                    }
+                                }
+
+                                if(initiatorMethionineBehavior != InitiatorMethionineBehavior.Retain && indices[i] + 1 == 0 && this[0] == 'M')
+                                {
+                                    int length = indices[i + missed_cleavages + 1] - indices[i] - 1;
+                                    if(length > 0 && (!minimumPeptideLength.HasValue || length >= minimumPeptideLength.Value) && (!maximumPeptideLength.HasValue || length <= maximumPeptideLength.Value))
+                                    {
+                                        // start residue number: +1 for skipping initiator methionine, +1 for starting at the next residue after the cleavage, +1 for 0->1 indexing
+                                        // end residue number: +1 for 0->1 indexing
+                                        Peptide peptide_without_initiator_methionine = new Peptide(this, indices[i] + 1 + 1 + 1, indices[i + missed_cleavages + 1] + 1, missed_cleavages);
+                                        yield return peptide_without_initiator_methionine;
+                                    }
                                 }
                             }
+                        }
+                    }
+                    else  // protease.CleavageSpecificity == CleavageSpecificity.Semi || protease.CleavageSpecificity == CleavageSpecificity.SemiN || protease.CleavageSpecificity == CleavageSpecificity.SemiC
+                    {
+                        if(protease.CleavageSpecificity == CleavageSpecificity.Semi || protease.CleavageSpecificity == CleavageSpecificity.SemiN)
+                        {
+                            for(int missed_cleavages = 0; missed_cleavages <= maximumMissedCleavages; missed_cleavages++)
+                            {
+                                for(int i = 0; i < indices.Count - missed_cleavages - 1; i++)
+                                {
+                                    if(initiatorMethionineBehavior != InitiatorMethionineBehavior.Cleave || indices[i] + 1 != 0 || this[0] != 'M')
+                                    {
+                                        // conditional ensures that we are generating peptides at their lowest missed cleavage state
+                                        for(int length = indices[i + missed_cleavages + 1] - indices[i]; length > (indices[i + missed_cleavages + 1] - indices[i]) - (indices[i + missed_cleavages + 1] - indices[(i + missed_cleavages + 1) - 1]); length--)
+                                        {
+                                            if((indices[i] + 1 + 1) + length - 1 <= Length)
+                                            {
+                                                if((!minimumPeptideLength.HasValue || length >= minimumPeptideLength.Value) && (!maximumPeptideLength.HasValue || length <= maximumPeptideLength.Value))
+                                                {
+                                                    // start residue number: +1 for starting at the next residue after the cleavage, +1 for 0->1 indexing
+                                                    // end residue number: start residue number + length - 1
+                                                    Peptide peptide = new Peptide(this, indices[i] + 1 + 1, (indices[i] + 1 + 1) + length - 1, missed_cleavages);
+                                                    yield return peptide;
+                                                }
+                                            }
+                                        }
+                                    }
+
+                                    if(initiatorMethionineBehavior != InitiatorMethionineBehavior.Retain && indices[i] + 1 == 0 && this[0] == 'M')
+                                    {
+                                        // conditional ensures that we are generating peptides at their lowest missed cleavage state
+                                        for(int length = indices[i + missed_cleavages + 1] - indices[i]; length > (indices[i + missed_cleavages + 1] - indices[i]) - (indices[i + missed_cleavages + 1] - indices[(i + missed_cleavages + 1) - 1]); length--)
+                                        {
+                                            if((indices[i] + 1 + 1 + 1) + length - 1 <= Length)
+                                            {
+                                                if((!minimumPeptideLength.HasValue || length >= minimumPeptideLength.Value) && (!maximumPeptideLength.HasValue || length <= maximumPeptideLength.Value))
+                                                {
+                                                    // start residue number: +1 for skipping initiator methionine, +1 for starting at the next residue after the cleavage, +1 for 0->1 indexing
+                                                    // end residue number: start residue number + length - 1
+                                                    Peptide peptide_without_initiator_methionine = new Peptide(this, indices[i] + 1 + 1 + 1, (indices[i] + 1 + 1 + 1) + length - 1, missed_cleavages);
+                                                    yield return peptide_without_initiator_methionine;
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        if(protease.CleavageSpecificity == CleavageSpecificity.Semi || protease.CleavageSpecificity == CleavageSpecificity.SemiC)
+                        {
+                            for(int missed_cleavages = 0; missed_cleavages <= maximumMissedCleavages; missed_cleavages++)
+                            {
+                                for(int i = 0; i < indices.Count - missed_cleavages - 1; i++)
+                                {
+                                    // handling for initiator methionine not required
+
+                                    // - (protease.CleavageSpecificity == CleavageSpecificity.Semi ? 1 : 0) ensures that we don't repeat the same peptides we generated above in the SemiN digestion
+                                    // conditional ensures that we are generating peptides at their lowest missed cleavage state
+                                    for(int length = indices[i + missed_cleavages + 1] - indices[i] - (protease.CleavageSpecificity == CleavageSpecificity.Semi ? 1 : 0); length > (indices[i + missed_cleavages + 1] - indices[i]) - (indices[i + 1] - indices[i]); length--)
+                                    {
+                                        if((indices[i + missed_cleavages + 1] + 1) - length + 1 >= 1)
+                                        {
+                                            if((!minimumPeptideLength.HasValue || length >= minimumPeptideLength.Value) && (!maximumPeptideLength.HasValue || length <= maximumPeptideLength.Value))
+                                            {
+                                                // start residue number: end residue number - length + 1
+                                                // end residue number: +1 for 0->1 indexing
+                                                Peptide peptide = new Peptide(this, (indices[i + missed_cleavages + 1] + 1) - length + 1, indices[i + missed_cleavages + 1] + 1, missed_cleavages);
+                                                yield return peptide;
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                else  // protease.CleavageSpecificity != CleavageSpecificity.None
+                {
+                    if(initiatorMethionineBehavior != InitiatorMethionineBehavior.Cleave || this[0] != 'M')
+                    {
+                        if((!minimumPeptideLength.HasValue || Length >= minimumPeptideLength.Value) && (!maximumPeptideLength.HasValue || Length <= maximumPeptideLength.Value))
+                        {
+                            Peptide peptide = new Peptide(this, 1, Length, -1);
+                            yield return peptide;
+                        }
+                    }
+
+                    if(initiatorMethionineBehavior != InitiatorMethionineBehavior.Retain && this[0] == 'M')
+                    {
+                        if(Length > 1 && (!minimumPeptideLength.HasValue || Length - 1 >= minimumPeptideLength.Value) && (!maximumPeptideLength.HasValue || Length - 1 <= maximumPeptideLength.Value))
+                        {
+                            Peptide peptide_without_initiator_methionine = new Peptide(this, 2, Length, -1);
+                            yield return peptide_without_initiator_methionine;
                         }
                     }
                 }
