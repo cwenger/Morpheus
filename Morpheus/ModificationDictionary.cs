@@ -22,27 +22,22 @@ namespace Morpheus
                     string[] fields = line.Split('\t');
 
                     string description = fields[0];
-                    ModificationType modification_type;
-                    switch(fields[1])
+                    ModificationType modification_type = ModificationType.AminoAcidResidue;
+                    if(fields[1].Equals("protein N-terminus", StringComparison.OrdinalIgnoreCase))
                     {
-                        case "amino acid residue":
-                            modification_type = ModificationType.AminoAcidResidue;
-                            break;
-                        case "protein N-terminus":
-                            modification_type = ModificationType.ProteinNTerminus;
-                            break;
-                        case "protein C-terminus":
-                            modification_type = ModificationType.ProteinCTerminus;
-                            break;
-                        case "peptide N-terminus":
-                            modification_type = ModificationType.PeptideNTerminus;
-                            break;
-                        case "peptide C-terminus":
-                            modification_type = ModificationType.PeptideCTerminus;
-                            break;
-                        default:
-                            modification_type = ModificationType.AminoAcidResidue;
-                            break;
+                        modification_type = ModificationType.ProteinNTerminus;
+                    }
+                    else if(fields[1].Equals("protein C-terminus", StringComparison.OrdinalIgnoreCase))
+                    {
+                        modification_type = ModificationType.ProteinCTerminus;
+                    }
+                    else if(fields[1].Equals("peptide N-terminus", StringComparison.OrdinalIgnoreCase))
+                    {
+                        modification_type = ModificationType.PeptideNTerminus;
+                    }
+                    else if(fields[1].Equals("peptide C-terminus", StringComparison.OrdinalIgnoreCase))
+                    {
+                        modification_type = ModificationType.PeptideCTerminus;
                     }
                     char amino_acid;
                     char.TryParse(fields[2], out amino_acid);

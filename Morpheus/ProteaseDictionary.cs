@@ -23,8 +23,8 @@ namespace Morpheus
                     string name = fields[0];
                     string[] sequences_inducing_cleavage = fields[1].Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
                     string[] sequences_preventing_cleavage = fields[2].Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
-                    Terminus cleavage_terminus = (Terminus)Enum.Parse(typeof(Terminus), fields[3]);
-                    CleavageSpecificity cleavage_specificity = (CleavageSpecificity)Enum.Parse(typeof(CleavageSpecificity), fields[4]);
+                    Terminus cleavage_terminus = (Terminus)Enum.Parse(typeof(Terminus), fields[3], true);
+                    CleavageSpecificity cleavage_specificity = (CleavageSpecificity)Enum.Parse(typeof(CleavageSpecificity), fields[4], true);
                     Protease protease = new Protease(name, sequences_inducing_cleavage, sequences_preventing_cleavage, cleavage_terminus, cleavage_specificity);
                     Add(protease);
                 }
