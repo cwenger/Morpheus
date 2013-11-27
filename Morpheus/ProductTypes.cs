@@ -20,7 +20,7 @@ namespace Morpheus
                 Dictionary<int, ProductType> product_type_column_numbers = new Dictionary<int, ProductType>(Enum.GetNames(typeof(ProductType)).Length);
                 for(int i = 1; i < header_fields.Length; i++)
                 {
-                    ProductType product_type = (ProductType)Enum.Parse(typeof(ProductType), header_fields[i]);
+                    ProductType product_type = (ProductType)Enum.Parse(typeof(ProductType), header_fields[i], true);
                     product_type_column_numbers.Add(i, product_type);
                 }
 
