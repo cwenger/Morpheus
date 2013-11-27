@@ -2,8 +2,15 @@
 {
     public enum CleavageSpecificity
     {
-        None = 0,
-        Semi = 1,
-        Full = 2
+        [MinNumberTermini(0)]
+        None,
+        [MinNumberTermini(1)]
+        SemiN,
+        [MinNumberTermini(1)]
+        SemiC,
+        [MinNumberTermini(1)]
+        Semi,
+        [MinNumberTermini(2)]
+        Full
     }
 }

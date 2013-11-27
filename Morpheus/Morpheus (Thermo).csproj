@@ -64,6 +64,7 @@
     <Compile Include="IdentificationWithFalseDiscoveryRate.cs" />
     <Compile Include="InitiatorMethionineBehavior.cs" />
     <Compile Include="ITargetDecoy.cs" />
+    <Compile Include="MinNumberTerminiAttribute.cs" />
     <Compile Include="Modification.cs" />
     <Compile Include="ModificationDictionary.cs" />
     <Compile Include="ModificationType.cs" />

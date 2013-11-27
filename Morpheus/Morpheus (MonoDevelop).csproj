@@ -105,6 +105,7 @@
     </Compile>
     <Compile Include="ProductTypes.cs" />
     <Compile Include="InitiatorMethionineBehavior.cs" />
+    <Compile Include="MinNumberTerminiAttribute.cs" />
     <Compile Include="Modification.cs" />
     <Compile Include="ModificationDictionary.cs" />
     <Compile Include="ModificationType.cs" />
