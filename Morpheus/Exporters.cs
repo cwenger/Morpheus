@@ -90,7 +90,7 @@ namespace Morpheus
                 output.WriteStartElement("enzymatic_search_constraint");
                 output.WriteAttributeString("enzyme", protease.Name);
                 output.WriteAttributeString("max_num_internal_cleavages", maximumMissedCleavages.ToString());
-                output.WriteAttributeString("min_number_termini", ((MinNumberTerminiAttribute)typeof(CleavageSpecificity).GetMember(protease.CleavageSpecificity.ToString())[0].GetCustomAttributes(typeof(MinNumberTerminiAttribute), false)[0]).MinNumberTermini.ToString());
+                output.WriteAttributeString("min_number_termini", protease.CleavageSpecificity.GetMinNumberTermini().ToString());
                 output.WriteEndElement();  // enzymatic_search_constraint
                 foreach(Modification fixed_mod in fixedModifications)
                 {
