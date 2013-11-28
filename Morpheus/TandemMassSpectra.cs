@@ -244,33 +244,36 @@ namespace Morpheus
                             }
                         }
 
-                        List<MSPeak> peaks = new List<MSPeak>(mz.Length);
-                        for(int i = 0; i < mz.Length; i++)
+                        if(mz != null && intensity != null)
                         {
-                            peaks.Add(new MSPeak(mz[i], intensity[i], 0));
-                        }
-
-                        peaks = FilterPeaks(peaks, absoluteThreshold, relativeThresholdPercent, maximumNumberOfPeaks);
-
-                        for(int c = (ALWAYS_USE_PRECURSOR_CHARGE_STATE_RANGE || charge == 0 ? minimumAssumedPrecursorChargeState : charge); 
-                            c <= (ALWAYS_USE_PRECURSOR_CHARGE_STATE_RANGE || charge == 0 ? maximumAssumedPrecursorChargeState : charge); c++)
-                        {
-                            List<MSPeak> new_peaks = peaks;
-                            if(assignChargeStates)
+                            List<MSPeak> peaks = new List<MSPeak>(mz.Length);
+                            for(int i = 0; i < mz.Length; i++)
                             {
-                                new_peaks = AssignChargeStates(new_peaks, c, isotopicMZTolerance);
-                                if(deisotope)
-                                {
-                                    new_peaks = Deisotope(new_peaks, c, isotopicMZTolerance);
-                                }
+                                peaks.Add(new MSPeak(mz[i], intensity[i], 0));
                             }
 
-                            double precursor_mass = Utilities.MassFromMZ(precursor_mz, c);
+                            peaks = FilterPeaks(peaks, absoluteThreshold, relativeThresholdPercent, maximumNumberOfPeaks);
 
-                            TandemMassSpectrum spectrum = new TandemMassSpectrum(mzmlFilepath, spectrum_number, spectrum_id, spectrum_title, retention_time_minutes, fragmentation_method, precursor_mz, precursor_intensity, c, precursor_mass, new_peaks);
-                            lock(spectra)
+                            for(int c = (ALWAYS_USE_PRECURSOR_CHARGE_STATE_RANGE || charge == 0 ? minimumAssumedPrecursorChargeState : charge);
+                                c <= (ALWAYS_USE_PRECURSOR_CHARGE_STATE_RANGE || charge == 0 ? maximumAssumedPrecursorChargeState : charge); c++)
                             {
-                                spectra.Add(spectrum);
+                                List<MSPeak> new_peaks = peaks;
+                                if(assignChargeStates)
+                                {
+                                    new_peaks = AssignChargeStates(new_peaks, c, isotopicMZTolerance);
+                                    if(deisotope)
+                                    {
+                                        new_peaks = Deisotope(new_peaks, c, isotopicMZTolerance);
+                                    }
+                                }
+
+                                double precursor_mass = Utilities.MassFromMZ(precursor_mz, c);
+
+                                TandemMassSpectrum spectrum = new TandemMassSpectrum(mzmlFilepath, spectrum_number, spectrum_id, spectrum_title, retention_time_minutes, fragmentation_method, precursor_mz, precursor_intensity, c, precursor_mass, new_peaks);
+                                lock(spectra)
+                                {
+                                    spectra.Add(spectrum);
+                                }
                             }
                         }
                     }
