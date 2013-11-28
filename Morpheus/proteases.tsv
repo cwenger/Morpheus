@@ -13,5 +13,5 @@ semi-trypsin (no proline rule)	K,R		C	semi
 trypsin	K,R	P	C	full
 trypsin (no proline rule)	K,R		C	full
 tryptophan oxidation	W		C	full
-non-specific	A,C,D,E,F,G,H,I,K,L,M,N,P,Q,R,S,T,V,W,Y		none	full
+non-specific	A,C,D,E,F,G,H,I,K,L,M,N,P,Q,R,S,T,U,V,W,Y		none	full
 top-down			none	none
