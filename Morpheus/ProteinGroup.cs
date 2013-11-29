@@ -156,7 +156,7 @@ namespace Morpheus
             StringBuilder sequence_coverage = new StringBuilder();
             foreach(Protein protein in this)
             {
-                sequence_coverage.Append((protein.CalculateSequenceCoverage(UniquePeptides) * 100.0).ToString() + "; ");
+                sequence_coverage.Append((protein.CalculateSequenceCoverage() * 100.0).ToString() + "; ");
             }
             sequence_coverage = sequence_coverage.Remove(sequence_coverage.Length - 2, 2);
             sb.Append(sequence_coverage.ToString() + '\t');
@@ -167,6 +167,7 @@ namespace Morpheus
 
         public static List<ProteinGroup> ApplyProteinParsimony(IEnumerable<PeptideSpectrumMatch> peptideSpectrumMatches, double morpheusScoreThreshold, FileStream proteinFastaDatabase, bool onTheFlyDecoys, Protease protease, int maximumMissedCleavages, InitiatorMethionineBehavior initiatorMethionineBehavior, int maximumThreads)
         {
+            // make a list of the all the distinct base leucine peptide sequences
             Dictionary<string, List<Protein>> peptide_proteins = new Dictionary<string, List<Protein>>();
             foreach(PeptideSpectrumMatch psm in peptideSpectrumMatches)
             {
@@ -179,6 +180,7 @@ namespace Morpheus
                 }
             }
 
+            // record all proteins that could have been the source of each peptide
             ParallelOptions parallel_options = new ParallelOptions();
             parallel_options.MaxDegreeOfParallelism = maximumThreads;
             Parallel.ForEach(ProteinFastaReader.ReadProteins(proteinFastaDatabase, onTheFlyDecoys), parallel_options, protein =>
@@ -190,6 +192,17 @@ namespace Morpheus
                             List<Protein> proteins;
                             if(peptide_proteins.TryGetValue(peptide.BaseLeucineSequence, out proteins))
                             {
+                                List<Peptide> peptides;
+                                if(!protein.IdentifiedPeptides.TryGetValue(peptide.BaseLeucineSequence, out peptides))
+                                {
+                                    peptides = new List<Peptide>();
+                                    peptides.Add(peptide);
+                                    protein.IdentifiedPeptides.Add(peptide.BaseLeucineSequence, peptides);
+                                }
+                                else
+                                {
+                                    peptides.Add(peptide);
+                                }
                                 proteins.Add(protein);
                             }
                         }
@@ -197,6 +210,7 @@ namespace Morpheus
                 }
             );
 
+            // create protein groups (initially with just one protein each) and assign PSMs to them
             Dictionary<string, ProteinGroup> proteins_by_description = new Dictionary<string, ProteinGroup>();
             foreach(PeptideSpectrumMatch psm in peptideSpectrumMatches)
             {
@@ -223,7 +237,9 @@ namespace Morpheus
             List<ProteinGroup> protein_groups = new List<ProteinGroup>(proteins_by_description.Values);
             protein_groups.Sort(ProteinGroup.DescendingSummedMorpheusScoreProteinGroupComparison);
 
-            // merge indistinguishable proteins
+            // todo: remove shared peptides from lower-scoring protein group?
+
+            // merge indistinguishable proteins (technically protein groups but they only contain a single protein thus far)
             for(int i = 0; i < protein_groups.Count - 1; i++)
             {
                 ProteinGroup protein_group = protein_groups[i];

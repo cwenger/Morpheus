@@ -19,10 +19,14 @@ namespace Morpheus
             get { return !Decoy; }
         }
 
+        // just used for calculating sequence coverage
+        public Dictionary<string, List<Peptide>> IdentifiedPeptides { get; private set; }
+
         public Protein(string sequence, string description)
             : base(sequence)
         {
             Description = description;
+            IdentifiedPeptides = new Dictionary<string, List<Peptide>>();
         }
 
         public IEnumerable<Peptide> Digest(Protease protease, int maximumMissedCleavages, InitiatorMethionineBehavior initiatorMethionineBehavior,
@@ -236,14 +240,19 @@ namespace Morpheus
             }
         }
 
-        public double CalculateSequenceCoverage(IEnumerable<PeptideSpectrumMatch> peptideSpectrumMatches)
+        private const bool ONLY_COUNT_DUPLICATE_PEPTIDES_ONCE_IN_SEQUENCE_COVERAGE = false;
+
+        public double CalculateSequenceCoverage()
         {
             HashSet<int> covered_residues = new HashSet<int>();
-            foreach(PeptideSpectrumMatch psm in peptideSpectrumMatches)
+            foreach(KeyValuePair<string, List<Peptide>> kvp in IdentifiedPeptides)
             {
-                for(int r = psm.Peptide.StartResidueNumber; r <= psm.Peptide.EndResidueNumber; r++)
+                for(int i = 0; i < (ONLY_COUNT_DUPLICATE_PEPTIDES_ONCE_IN_SEQUENCE_COVERAGE ? 1 : kvp.Value.Count); i++)
                 {
-                    covered_residues.Add(r);
+                    for(int r = kvp.Value[i].StartResidueNumber; r <= kvp.Value[i].EndResidueNumber; r++)
+                    {
+                        covered_residues.Add(r);
+                    }
                 }
             }
             return (double)covered_residues.Count / Length;
