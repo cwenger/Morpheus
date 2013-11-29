@@ -1,4 +1,4 @@
-Name	Amino Acids Inducing Cleavage	Amino Acids Preventing Cleavage	Cleavage Terminus	Cleavage Specificity	Notes
+Name	Sequences Inducing Cleavage	Sequences Preventing Cleavage	Cleavage Terminus	Cleavage Specificity	Notes
 Arg-C	R		C	full
 Asp-N	D		N	full
 chymotrypsin	F,W,Y	P	C	full
