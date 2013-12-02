@@ -147,7 +147,7 @@ namespace Morpheus
                         }
                     }
                 }
-                else  // protease.CleavageSpecificity != CleavageSpecificity.None
+                else  // protease.CleavageSpecificity == CleavageSpecificity.None
                 {
                     if(initiatorMethionineBehavior != InitiatorMethionineBehavior.Cleave || this[0] != 'M')
                     {
