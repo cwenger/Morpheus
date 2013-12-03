@@ -231,7 +231,7 @@ namespace Morpheus
             get { return Sequence.Replace('I', 'L'); }
         }
 
-        private static readonly Regex INVALID_AMINO_ACIDS = new Regex("[^ACDEFGHIKLMNPQRSTVWY]");
+        private static readonly Regex INVALID_AMINO_ACIDS = new Regex("[^ACDEFGHIKLMNPQRSTVWY]", RegexOptions.Compiled);
 
         protected AminoAcidPolymer(string baseSequence, bool prevalidated)
         {
