@@ -23,7 +23,7 @@ namespace Morpheus
         public Dictionary<string, List<Peptide>> IdentifiedPeptides { get; private set; }
 
         public Protein(string sequence, string description)
-            : base(sequence)
+            : base(sequence, false)
         {
             Description = description;
             IdentifiedPeptides = new Dictionary<string, List<Peptide>>();

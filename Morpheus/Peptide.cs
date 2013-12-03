@@ -43,7 +43,7 @@ namespace Morpheus
         }
 
         public Peptide(Protein parent, int startResidueNumber, int endResidueNumber, int missedCleavages)
-            : base(parent.BaseSequence.Substring(startResidueNumber - 1, endResidueNumber - startResidueNumber + 1))
+            : base(parent.BaseSequence.Substring(startResidueNumber - 1, endResidueNumber - startResidueNumber + 1), true)
         {
             Parent = parent;
             StartResidueNumber = startResidueNumber;
