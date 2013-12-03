@@ -233,9 +233,16 @@ namespace Morpheus
 
         private static readonly Regex INVALID_AMINO_ACIDS = new Regex("[^ACDEFGHIKLMNPQRSTVWY]");
 
-        protected AminoAcidPolymer(string baseSequence)
+        protected AminoAcidPolymer(string baseSequence, bool prevalidated)
         {
-            BaseSequence = INVALID_AMINO_ACIDS.Replace(baseSequence, string.Empty);
+            if(prevalidated)
+            {
+                BaseSequence = baseSequence;
+            }
+            else
+            {
+                BaseSequence = INVALID_AMINO_ACIDS.Replace(baseSequence, string.Empty);
+            }
         }
 
         public override string ToString()
