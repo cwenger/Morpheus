@@ -53,7 +53,11 @@ namespace Morpheus
             parallel_options.MaxDegreeOfParallelism = maximumThreads;
             Parallel.For(0, (int)agilent_d.MSScanFileInformation.TotalScansPresent, parallel_options, row_number =>
                 {
-                    IMSScanRecord scan_record = agilent_d.GetScanRecord(row_number);
+                    IMSScanRecord scan_record;
+                    lock(agilent_d)
+                    {
+                        scan_record = agilent_d.GetScanRecord(row_number);
+                    }
 
                     if(scan_record.MSLevel == MSLevel.MSMS)
                     {
