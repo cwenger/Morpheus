@@ -20,12 +20,12 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
     <DebugSymbols>true</DebugSymbols>
-    <OutputPath>bin\x86\Debug\</OutputPath>
+    <OutputPath>bin\Agilent\32-bit\Debug\</OutputPath>
     <PlatformTarget>x86</PlatformTarget>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
-    <OutputPath>bin\x86\Release\</OutputPath>
+    <OutputPath>bin\Agilent\32-bit\Release\</OutputPath>
     <PlatformTarget>x86</PlatformTarget>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
@@ -55,12 +55,12 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>copy /Y "..\..\..\..\..\external\Agilent\32-bit\BaseCommon.dll"
-copy /Y "..\..\..\..\..\external\Agilent\32-bit\BaseError.dll"
-copy /Y "..\..\..\..\..\external\Agilent\32-bit\BaseTof.dll"
-copy /Y "..\..\..\..\..\external\Agilent\32-bit\CoreTypes.dll"
-copy /Y "..\..\..\..\..\external\Agilent\32-bit\CoreUI.dll"
-copy /Y "..\..\..\app.config" "Morpheus (Agilent 32-bit).exe.config"</PostBuildEvent>
+    <PostBuildEvent>copy /Y "..\..\..\..\..\..\external\Agilent\32-bit\BaseCommon.dll"
+copy /Y "..\..\..\..\..\..\external\Agilent\32-bit\BaseError.dll"
+copy /Y "..\..\..\..\..\..\external\Agilent\32-bit\BaseTof.dll"
+copy /Y "..\..\..\..\..\..\external\Agilent\32-bit\CoreTypes.dll"
+copy /Y "..\..\..\..\..\..\external\Agilent\32-bit\CoreUI.dll"
+copy /Y "..\..\..\..\app.config" "Morpheus (Agilent 32-bit).exe.config"</PostBuildEvent>
   </PropertyGroup>
   <Target Name="AfterClean">
     <Delete Files="$(OutDir)\BaseCommon.dll" ContinueOnError="true" />
