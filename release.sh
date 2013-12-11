@@ -1,4 +1,5 @@
 rm -r release
+rm -r "Morpheus/Morpheus (command line)/bin"
 
 mkdir release
 mkdir "release/Morpheus (Linux)"
