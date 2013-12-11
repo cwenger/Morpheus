@@ -1,4 +1,6 @@
 rmdir /s /q release
+rmdir /s /q "Morpheus\Morpheus (command line)\obj"
+rmdir /s /q "Morpheus\Morpheus (command line)\bin"
 
 for /f %%i in ('svnversion -n') do set revision=%%i
 
