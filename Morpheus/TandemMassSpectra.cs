@@ -42,7 +42,7 @@ namespace Morpheus
     public partial class TandemMassSpectra : List<TandemMassSpectrum>
     {
         private const bool GET_PRECURSOR_MZ_AND_INTENSITY_FROM_MS1 = true;
-        private const bool ALWAYS_USE_PRECURSOR_CHARGE_STATE_RANGE = false;
+        private const bool ALWAYS_USE_PRECURSOR_CHARGE_STATE_RANGE = true;
         private const bool HARMONIC_CHARGE_DETECTION = false;
 
         private TandemMassSpectra() : base() { }
@@ -244,7 +244,7 @@ namespace Morpheus
                             }
                         }
 
-                        if(mz != null && intensity != null)
+                        if(mz != null && intensity != null && mz.Length > 0 && intensity.Length > 0)
                         {
                             List<MSPeak> peaks = new List<MSPeak>(mz.Length);
                             for(int i = 0; i < mz.Length; i++)
@@ -253,26 +253,28 @@ namespace Morpheus
                             }
 
                             peaks = FilterPeaks(peaks, absoluteThreshold, relativeThresholdPercent, maximumNumberOfPeaks);
-
-                            for(int c = (ALWAYS_USE_PRECURSOR_CHARGE_STATE_RANGE || charge == 0 ? minimumAssumedPrecursorChargeState : charge);
-                                c <= (ALWAYS_USE_PRECURSOR_CHARGE_STATE_RANGE || charge == 0 ? maximumAssumedPrecursorChargeState : charge); c++)
+                            if(peaks.Count > 0)
                             {
-                                List<MSPeak> new_peaks = peaks;
-                                if(assignChargeStates)
+                                for(int c = (ALWAYS_USE_PRECURSOR_CHARGE_STATE_RANGE || charge == 0 ? minimumAssumedPrecursorChargeState : charge);
+                                    c <= (ALWAYS_USE_PRECURSOR_CHARGE_STATE_RANGE || charge == 0 ? maximumAssumedPrecursorChargeState : charge); c++)
                                 {
-                                    new_peaks = AssignChargeStates(new_peaks, c, isotopicMZTolerance);
-                                    if(deisotope)
+                                    List<MSPeak> new_peaks = peaks;
+                                    if(assignChargeStates)
                                     {
-                                        new_peaks = Deisotope(new_peaks, c, isotopicMZTolerance);
+                                        new_peaks = AssignChargeStates(new_peaks, c, isotopicMZTolerance);
+                                        if(deisotope)
+                                        {
+                                            new_peaks = Deisotope(new_peaks, c, isotopicMZTolerance);
+                                        }
                                     }
-                                }
 
-                                double precursor_mass = Utilities.MassFromMZ(precursor_mz, c);
+                                    double precursor_mass = Utilities.MassFromMZ(precursor_mz, c);
 
-                                TandemMassSpectrum spectrum = new TandemMassSpectrum(mzmlFilepath, spectrum_number, spectrum_id, spectrum_title, retention_time_minutes, fragmentation_method, precursor_mz, precursor_intensity, c, precursor_mass, new_peaks);
-                                lock(spectra)
-                                {
-                                    spectra.Add(spectrum);
+                                    TandemMassSpectrum spectrum = new TandemMassSpectrum(mzmlFilepath, spectrum_number, spectrum_id, spectrum_title, retention_time_minutes, fragmentation_method, precursor_mz, precursor_intensity, c, precursor_mass, new_peaks);
+                                    lock(spectra)
+                                    {
+                                        spectra.Add(spectrum);
+                                    }
                                 }
                             }
                         }
@@ -367,7 +369,7 @@ namespace Morpheus
         {
             List<MSPeak> new_peaks = new List<MSPeak>();
 
-            for(int i = 0; i < peaks.Count - 1; i++)
+            for(int i = 0; i < peaks.Count; i++)
             {
                 int j = i + 1;
                 List<int> charges = new List<int>();
