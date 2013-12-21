@@ -42,7 +42,7 @@ namespace Morpheus
     public partial class TandemMassSpectra : List<TandemMassSpectrum>
     {
         private const bool GET_PRECURSOR_MZ_AND_INTENSITY_FROM_MS1 = true;
-        private const bool ALWAYS_USE_PRECURSOR_CHARGE_STATE_RANGE = true;
+        private const bool ALWAYS_USE_PRECURSOR_CHARGE_STATE_RANGE = false;
         private const bool HARMONIC_CHARGE_DETECTION = false;
 
         private TandemMassSpectra() : base() { }
