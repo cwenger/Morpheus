@@ -67,79 +67,82 @@ namespace Morpheus
                             agilent_spectrum = agilent_d.GetSpectrum(row_number, ms1_peak_filter, ms2_peak_filter);
                         }
 
-                        int spectrum_number = row_number + 1;
-                        string scan_id = "scanId=" + agilent_spectrum.ScanId.ToString();
-
-                        double precursor_mz = agilent_spectrum.MZOfInterest[0].Start;
-                        double precursor_intensity;
-                        if(GET_PRECURSOR_MZ_AND_INTENSITY_FROM_MS1)
+                        if(agilent_spectrum.TotalDataPoints > 0)
                         {
-                            GetAccurateMZAndIntensity(agilent_d, agilent_spectrum.ParentScanId, ref precursor_mz, out precursor_intensity);
-                        }
-                        else
-                        {
-                            agilent_spectrum.GetPrecursorIntensity(out precursor_intensity);
-                        }
+                            int spectrum_number = row_number + 1;
+                            string scan_id = "scanId=" + agilent_spectrum.ScanId.ToString();
 
-                        int charge;
-                        agilent_spectrum.GetPrecursorCharge(out charge);
-
-                        List<MSPeak> peaks = null;
-                        if(!assignChargeStates)
-                        {
-                            peaks = new List<MSPeak>(agilent_spectrum.TotalDataPoints);
-                            for(int i = 0; i < agilent_spectrum.TotalDataPoints; i++)
+                            double precursor_mz = agilent_spectrum.MZOfInterest[0].Start;
+                            double precursor_intensity;
+                            if(GET_PRECURSOR_MZ_AND_INTENSITY_FROM_MS1)
                             {
-                                peaks.Add(new MSPeak(agilent_spectrum.XArray[i], agilent_spectrum.YArray[i], 0));
+                                GetAccurateMZAndIntensity(agilent_d, agilent_spectrum.ParentScanId, ref precursor_mz, out precursor_intensity);
                             }
-                        }
-
-                        for(int c = (ALWAYS_USE_PRECURSOR_CHARGE_STATE_RANGE || charge == 0 ? minimumAssumedPrecursorChargeState : charge); 
-                            c <= (ALWAYS_USE_PRECURSOR_CHARGE_STATE_RANGE || charge == 0 ? maximumAssumedPrecursorChargeState : charge); c++)
-                        {
-                            if(assignChargeStates)
+                            else
                             {
-                                int[] peak_ids = new int[agilent_spectrum.TotalDataPoints];
-                                double[] peak_mzs = new double[agilent_spectrum.TotalDataPoints];
-                                double[] peak_intensities = new double[agilent_spectrum.TotalDataPoints];
+                                agilent_spectrum.GetPrecursorIntensity(out precursor_intensity);
+                            }
+
+                            int charge;
+                            agilent_spectrum.GetPrecursorCharge(out charge);
+
+                            List<MSPeak> peaks = null;
+                            if(!assignChargeStates)
+                            {
+                                peaks = new List<MSPeak>(agilent_spectrum.TotalDataPoints);
                                 for(int i = 0; i < agilent_spectrum.TotalDataPoints; i++)
                                 {
-                                    peak_ids[i] = i;
-                                    peak_mzs[i] = agilent_spectrum.XArray[i];
-                                    peak_intensities[i] = agilent_spectrum.YArray[i];
+                                    peaks.Add(new MSPeak(agilent_spectrum.XArray[i], agilent_spectrum.YArray[i], 0));
                                 }
-                                int[] peak_charge_states = new int[agilent_spectrum.TotalDataPoints];
-                                int[] peak_clusters = new int[agilent_spectrum.TotalDataPoints];
+                            }
 
-                                int num_peaks;
-                                lock(csaw)
+                            for(int c = (ALWAYS_USE_PRECURSOR_CHARGE_STATE_RANGE || charge == 0 ? minimumAssumedPrecursorChargeState : charge);
+                                c <= (ALWAYS_USE_PRECURSOR_CHARGE_STATE_RANGE || charge == 0 ? maximumAssumedPrecursorChargeState : charge); c++)
+                            {
+                                if(assignChargeStates)
                                 {
-                                    csaw.SetParameters(IsotopeModel.Peptidic, 1, (short)c, false, ACCURACY_C0, ACCURACY_C1);
-                                    num_peaks = csaw.AssignChargeStates(peak_ids, peak_mzs, peak_intensities, peak_charge_states, peak_clusters);
-                                }
-
-                                peaks = new List<MSPeak>(num_peaks);
-                                HashSet<int> observed_peak_clusters = new HashSet<int>();
-                                for(int i = 0; i < num_peaks; i++)
-                                {
-                                    bool isotopic_peak = observed_peak_clusters.Contains(peak_clusters[i]);
-                                    if(!deisotope || !isotopic_peak)
+                                    int[] peak_ids = new int[agilent_spectrum.TotalDataPoints];
+                                    double[] peak_mzs = new double[agilent_spectrum.TotalDataPoints];
+                                    double[] peak_intensities = new double[agilent_spectrum.TotalDataPoints];
+                                    for(int i = 0; i < agilent_spectrum.TotalDataPoints; i++)
                                     {
-                                        peaks.Add(new MSPeak(peak_mzs[i], peak_intensities[i], peak_charge_states[i]));
-                                        if(peak_clusters[i] > 0 && !isotopic_peak)
+                                        peak_ids[i] = i;
+                                        peak_mzs[i] = agilent_spectrum.XArray[i];
+                                        peak_intensities[i] = agilent_spectrum.YArray[i];
+                                    }
+                                    int[] peak_charge_states = new int[agilent_spectrum.TotalDataPoints];
+                                    int[] peak_clusters = new int[agilent_spectrum.TotalDataPoints];
+
+                                    int num_peaks;
+                                    lock(csaw)
+                                    {
+                                        csaw.SetParameters(IsotopeModel.Peptidic, 1, (short)c, false, ACCURACY_C0, ACCURACY_C1);
+                                        num_peaks = csaw.AssignChargeStates(peak_ids, peak_mzs, peak_intensities, peak_charge_states, peak_clusters);
+                                    }
+
+                                    peaks = new List<MSPeak>(num_peaks);
+                                    HashSet<int> observed_peak_clusters = new HashSet<int>();
+                                    for(int i = 0; i < num_peaks; i++)
+                                    {
+                                        bool isotopic_peak = observed_peak_clusters.Contains(peak_clusters[i]);
+                                        if(!deisotope || !isotopic_peak)
                                         {
-                                            observed_peak_clusters.Add(peak_clusters[i]);
+                                            peaks.Add(new MSPeak(peak_mzs[i], peak_intensities[i], peak_charge_states[i]));
+                                            if(peak_clusters[i] > 0 && !isotopic_peak)
+                                            {
+                                                observed_peak_clusters.Add(peak_clusters[i]);
+                                            }
                                         }
                                     }
                                 }
-                            }
 
-                            double precursor_mass = Utilities.MassFromMZ(precursor_mz, c);
+                                double precursor_mass = Utilities.MassFromMZ(precursor_mz, c);
 
-                            TandemMassSpectrum spectrum = new TandemMassSpectrum(agilentDFolderPath, spectrum_number, scan_id, null, scan_record.RetentionTime, FRAGMENTATION_METHOD, precursor_mz, precursor_intensity, c, precursor_mass, peaks);
-                            lock(spectra)
-                            {
-                                spectra.Add(spectrum);
+                                TandemMassSpectrum spectrum = new TandemMassSpectrum(agilentDFolderPath, spectrum_number, scan_id, null, scan_record.RetentionTime, FRAGMENTATION_METHOD, precursor_mz, precursor_intensity, c, precursor_mass, peaks);
+                                lock(spectra)
+                                {
+                                    spectra.Add(spectrum);
+                                }
                             }
                         }
                     }
