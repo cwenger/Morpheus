@@ -74,13 +74,13 @@ namespace Morpheus
 
                         int charge = DeterminePrecursorCharge(raw, scan_number);
 
-                        double[,] label_data = GetFragmentationData(raw, scan_number);
+                        double[,] label_data = GetFragmentationData(raw, scan_number, scan_filter);
                         List<MSPeak> peaks = new List<MSPeak>(label_data.GetLength(1));
                         for(int peak_index = label_data.GetLowerBound(1); peak_index <= label_data.GetUpperBound(1); peak_index++)
                         {
                             peaks.Add(new MSPeak(label_data[(int)RawLabelDataColumn.MZ, peak_index],
                                 label_data[(int)RawLabelDataColumn.Intensity, peak_index],
-                                assignChargeStates ? (int)label_data[(int)RawLabelDataColumn.Charge, peak_index] : 0));
+                                assignChargeStates && (int)RawLabelDataColumn.Charge < label_data.GetLength(0) ? (int)label_data[(int)RawLabelDataColumn.Charge, peak_index] : 0));
                         }
 
                         peaks = FilterPeaks(peaks, absoluteThreshold, relativeThresholdPercent, maximumNumberOfPeaks);
@@ -236,14 +236,27 @@ namespace Morpheus
             return false;
         }
 
-        private static double[,] GetFragmentationData(IXRawfile2 raw, int scanNumber)
+        private static double[,] GetFragmentationData(IXRawfile2 raw, int scanNumber, string scanFilter)
         {
-            object labels_obj = null;
-            object flags_obj = null;
-            raw.GetLabelData(ref labels_obj, ref flags_obj, ref scanNumber);
-            double[,] labels = (double[,])labels_obj;
+            double[,] data;
+            if(scanFilter.Contains("FTMS"))
+            {
+                object labels_obj = null;
+                object flags_obj = null;
+                raw.GetLabelData(ref labels_obj, ref flags_obj, ref scanNumber);
+                data = (double[,])labels_obj;
+            }
+            else
+            {
+                double centroid_peak_width = double.NaN;
+                object mass_list = null;
+                object peak_flags = null;
+                int array_size = -1;
+                raw.GetMassListFromScanNum(scanNumber, null, 0, 0, 0, 1, ref centroid_peak_width, ref mass_list, ref peak_flags, ref array_size);
+                data = (double[,])mass_list;
+            }
 
-            return labels;
+            return data;
         }
 
         private static int DeterminePrecursorCharge(IXRawfile2 raw, int scanNumber)
