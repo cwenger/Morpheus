@@ -22,23 +22,7 @@ namespace Morpheus
                     string[] fields = line.Split('\t');
 
                     string description = fields[0];
-                    ModificationType modification_type = ModificationType.AminoAcidResidue;
-                    if(fields[1].Equals("protein N-terminus", StringComparison.OrdinalIgnoreCase))
-                    {
-                        modification_type = ModificationType.ProteinNTerminus;
-                    }
-                    else if(fields[1].Equals("protein C-terminus", StringComparison.OrdinalIgnoreCase))
-                    {
-                        modification_type = ModificationType.ProteinCTerminus;
-                    }
-                    else if(fields[1].Equals("peptide N-terminus", StringComparison.OrdinalIgnoreCase))
-                    {
-                        modification_type = ModificationType.PeptideNTerminus;
-                    }
-                    else if(fields[1].Equals("peptide C-terminus", StringComparison.OrdinalIgnoreCase))
-                    {
-                        modification_type = ModificationType.PeptideCTerminus;
-                    }
+                    ModificationType modification_type = (ModificationType)Enum.Parse(typeof(ModificationType), fields[1], true);
                     char amino_acid;
                     char.TryParse(fields[2], out amino_acid);
                     double monoisotopic_mass_shift = double.Parse(fields[3], CultureInfo.InvariantCulture);
