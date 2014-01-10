@@ -17,24 +17,30 @@ namespace Morpheus
 
     internal class SpectrumNavigator
     {
-        internal XPathNavigator Navigator { get; private set; }
-        internal XmlNamespaceManager XmlNamespaceManager { get; private set; }
-        internal bool SpectrumConverted { get; private set; }
-        internal double[] MZ { get; private set; }
-        internal double[] Intensity { get; private set; }
+        private XPathNavigator navigator;
+        private XmlNamespaceManager xmlNamespaceManager;
+        private double[] mz;
+        private double[] intensity;
 
         internal SpectrumNavigator(XPathNavigator navigator, XmlNamespaceManager xmlNamespaceManager)
         {
-            Navigator = navigator;
-            XmlNamespaceManager = xmlNamespaceManager;
+            this.navigator = navigator;
+            this.xmlNamespaceManager = xmlNamespaceManager;
         }
 
-        internal void ConvertSpectrum(out double[] mz, out double[] intensity)
+        internal void GetSpectrum(out double[] mz, out double[] intensity)
         {
-            TandemMassSpectra.ReadDataFromSpectrumNavigator(Navigator.Select("mzML:binaryDataArrayList/mzML:binaryDataArray/*", XmlNamespaceManager), out mz, out intensity);
-            MZ = mz;
-            Intensity = intensity;
-            SpectrumConverted = true;
+            if(this.mz == null || this.intensity == null)
+            {
+                TandemMassSpectra.ReadDataFromSpectrumNavigator(navigator.Select("mzML:binaryDataArrayList/mzML:binaryDataArray/*", xmlNamespaceManager), out mz, out intensity);
+                this.mz = mz;
+                this.intensity = intensity;
+            }
+            else
+            {
+                mz = this.mz;
+                intensity = this.intensity;
+            }
         }
     }
 
@@ -221,15 +227,7 @@ namespace Morpheus
                             {
                                 double[] ms1_mz;
                                 double[] ms1_intensity;
-                                if(!ms1.SpectrumConverted)
-                                {
-                                    ms1.ConvertSpectrum(out ms1_mz, out ms1_intensity);
-                                }
-                                else
-                                {
-                                    ms1_mz = ms1.MZ;
-                                    ms1_intensity = ms1.Intensity;
-                                }
+                                ms1.GetSpectrum(out ms1_mz, out ms1_intensity);
                                 int index = -1;
                                 for(int i = ms1_mz.GetLowerBound(0); i <= ms1_mz.GetUpperBound(0); i++)
                                 {
