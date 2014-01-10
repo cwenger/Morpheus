@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Xml;
@@ -170,7 +169,7 @@ namespace Morpheus
                             {
                                 if(navigator.GetAttribute("name", string.Empty).Equals("scan start time", StringComparison.OrdinalIgnoreCase))
                                 {
-                                    retention_time_minutes = double.Parse(navigator.GetAttribute("value", string.Empty), CultureInfo.InvariantCulture);
+                                    retention_time_minutes = double.Parse(navigator.GetAttribute("value", string.Empty));
                                     if(navigator.GetAttribute("unitName", string.Empty).StartsWith("s", StringComparison.OrdinalIgnoreCase))
                                     {
                                         retention_time_minutes = TimeSpan.FromSeconds(retention_time_minutes).TotalMinutes;
@@ -186,7 +185,7 @@ namespace Morpheus
                             {
                                 if(navigator.GetAttribute("name", string.Empty).Equals("selected ion m/z", StringComparison.OrdinalIgnoreCase))
                                 {
-                                    precursor_mz = double.Parse(navigator.GetAttribute("value", string.Empty), CultureInfo.InvariantCulture);
+                                    precursor_mz = double.Parse(navigator.GetAttribute("value", string.Empty));
                                 }
                                 else if(navigator.GetAttribute("name", string.Empty).Equals("charge state", StringComparison.OrdinalIgnoreCase))
                                 {
@@ -194,7 +193,7 @@ namespace Morpheus
                                 }
                                 else if(navigator.GetAttribute("name", string.Empty).Equals("peak intensity", StringComparison.OrdinalIgnoreCase))
                                 {
-                                    precursor_intensity = double.Parse(navigator.GetAttribute("value", string.Empty), CultureInfo.InvariantCulture);
+                                    precursor_intensity = double.Parse(navigator.GetAttribute("value", string.Empty));
                                 }
                             }
                             XPathNavigator navigator2 = spectrum_child_navigator.SelectSingleNode("mzML:precursor/mzML:activation/mzML:cvParam", xnm);
