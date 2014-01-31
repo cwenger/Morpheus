@@ -779,6 +779,7 @@ namespace Morpheus
             SetToolStripProgressBarValue(tspbProgress, 100);
             SetDropAllowed(this, true);
             SetControlEnabled(pnlMain, true);
+            GC.Collect();
         }
 
         private void ResetProgressBar(object sender, EventArgs e)
