@@ -208,6 +208,13 @@ namespace Morpheus
 
         public void Search()
         {
+            OnStarting(EventArgs.Empty);
+            DoSearch();
+            OnFinished(EventArgs.Empty);
+        }
+
+        public void DoSearch()
+        {
             StreamWriter overall_log = null;
             StreamWriter summary = null;
             StreamWriter log = null;
@@ -216,8 +223,6 @@ namespace Morpheus
             try
             {
                 DateTime overall_start = DateTime.Now;
-
-                OnStarting(EventArgs.Empty);
 
                 OnUpdateProgress(new ProgressEventArgs(0));
 
@@ -883,8 +888,6 @@ namespace Morpheus
                 protein_fasta_database.Close();
 
                 summary.Close();
-
-                OnFinished(EventArgs.Empty);
             }
             catch(Exception ex)
             {
