@@ -213,7 +213,7 @@ namespace Morpheus
             OnFinished(EventArgs.Empty);
         }
 
-        public void DoSearch()
+        private void DoSearch()
         {
             StreamWriter overall_log = null;
             StreamWriter summary = null;
