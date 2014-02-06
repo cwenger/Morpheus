@@ -641,13 +641,11 @@ namespace Morpheus
             thread.Start();
         }
 
-        private delegate void SetDropAllowedCallback(Form form, bool allowDrop);
-
         private void SetDropAllowed(Form form, bool allowDrop)
         {
             if(form.InvokeRequired)
             {
-                form.Invoke(new SetDropAllowedCallback(SetDropAllowed), new object[] { form, allowDrop });
+                form.Invoke(new Action<Form, bool>(SetDropAllowed), new object[] { form, allowDrop });
             }
             else
             {
@@ -655,13 +653,11 @@ namespace Morpheus
             }
         }
 
-        private delegate void SetControlEnabledCallback(Control control, bool enabled);
-
         private void SetControlEnabled(Control control, bool enabled)
         {
             if(control.InvokeRequired)
             {
-                control.Invoke(new SetControlEnabledCallback(SetControlEnabled), new object[] { control, enabled });
+                control.Invoke(new Action<Control, bool>(SetControlEnabled), new object[] { control, enabled });
             }
             else
             {
@@ -675,13 +671,11 @@ namespace Morpheus
             SetControlEnabled(pnlMain, false);
         }
 
-        private delegate void SetListBoxSelectedItemCallback(ListBox listBox, string selectedItem);
-
         private void SetListBoxSelectedItem(ListBox listBox, string selectedItem)
         {
             if(listBox.InvokeRequired)
             {
-                listBox.Invoke(new SetListBoxSelectedItemCallback(SetListBoxSelectedItem), new object[] { listBox, selectedItem });
+                listBox.Invoke(new Action<ListBox, string>(SetListBoxSelectedItem), new object[] { listBox, selectedItem });
             }
             else
             {
@@ -694,13 +688,11 @@ namespace Morpheus
             SetListBoxSelectedItem(lstData, e.Filepath);
         }
 
-        private delegate void SetToolStripItemTextCallback(ToolStripItem toolStripItem, string text);
-
         private void SetToolStripItemText(ToolStripItem toolStripItem, string text)
         {
             if(toolStripItem.GetCurrentParent().InvokeRequired)
             {
-                toolStripItem.GetCurrentParent().Invoke(new SetToolStripItemTextCallback(SetToolStripItemText), new object[] { toolStripItem, text });
+                toolStripItem.GetCurrentParent().Invoke(new Action<ToolStripItem, string>(SetToolStripItemText), new object[] { toolStripItem, text });
             }
             else
             {
@@ -713,13 +705,11 @@ namespace Morpheus
             SetToolStripItemText(tsslStatus, e.Status);
         }
 
-        private delegate void SetToolStripProgressBarStyleCallback(ToolStripProgressBar toolStripProgressBar, ProgressBarStyle style);
-
         private void SetToolStripProgressBarStyle(ToolStripProgressBar toolStripProgressBar, ProgressBarStyle style)
         {
             if(toolStripProgressBar.GetCurrentParent().InvokeRequired)
             {
-                toolStripProgressBar.GetCurrentParent().Invoke(new SetToolStripProgressBarStyleCallback(SetToolStripProgressBarStyle), new object[] { toolStripProgressBar, style });
+                toolStripProgressBar.GetCurrentParent().Invoke(new Action<ToolStripProgressBar, ProgressBarStyle>(SetToolStripProgressBarStyle), new object[] { toolStripProgressBar, style });
             }
             else
             {
@@ -737,13 +727,11 @@ namespace Morpheus
             SetToolStripProgressBarStyle(tspbProgress, ProgressBarStyle.Marquee);
         }
 
-        private delegate void SetToolStripProgressBarValueCallback(ToolStripProgressBar toolStripProgressBar, int value);
-
         private void SetToolStripProgressBarValue(ToolStripProgressBar toolStripProgressBar, int value)
         {
             if(toolStripProgressBar.GetCurrentParent().InvokeRequired)
             {
-                toolStripProgressBar.GetCurrentParent().Invoke(new SetToolStripProgressBarValueCallback(SetToolStripProgressBarValue), new object[] { toolStripProgressBar, value });
+                toolStripProgressBar.GetCurrentParent().Invoke(new Action<ToolStripProgressBar, int>(SetToolStripProgressBarValue), new object[] { toolStripProgressBar, value });
             }
             else
             {
