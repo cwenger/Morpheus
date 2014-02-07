@@ -735,8 +735,8 @@ namespace Morpheus
                     HashSet<string> prefixes = new HashSet<string>();
                     foreach(KeyValuePair<string, HashSet<string>> kvp in parents)
                     {
-                        DirectoryInfo directory_info = new DirectoryInfo(kvp.Key);
-                        string prefix = directory_info.Name;
+                        DirectoryInfo directory_info = new DirectoryInfo(kvp.Key.Replace("*", null));
+                        string prefix = directory_info.Name.Replace(@":\", null);
                         int id = 1;
                         while(prefixes.Contains(prefix))
                         {
@@ -931,25 +931,32 @@ namespace Morpheus
             SortedList<string, HashSet<string>> parents = new SortedList<string, HashSet<string>>();
 
             // find all the parent folders and the data files they contain
-            // does this work if the data files are in the root directory (i.e. C:\)?
             foreach(string data_filepath in dataFilepaths)
             {
-                string directory = data_filepath;
+                string directory = Path.GetDirectoryName(data_filepath);
+                bool first = true;
                 while(true)
                 {
-                    directory = Path.GetDirectoryName(directory);
                     if(directory != null)
                     {
                         HashSet<string> parent_data_filepaths;
-                        if(!parents.TryGetValue(directory, out parent_data_filepaths))
+                        if(!parents.TryGetValue(directory + (first ? null : @"*"), out parent_data_filepaths))
                         {
                             parent_data_filepaths = new HashSet<string>();
                             parent_data_filepaths.Add(data_filepath);
-                            parents.Add(directory, parent_data_filepaths);
+                            parents.Add(directory + (first ? null : "*"), parent_data_filepaths);
                         }
                         else
                         {
                             parent_data_filepaths.Add(data_filepath);
+                        }
+                        if(first)
+                        {
+                            first = false;
+                        }
+                        else
+                        {
+                            directory = Path.GetDirectoryName(directory);
                         }
                     }
                     else
@@ -980,6 +987,7 @@ namespace Morpheus
             {
                 HashSet<string> current_data_filepaths = parents.Values[j];
 
+                bool removed = false;
                 int k = j + 1;
                 while(k < parents.Count)
                 {
@@ -987,6 +995,7 @@ namespace Morpheus
                     if(next_data_filepaths.SetEquals(current_data_filepaths))
                     {
                         parents.RemoveAt(j);
+                        removed = true;
                         break;
                     }
                     else
@@ -995,7 +1004,10 @@ namespace Morpheus
                     }
                 }
 
-                j++;
+                if(!removed)
+                {
+                    j++;
+                }
             }
 
             return parents;
