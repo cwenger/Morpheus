@@ -65,6 +65,21 @@ namespace Morpheus
             {
                 NextAminoAcid = '-';
             }
+            if(parent.KnownModifications != null && parent.KnownModifications.Count > 0)
+            {
+                for(int i = 0; i < endResidueNumber - startResidueNumber + 1; i++)
+                {
+                    List<Modification> modifications;
+                    if(parent.KnownModifications.TryGetValue(startResidueNumber - 1 + i + 2, out modifications))
+                    {
+                        if(KnownModifications == null)
+                        {
+                            KnownModifications = new Dictionary<int, List<Modification>>();
+                        }
+                        KnownModifications.Add(i + 2, modifications);
+                    }
+                }
+            }
         }
 
         private Peptide(Peptide peptide) : this(peptide.Parent, peptide.StartResidueNumber, peptide.EndResidueNumber, peptide.MissedCleavages) { }

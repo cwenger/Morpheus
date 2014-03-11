@@ -54,7 +54,7 @@ namespace Morpheus
                     string default_mod = fields[5];
                     bool default_fixed = default_mod.Equals("fixed", StringComparison.OrdinalIgnoreCase);
                     bool default_variable = default_mod.Equals("variable", StringComparison.OrdinalIgnoreCase);
-                    Modification modification = new Modification(description, modification_type, amino_acid, monoisotopic_mass_shift, average_mass_shift, default_fixed, default_variable);
+                    Modification modification = new Modification(description, modification_type, amino_acid, monoisotopic_mass_shift, average_mass_shift, default_fixed, default_variable, false);
                     Add(modification);
                 }
             }

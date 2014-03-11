@@ -165,7 +165,9 @@ namespace Morpheus
             return sb.ToString();
         }
 
-        public static List<ProteinGroup> ApplyProteinParsimony(IEnumerable<PeptideSpectrumMatch> peptideSpectrumMatches, double morpheusScoreThreshold, FileStream proteinFastaDatabase, bool onTheFlyDecoys, Protease protease, int maximumMissedCleavages, InitiatorMethionineBehavior initiatorMethionineBehavior, int maximumThreads)
+        private const bool REQUIRE_MATCHING_KNOWN_MODIFICATIONS_IN_PROTEIN_PARSIMONY = true;
+
+        public static List<ProteinGroup> ApplyProteinParsimony(IEnumerable<PeptideSpectrumMatch> peptideSpectrumMatches, double morpheusScoreThreshold, FileStream proteinFastaDatabase, bool onTheFlyDecoys, IDictionary<string, Modification> knownVariableModifications, Protease protease, int maximumMissedCleavages, InitiatorMethionineBehavior initiatorMethionineBehavior, int maximumThreads)
         {
             // make a list of the all the distinct base leucine peptide sequences
             Dictionary<string, List<Protein>> peptide_proteins = new Dictionary<string, List<Protein>>();
@@ -183,7 +185,7 @@ namespace Morpheus
             // record all proteins that could have been the source of each peptide
             ParallelOptions parallel_options = new ParallelOptions();
             parallel_options.MaxDegreeOfParallelism = maximumThreads;
-            Parallel.ForEach(ProteinFastaReader.ReadProteins(proteinFastaDatabase, onTheFlyDecoys), parallel_options, protein =>
+            Parallel.ForEach(ProteinFastaReader.ReadProteins(proteinFastaDatabase, onTheFlyDecoys, REQUIRE_MATCHING_KNOWN_MODIFICATIONS_IN_PROTEIN_PARSIMONY ? knownVariableModifications : null), parallel_options, protein =>
                 {
                     foreach(Peptide peptide in protein.Digest(protease, maximumMissedCleavages, initiatorMethionineBehavior, null, null))
                     {
@@ -218,6 +220,33 @@ namespace Morpheus
                 {
                     foreach(Protein protein in peptide_proteins[psm.Peptide.BaseLeucineSequence])
                     {
+                        if(REQUIRE_MATCHING_KNOWN_MODIFICATIONS_IN_PROTEIN_PARSIMONY)
+                        {
+                            // check to make sure this protein's known modifications match the PSM's
+                            bool known_modification_match = true;
+                            if(psm.Peptide.VariableModifications != null && psm.Peptide.VariableModifications.Count > 0)
+                            {
+                                foreach(KeyValuePair<int, Modification> kvp in psm.Peptide.VariableModifications)
+                                {
+                                    if(kvp.Value.Known)
+                                    {
+                                        List<Modification> protein_modifications = null;
+                                        if(protein.KnownModifications == null ||
+                                            !protein.KnownModifications.TryGetValue(psm.Peptide.StartResidueNumber - 1 + kvp.Key, out protein_modifications) ||
+                                            !protein_modifications.Contains(kvp.Value))
+                                        {
+                                            known_modification_match = false;
+                                            break;
+                                        }
+                                    }
+                                }
+                                if(!known_modification_match)
+                                {
+                                    continue;
+                                }
+                            }
+                        }
+
                         ProteinGroup protein_group;
                         if(!proteins_by_description.TryGetValue(protein.Description, out protein_group))
                         {
