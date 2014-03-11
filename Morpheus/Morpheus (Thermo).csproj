@@ -88,7 +88,7 @@
     <Compile Include="ProductTypes.cs" />
     <Compile Include="ProgressEventArgs.cs" />
     <Compile Include="ProteaseDictionary.cs" />
-    <Compile Include="ProteinFastaReader.cs" />
+    <Compile Include="ProteomeDatabaseReader.cs" />
     <Compile Include="MassToleranceUnits.cs" />
     <Compile Include="MassType.cs" />
     <Compile Include="Program.cs" />

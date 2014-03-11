@@ -54,7 +54,7 @@ namespace Morpheus
                 Dictionary<string, Modification> known_variable_modifications = null;
                 if(Path.GetExtension(database).Equals(".xml", StringComparison.InvariantCultureIgnoreCase))
                 {
-                    known_variable_modifications = ProteinFastaReader.ReadUniProtXmlModifications(database);
+                    known_variable_modifications = ProteomeDatabaseReader.ReadUniProtXmlModifications(database);
                 }
                 bool append_decoys = false;
                 if(arguments["ad"] != null)
@@ -63,7 +63,7 @@ namespace Morpheus
                 }
                 else
                 {
-                    append_decoys = Path.GetExtension(database).Equals(".xml", StringComparison.InvariantCultureIgnoreCase) || !ProteinFastaReader.HasDecoyProteins(database);
+                    append_decoys = Path.GetExtension(database).Equals(".xml", StringComparison.InvariantCultureIgnoreCase) || !ProteomeDatabaseReader.HasDecoyProteins(database);
                 }
                 ProteaseDictionary proteases = ProteaseDictionary.Instance;
                 Protease protease = proteases["trypsin (no proline rule)"];

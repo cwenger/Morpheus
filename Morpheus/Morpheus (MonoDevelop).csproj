@@ -118,7 +118,7 @@
     <Compile Include="PeptideSpectrumMatch.cs" />
     <Compile Include="ProgressEventArgs.cs" />
     <Compile Include="ProteaseDictionary.cs" />
-    <Compile Include="ProteinFastaReader.cs" />
+    <Compile Include="ProteomeDatabaseReader.cs" />
     <Compile Include="frmMain.cs">
       <SubType>Form</SubType>
     </Compile>
