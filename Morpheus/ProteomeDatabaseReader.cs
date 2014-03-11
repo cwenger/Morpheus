@@ -5,7 +5,7 @@ using System.Xml;
 
 namespace Morpheus
 {
-    public static class ProteinFastaReader
+    public static class ProteomeDatabaseReader
     {
         public static bool HasDecoyProteins(string fastaProteomeDatabaseFilepath)
         {

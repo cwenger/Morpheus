@@ -248,7 +248,7 @@ namespace Morpheus
                 int target_proteins;
                 int decoy_proteins;
                 int on_the_fly_decoy_proteins;
-                int total_proteins = ProteinFastaReader.CountProteins(protein_fasta_database, onTheFlyDecoys, out target_proteins, out decoy_proteins, out on_the_fly_decoy_proteins);
+                int total_proteins = ProteomeDatabaseReader.CountProteins(protein_fasta_database, onTheFlyDecoys, out target_proteins, out decoy_proteins, out on_the_fly_decoy_proteins);
                 double decoys_over_targets_protein_ratio = (double)(decoy_proteins + on_the_fly_decoy_proteins) / target_proteins;
 
                 int num_target_peptides = 0;
@@ -486,10 +486,16 @@ namespace Morpheus
                                 {
                                     if(observed_as_decoy || peptide.Target)
                                     {
-                                        continue;
+                                        // if the peptide has no known mods we have already searched all its isoforms, skip it
+                                        if(peptide.KnownModifications == null || peptide.KnownModifications.Count == 0)
+                                        {
+                                            continue;
+                                        }
                                     }
-
-                                    peptides_observed[peptide.BaseLeucineSequence] = true;
+                                    else
+                                    {
+                                        peptides_observed[peptide.BaseLeucineSequence] = true;
+                                    }
                                 }
                             }
 
@@ -524,7 +530,7 @@ namespace Morpheus
                     int old_progress = 0;
                     ParallelOptions parallel_options = new ParallelOptions();
                     parallel_options.MaxDegreeOfParallelism = maximumThreads;
-                    Parallel.ForEach(ProteinFastaReader.ReadProteins(protein_fasta_database, onTheFlyDecoys, known_variable_modifications), parallel_options, protein =>
+                    Parallel.ForEach(ProteomeDatabaseReader.ReadProteins(protein_fasta_database, onTheFlyDecoys, known_variable_modifications), parallel_options, protein =>
                         {
                             foreach(Peptide peptide in protein.Digest(protease, maximumMissedCleavages, initiatorMethionineBehavior, null, null))
                             {
@@ -556,6 +562,7 @@ namespace Morpheus
                                         {
                                             if(observed_as_decoy || peptide.Target)
                                             {
+                                                // if the peptide has no known mods we have already searched all its isoforms, skip it
                                                 if(peptide.KnownModifications == null || peptide.KnownModifications.Count == 0)
                                                 {
                                                     continue;

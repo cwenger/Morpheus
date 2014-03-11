@@ -473,11 +473,11 @@ namespace Morpheus
         {
             if(Path.GetExtension(txtFastaFile.Text).Equals(".xml", StringComparison.InvariantCultureIgnoreCase))
             {
-                e.Result = new KeyValuePair<IEnumerable<Modification>, bool>(ProteinFastaReader.ReadUniProtXmlModifications(txtFastaFile.Text).Values, false);
+                e.Result = new KeyValuePair<IEnumerable<Modification>, bool>(ProteomeDatabaseReader.ReadUniProtXmlModifications(txtFastaFile.Text).Values, false);
             }
             else
             {
-                e.Result = new KeyValuePair<IEnumerable<Modification>, bool>(null, ProteinFastaReader.HasDecoyProteins(txtFastaFile.Text));
+                e.Result = new KeyValuePair<IEnumerable<Modification>, bool>(null, ProteomeDatabaseReader.HasDecoyProteins(txtFastaFile.Text));
             }
         }
 

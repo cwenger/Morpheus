@@ -185,7 +185,7 @@ namespace Morpheus
             // record all proteins that could have been the source of each peptide
             ParallelOptions parallel_options = new ParallelOptions();
             parallel_options.MaxDegreeOfParallelism = maximumThreads;
-            Parallel.ForEach(ProteinFastaReader.ReadProteins(proteinFastaDatabase, onTheFlyDecoys, REQUIRE_MATCHING_KNOWN_MODIFICATIONS_IN_PROTEIN_PARSIMONY ? knownVariableModifications : null), parallel_options, protein =>
+            Parallel.ForEach(ProteomeDatabaseReader.ReadProteins(proteinFastaDatabase, onTheFlyDecoys, REQUIRE_MATCHING_KNOWN_MODIFICATIONS_IN_PROTEIN_PARSIMONY ? knownVariableModifications : null), parallel_options, protein =>
                 {
                     foreach(Peptide peptide in protein.Digest(protease, maximumMissedCleavages, initiatorMethionineBehavior, null, null))
                     {
