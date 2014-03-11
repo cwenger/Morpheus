@@ -224,6 +224,8 @@ namespace Morpheus
             {
                 DateTime overall_start = DateTime.Now;
 
+                OnUpdateStatus(new StatusEventArgs("Initializing..."));
+                OnReportTaskWithoutProgress(EventArgs.Empty);
                 OnUpdateProgress(new ProgressEventArgs(0));
 
                 TandemMassSpectra.ReportTaskWithoutProgress += new EventHandler(HandleReportTaskWithoutProgress);
@@ -286,6 +288,20 @@ namespace Morpheus
                 SortedList<string, HashSet<string>> parents = null;
                 Dictionary<string, int> num_spectra = null;
                 Dictionary<string, List<PeptideSpectrumMatch>> grouped_aggregate_psms = null;
+
+                Dictionary<string, Modification> known_variable_modifications = new Dictionary<string, Modification>();
+                List<Modification> unknown_variable_modifications = new List<Modification>();
+                foreach(Modification variable_modification in variableModifications)
+                {
+                    if(variable_modification.Known)
+                    {
+                        known_variable_modifications.Add(variable_modification.Description, variable_modification);
+                    }
+                    else
+                    {
+                        unknown_variable_modifications.Add(variable_modification);
+                    }
+                }
 
                 if(dataFilepaths.Count > 1)
                 {
@@ -440,7 +456,7 @@ namespace Morpheus
 #if NON_MULTITHREADED
                     int proteins = 0;
                     int old_progress = 0;
-                    foreach(Protein protein in ProteinFastaReader.ReadProteins(protein_fasta_database, onTheFlyDecoys))
+                    foreach(Protein protein in ProteinFastaReader.ReadProteins(protein_fasta_database, onTheFlyDecoys, known_variable_modifications))
                     {
                         foreach(Peptide peptide in protein.Digest(protease, maximumMissedCleavages, initiatorMethionineBehavior, null, null))
                         {
@@ -478,7 +494,7 @@ namespace Morpheus
                             }
 
                             peptide.SetFixedModifications(fixedModifications);
-                            foreach(Peptide modified_peptide in peptide.GetVariablyModifiedPeptides(variableModifications, maximumVariableModificationIsoforms))
+                            foreach(Peptide modified_peptide in peptide.GetVariablyModifiedPeptides(unknown_variable_modifications, maximumVariableModificationIsoforms))
                             {
                                 foreach(TandemMassSpectrum spectrum in precursorMonoisotopicPeakCorrection ?
                                     spectra.GetTandemMassSpectraInMassRange(precursorMassType == MassType.Average ? modified_peptide.AverageMass : modified_peptide.MonoisotopicMass, precursorMassTolerance, minimumPrecursorMonoisotopicPeakOffset, maximumPrecursorMonoisotopicPeakOffset) :
@@ -508,7 +524,7 @@ namespace Morpheus
                     int old_progress = 0;
                     ParallelOptions parallel_options = new ParallelOptions();
                     parallel_options.MaxDegreeOfParallelism = maximumThreads;
-                    Parallel.ForEach(ProteinFastaReader.ReadProteins(protein_fasta_database, onTheFlyDecoys), parallel_options, protein =>
+                    Parallel.ForEach(ProteinFastaReader.ReadProteins(protein_fasta_database, onTheFlyDecoys, known_variable_modifications), parallel_options, protein =>
                         {
                             foreach(Peptide peptide in protein.Digest(protease, maximumMissedCleavages, initiatorMethionineBehavior, null, null))
                             {
@@ -540,16 +556,21 @@ namespace Morpheus
                                         {
                                             if(observed_as_decoy || peptide.Target)
                                             {
-                                                continue;
+                                                if(peptide.KnownModifications == null || peptide.KnownModifications.Count == 0)
+                                                {
+                                                    continue;
+                                                }
                                             }
-
-                                            peptides_observed[peptide.BaseLeucineSequence] = true;
+                                            else
+                                            {
+                                                peptides_observed[peptide.BaseLeucineSequence] = true;
+                                            }
                                         }
                                     }
                                 }
 
                                 peptide.SetFixedModifications(fixedModifications);
-                                foreach(Peptide modified_peptide in peptide.GetVariablyModifiedPeptides(variableModifications, maximumVariableModificationIsoforms))
+                                foreach(Peptide modified_peptide in peptide.GetVariablyModifiedPeptides(unknown_variable_modifications, maximumVariableModificationIsoforms))
                                 {
                                     foreach(TandemMassSpectrum spectrum in precursorMonoisotopicPeakCorrection ?
                                         spectra.GetTandemMassSpectraInMassRange(precursorMassType == MassType.Average ? modified_peptide.AverageMass : modified_peptide.MonoisotopicMass, precursorMassTolerance, minimumPrecursorMonoisotopicPeakOffset, maximumPrecursorMonoisotopicPeakOffset) :
@@ -681,7 +702,7 @@ namespace Morpheus
                         log.WriteLine(target_peptides.ToString("N0") + " unique target (" + decoy_peptides.ToString("N0") + " decoy) peptides at " + peptide_fdr.ToString("0.000%") + " unique peptide FDR (" + peptide_score_threshold.ToString("0.000") + " Morpheus score threshold)");
                     }
 
-                    List<ProteinGroup> protein_groups = ProteinGroup.ApplyProteinParsimony(sorted_psms, peptide_score_threshold, protein_fasta_database, onTheFlyDecoys, protease, maximumMissedCleavages, initiatorMethionineBehavior, maximumThreads);
+                    List<ProteinGroup> protein_groups = ProteinGroup.ApplyProteinParsimony(sorted_psms, peptide_score_threshold, protein_fasta_database, onTheFlyDecoys, known_variable_modifications, protease, maximumMissedCleavages, initiatorMethionineBehavior, maximumThreads);
 
                     IEnumerable<IdentificationWithFalseDiscoveryRate<ProteinGroup>> protein_groups_with_fdr = FalseDiscoveryRate.DoFalseDiscoveryRateAnalysis(protein_groups, decoys_over_targets_protein_ratio);
                     Exporters.WriteToTabDelimitedTextFile(protein_groups_with_fdr, Path.Combine(outputFolder, Path.GetFileNameWithoutExtension(data_filepath) + ".protein_groups.tsv"));
@@ -787,7 +808,7 @@ namespace Morpheus
                         FalseDiscoveryRate.DetermineMaximumIdentifications(semi_aggregate_peptides_with_fdr, false, maximumFalseDiscoveryRate, out semi_aggregate_peptide_score_threshold, out semi_aggregate_target_peptides, out semi_aggregate_decoy_peptides, out semi_aggregate_peptide_fdr);
                         overall_log.WriteLine(semi_aggregate_target_peptides.ToString("N0") + " unique target (" + semi_aggregate_decoy_peptides.ToString("N0") + " decoy) peptides at " + semi_aggregate_peptide_fdr.ToString("0.000%") + " unique peptide FDR (" + semi_aggregate_peptide_score_threshold.ToString("0.000") + " Morpheus score threshold) in " + kvp.Key);
 
-                        List<ProteinGroup> semi_aggregate_protein_groups = ProteinGroup.ApplyProteinParsimony(semi_aggregate_psms, semi_aggregate_peptide_score_threshold, protein_fasta_database, onTheFlyDecoys, protease, maximumMissedCleavages, initiatorMethionineBehavior, maximumThreads);
+                        List<ProteinGroup> semi_aggregate_protein_groups = ProteinGroup.ApplyProteinParsimony(semi_aggregate_psms, semi_aggregate_peptide_score_threshold, protein_fasta_database, onTheFlyDecoys, known_variable_modifications, protease, maximumMissedCleavages, initiatorMethionineBehavior, maximumThreads);
 
                         IEnumerable<IdentificationWithFalseDiscoveryRate<ProteinGroup>> semi_aggregate_protein_groups_with_fdr = FalseDiscoveryRate.DoFalseDiscoveryRateAnalysis(semi_aggregate_protein_groups, decoys_over_targets_protein_ratio);
                         Exporters.WriteToTabDelimitedTextFile(semi_aggregate_protein_groups_with_fdr, Path.Combine(outputFolder, prefix + ".protein_groups.tsv"));
@@ -851,7 +872,7 @@ namespace Morpheus
                     FalseDiscoveryRate.DetermineMaximumIdentifications(aggregate_peptides_with_fdr, false, maximumFalseDiscoveryRate, out aggregate_peptide_score_threshold, out aggregate_target_peptides, out aggregate_decoy_peptides, out aggregate_peptide_fdr);
                     overall_log.WriteLine(aggregate_target_peptides.ToString("N0") + " unique target (" + aggregate_decoy_peptides.ToString("N0") + " decoy) aggregate peptides at " + aggregate_peptide_fdr.ToString("0.000%") + " unique peptide FDR (" + aggregate_peptide_score_threshold.ToString("0.000") + " Morpheus score threshold)");
 
-                    List<ProteinGroup> aggregate_protein_groups = ProteinGroup.ApplyProteinParsimony(aggregate_psms, aggregate_peptide_score_threshold, protein_fasta_database, onTheFlyDecoys, protease, maximumMissedCleavages, initiatorMethionineBehavior, maximumThreads);
+                    List<ProteinGroup> aggregate_protein_groups = ProteinGroup.ApplyProteinParsimony(aggregate_psms, aggregate_peptide_score_threshold, protein_fasta_database, onTheFlyDecoys, known_variable_modifications, protease, maximumMissedCleavages, initiatorMethionineBehavior, maximumThreads);
 
                     IEnumerable<IdentificationWithFalseDiscoveryRate<ProteinGroup>> aggregate_protein_groups_with_fdr = FalseDiscoveryRate.DoFalseDiscoveryRateAnalysis(aggregate_protein_groups, decoys_over_targets_protein_ratio);
                     Exporters.WriteToTabDelimitedTextFile(aggregate_protein_groups_with_fdr, Path.Combine(outputFolder, "protein_groups.tsv"));

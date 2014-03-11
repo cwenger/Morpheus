@@ -29,6 +29,13 @@ namespace Morpheus
             IdentifiedPeptides = new Dictionary<string, List<Peptide>>();
         }
 
+        public Protein(string sequence, string description, Dictionary<int, List<Modification>> knownModifications)
+            : base(sequence, false, knownModifications)
+        {
+            Description = description;
+            IdentifiedPeptides = new Dictionary<string, List<Peptide>>();
+        }
+
         public IEnumerable<Peptide> Digest(Protease protease, int maximumMissedCleavages, InitiatorMethionineBehavior initiatorMethionineBehavior,
             int? minimumPeptideLength, int? maximumPeptideLength)
         {

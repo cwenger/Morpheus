@@ -104,6 +104,7 @@
             this.ssStatusStrip = new System.Windows.Forms.StatusStrip();
             this.tsslStatus = new System.Windows.Forms.ToolStripStatusLabel();
             this.tspbProgress = new System.Windows.Forms.ToolStripProgressBar();
+            this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
             ((System.ComponentModel.ISupportInitialize)(this.numMaxMissedCleavages)).BeginInit();
             this.pnlMain.SuspendLayout();
             this.groupBox3.SuspendLayout();
@@ -184,9 +185,9 @@
             this.label2.AutoSize = true;
             this.label2.Location = new System.Drawing.Point(9, 293);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(136, 13);
+            this.label2.Size = new System.Drawing.Size(198, 13);
             this.label2.TabIndex = 3;
-            this.label2.Text = "Proteome Database (.fasta)";
+            this.label2.Text = "Proteome Database (.fasta, UniProt .xml)";
             // 
             // btnBrowseFasta
             // 
@@ -200,7 +201,7 @@
             // 
             // ofdFasta
             // 
-            this.ofdFasta.Filter = "FASTA proteome database files|*.fa;*.mpfa;*.fna;*.fsa;*.fas;*.fasta";
+            this.ofdFasta.Filter = "FASTA proteome database files|*.fa;*.mpfa;*.fna;*.fsa;*.fas;*.fasta|UniProt XML proteome database files|*.xml";
             this.ofdFasta.Multiselect = true;
             // 
             // cboProtease
@@ -973,6 +974,11 @@
             this.tspbProgress.Name = "tspbProgress";
             this.tspbProgress.Size = new System.Drawing.Size(400, 16);
             // 
+            // backgroundWorker1
+            // 
+            this.backgroundWorker1.DoWork += new System.ComponentModel.DoWorkEventHandler(this.backgroundWorker1_DoWork);
+            this.backgroundWorker1.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.backgroundWorker1_RunWorkerCompleted);
+            // 
             // frmMain
             // 
             this.AllowDrop = true;
@@ -1092,5 +1098,6 @@
         private System.Windows.Forms.Label label14;
         private System.Windows.Forms.NumericUpDown numMaximumAssumedPrecursorChargeState;
         private System.Windows.Forms.CheckBox chkMinimizeMemoryUsage;
+        private System.ComponentModel.BackgroundWorker backgroundWorker1;
     }
 }

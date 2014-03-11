@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Globalization;
 using System.IO;
 using System.Threading;
@@ -235,7 +236,9 @@ namespace Morpheus
                 foreach(string filepath in filepaths)
                 {
                     if(((!DIRECTORY || Directory.Exists(filepath)) && Path.GetExtension(filepath).Equals(EXTENSION, StringComparison.InvariantCultureIgnoreCase) && !lstData.Items.Contains(filepath))
-                        || Path.GetExtension(filepath).Equals(".fasta", StringComparison.InvariantCultureIgnoreCase) || Directory.Exists(filepath))
+                        || Path.GetExtension(filepath).Equals(".fasta", StringComparison.InvariantCultureIgnoreCase)
+                        || Path.GetExtension(filepath).Equals(".xml", StringComparison.InvariantCultureIgnoreCase)
+                        || Directory.Exists(filepath))
                     {
                         e.Effect = DragDropEffects.Link;
                         break;
@@ -255,7 +258,8 @@ namespace Morpheus
                     lstData.Items.Add(filepath);
                     tspbProgress.Value = tspbProgress.Minimum;
                 }
-                else if(Path.GetExtension(filepath).Equals(".fasta", StringComparison.InvariantCultureIgnoreCase))
+                else if(Path.GetExtension(filepath).Equals(".fasta", StringComparison.InvariantCultureIgnoreCase)
+                    || Path.GetExtension(filepath).Equals(".xml", StringComparison.InvariantCultureIgnoreCase))
                 {
                     txtFastaFile.Text = filepath;
                 }
@@ -440,7 +444,65 @@ namespace Morpheus
 
         private void CheckDatabase()
         {
-            chkOnTheFlyDecoys.Checked = !ProteinFastaReader.HasDecoyProteins(txtFastaFile.Text);
+            AllowDrop = false;
+            pnlMain.Enabled = false;
+            tsslStatus.Text = "Parsing database...";
+            tspbProgress.Style = ProgressBarStyle.Marquee;
+            Cursor = Cursors.WaitCursor;
+
+            int i = 0;
+            clbVariableModifications.BeginUpdate();
+            while(i < clbVariableModifications.Items.Count)
+            {
+                Modification modification = (Modification)clbVariableModifications.Items[i];
+                if(modification.Known)
+                {
+                    clbVariableModifications.Items.RemoveAt(i);
+                }
+                else
+                {
+                    i++;
+                }
+            }
+            clbVariableModifications.EndUpdate();
+
+            backgroundWorker1.RunWorkerAsync();
+        }
+
+        private void backgroundWorker1_DoWork(object sender, DoWorkEventArgs e)
+        {
+            if(Path.GetExtension(txtFastaFile.Text).Equals(".xml", StringComparison.InvariantCultureIgnoreCase))
+            {
+                e.Result = new KeyValuePair<IEnumerable<Modification>, bool>(ProteinFastaReader.ReadUniProtXmlModifications(txtFastaFile.Text).Values, false);
+            }
+            else
+            {
+                e.Result = new KeyValuePair<IEnumerable<Modification>, bool>(null, ProteinFastaReader.HasDecoyProteins(txtFastaFile.Text));
+            }
+        }
+
+        private void backgroundWorker1_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            KeyValuePair<IEnumerable<Modification>, bool> result = (KeyValuePair<IEnumerable<Modification>, bool>)e.Result;
+
+            if(result.Key != null)
+            {
+                clbVariableModifications.BeginUpdate();
+                foreach(Modification modification in result.Key)
+                {
+                    clbVariableModifications.Items.Add(modification, modification.DefaultVariable);
+                }
+                clbVariableModifications.TopIndex = clbVariableModifications.Items.Count - 1;
+                clbVariableModifications.EndUpdate();
+            }
+
+            chkOnTheFlyDecoys.Checked = !result.Value;
+
+            tsslStatus.Text = "Ready";
+            tspbProgress.Style = ProgressBarStyle.Blocks;
+            Cursor = Cursors.Default;
+            AllowDrop = true;
+            pnlMain.Enabled = true;
         }
 
         private void cboProtease_SelectedIndexChanged(object sender, EventArgs e)

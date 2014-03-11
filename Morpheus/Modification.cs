@@ -16,8 +16,10 @@
 
         public bool DefaultVariable { get; private set; }
 
+        public bool Known { get; private set; }
+
         public Modification(string description, ModificationType type, char aminoAcid, double monoisotopicMassShift,
-            double averageMassShift, bool defaultFixed, bool defaultVariable)
+            double averageMassShift, bool defaultFixed, bool defaultVariable, bool known)
         {
             Description = description;
             Type = type;
@@ -26,6 +28,7 @@
             AverageMassShift = averageMassShift;
             DefaultFixed = defaultFixed;
             DefaultVariable = defaultVariable;
+            Known = known;
         }
 
         public override string ToString()

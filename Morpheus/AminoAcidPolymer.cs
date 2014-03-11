@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -231,7 +232,7 @@ namespace Morpheus
             get { return Sequence.Replace('I', 'L'); }
         }
 
-        private static readonly Regex INVALID_AMINO_ACIDS = new Regex("[^ACDEFGHIKLMNPQRSTVWY]", RegexOptions.Compiled);
+        private static readonly Regex INVALID_AMINO_ACIDS = new Regex("[^ACDEFGHIKLMNPQRSTUVWY]", RegexOptions.Compiled);
 
         protected AminoAcidPolymer(string baseSequence, bool prevalidated)
         {
@@ -242,6 +243,37 @@ namespace Morpheus
             else
             {
                 BaseSequence = INVALID_AMINO_ACIDS.Replace(baseSequence, string.Empty);
+            }
+        }
+
+        protected AminoAcidPolymer(string baseSequence, bool prevalidated, Dictionary<int, List<Modification>> knownModifications)
+            : this(baseSequence, prevalidated)
+        {
+            if(BaseSequence.Length != baseSequence.Length && knownModifications != null && knownModifications.Count > 0)
+            {
+                // adjust known modification indices for invalid amino acids (i.e. protein sequence contains B, X, or Z, e.g. http://www.uniprot.org/uniprot/Q8NDA2, http://www.uniprot.org/uniprot/P01744, http://www.uniprot.org/uniprot/P01763)
+                int[] offset = new int[baseSequence.Length + 4];
+                for(int i = 0; i < baseSequence.Length; i++)
+                {
+                    int previous_offset = offset[i + 2 - 1];
+                    if(INVALID_AMINO_ACIDS.IsMatch(baseSequence[i].ToString()))
+                    {
+                        offset[i + 2] = previous_offset - 1;
+                    }
+                    else
+                    {
+                        offset[i + 2] = previous_offset;
+                    }
+                }
+                KnownModifications = new Dictionary<int, List<Modification>>(knownModifications.Count);
+                foreach(KeyValuePair<int, List<Modification>> kvp in knownModifications)
+                {
+                    KnownModifications.Add(kvp.Key + offset[kvp.Key], kvp.Value);
+                }
+            }
+            else
+            {
+                KnownModifications = knownModifications;
             }
         }
 
@@ -288,7 +320,7 @@ namespace Morpheus
             foreach(Modification fixed_modification in fixedModifications)
             {
                 if(fixed_modification.Type == ModificationType.ProteinNTerminus && (this is Protein ||
-                    (this is Peptide && (((Peptide)this).StartResidueNumber == 1 || (((Peptide)this).StartResidueNumber == 2 && ((Peptide)this).Parent[0] == 'M')))) 
+                    (this is Peptide && (((Peptide)this).StartResidueNumber == 1 || (((Peptide)this).StartResidueNumber == 2 && ((Peptide)this).Parent[0] == 'M'))))
                     && (fixed_modification.AminoAcid == char.MinValue || this[0] == fixed_modification.AminoAcid))
                 {
                     List<Modification> prot_n_term_fixed_mods;
@@ -352,7 +384,7 @@ namespace Morpheus
                     }
                 }
 
-                if(fixed_modification.Type == ModificationType.ProteinCTerminus && (this is Protein || (this is Peptide && ((Peptide)this).EndResidueNumber == ((Peptide)this).Parent.Length - 1) 
+                if(fixed_modification.Type == ModificationType.ProteinCTerminus && (this is Protein || (this is Peptide && ((Peptide)this).EndResidueNumber == ((Peptide)this).Parent.Length - 1)
                     && (fixed_modification.AminoAcid == char.MinValue || this[Length - 1] == fixed_modification.AminoAcid)))
                 {
                     List<Modification> prot_c_term_fixed_mods;
@@ -579,21 +611,46 @@ namespace Morpheus
             return product_masses;
         }
 
+        public Dictionary<int, List<Modification>> KnownModifications { get; protected set; }
+
         protected IEnumerable<Dictionary<int, Modification>> GetVariableModificationPatterns(Dictionary<int, List<Modification>> possibleVariableModifications)
         {
-            if(possibleVariableModifications.Count == 0)
+            if(possibleVariableModifications.Count == 0 && (KnownModifications == null || KnownModifications.Count == 0))
             {
                 yield return null;
             }
             else
             {
-                List<KeyValuePair<int, List<Modification>>> possible_variable_modifications = new List<KeyValuePair<int, List<Modification>>>(possibleVariableModifications);
+                Dictionary<int, List<Modification>> possible_variable_modifications = new Dictionary<int, List<Modification>>(possibleVariableModifications);
+                if(KnownModifications != null)
+                {
+                    foreach(KeyValuePair<int, List<Modification>> kvp in KnownModifications)
+                    {
+                        foreach(Modification modification in kvp.Value)
+                        {
+                            if(modification.AminoAcid != BaseSequence[kvp.Key - 2])
+                            {
+                                throw new Exception("Known modification amino acid mismatch in " + ((this is Peptide) ? ((Peptide)this).Parent.Description : ((Protein)this).Description));
+                            }
+                        }
+                        List<Modification> modifications;
+                        if(!possible_variable_modifications.TryGetValue(kvp.Key, out modifications))
+                        {
+                            modifications = kvp.Value;
+                            possible_variable_modifications.Add(kvp.Key, modifications);
+                        }
+                        else
+                        {
+                            modifications.AddRange(kvp.Value);
+                        }
+                    }
+                }
                 int[] base_variable_modification_pattern = new int[Length + 4];
                 for(int variable_modifications = 0; variable_modifications <= possible_variable_modifications.Count; variable_modifications++)
                 {
-                    foreach(int[] variable_modification_pattern in GetVariableModificationPatterns(possible_variable_modifications, possible_variable_modifications.Count - variable_modifications, base_variable_modification_pattern, 0))
+                    foreach(int[] variable_modification_pattern in GetVariableModificationPatterns(new List<KeyValuePair<int, List<Modification>>>(possible_variable_modifications), possible_variable_modifications.Count - variable_modifications, base_variable_modification_pattern, 0))
                     {
-                        yield return GetVariableModificationPattern(variable_modification_pattern, possibleVariableModifications);
+                        yield return GetVariableModificationPattern(variable_modification_pattern, possible_variable_modifications);
                     }
                 }
             }
@@ -641,7 +698,7 @@ namespace Morpheus
             }
         }
 
-        private static Dictionary<int, Modification> GetVariableModificationPattern(int[] variableModificationArray, Dictionary<int, List<Modification>> possibleVariableModifications)
+        private static Dictionary<int, Modification> GetVariableModificationPattern(int[] variableModificationArray, IEnumerable<KeyValuePair<int, List<Modification>>> possibleVariableModifications)
         {
             Dictionary<int, Modification> modification_pattern = new Dictionary<int, Modification>();
 

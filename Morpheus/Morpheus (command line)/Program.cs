@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.IO;
 using System.Text;
 using CommandLine.Utility;
 
@@ -50,14 +51,19 @@ namespace Morpheus
                     deisotope = bool.Parse(arguments["di"]);
                 }
                 string database = arguments["db"];
-                bool append_decoys;
+                Dictionary<string, Modification> known_variable_modifications = null;
+                if(Path.GetExtension(database).Equals(".xml", StringComparison.InvariantCultureIgnoreCase))
+                {
+                    known_variable_modifications = ProteinFastaReader.ReadUniProtXmlModifications(database);
+                }
+                bool append_decoys = false;
                 if(arguments["ad"] != null)
                 {
                     append_decoys = bool.Parse(arguments["ad"]);
                 }
                 else
                 {
-                    append_decoys = !ProteinFastaReader.HasDecoyProteins(database);
+                    append_decoys = Path.GetExtension(database).Equals(".xml", StringComparison.InvariantCultureIgnoreCase) || !ProteinFastaReader.HasDecoyProteins(database);
                 }
                 ProteaseDictionary proteases = ProteaseDictionary.Instance;
                 Protease protease = proteases["trypsin (no proline rule)"];
@@ -79,7 +85,7 @@ namespace Morpheus
                 List<Modification> fixed_mods = new List<Modification>();
                 if(arguments["fm"] != null)
                 {
-                    foreach(string fixed_mod in arguments["fm"].Split(','))
+                    foreach(string fixed_mod in arguments["fm"].Split(';'))
                     {
                         fixed_mods.Add(mods[fixed_mod]);
                     }
@@ -87,9 +93,14 @@ namespace Morpheus
                 List<Modification> variable_mods = new List<Modification>();
                 if(arguments["vm"] != null)
                 {
-                    foreach(string variable_mod in arguments["vm"].Split(','))
+                    foreach(string variable_mod in arguments["vm"].Split(';'))
                     {
-                        variable_mods.Add(mods[variable_mod]);
+                        Modification mod;
+                        if(!mods.TryGetValue(variable_mod, out mod))
+                        {
+                            known_variable_modifications.TryGetValue(variable_mod, out mod);
+                        }
+                        variable_mods.Add(mod);
                     }
                 }
                 int max_variable_mod_isoforms_per_peptide = 1024;
@@ -128,7 +139,7 @@ namespace Morpheus
                 {
                     max_prec_mono_offset = int.Parse(arguments["maxpmo"]);
                 }
-                double product_mass_tolerance_value = 0.025;
+                double product_mass_tolerance_value = 0.015;
                 if(arguments["prodmtv"] != null)
                 {
                     product_mass_tolerance_value = double.Parse(arguments["prodmtv"], CultureInfo.InvariantCulture);
