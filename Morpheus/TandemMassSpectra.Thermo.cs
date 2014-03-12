@@ -29,8 +29,6 @@ namespace Morpheus
                 assignChargeStates, maximumThreads);
         }
 
-        private static Dictionary<int, double[,]> ms1s;
-
         public static TandemMassSpectra Load(string rawFilepath, int minimumAssumedPrecursorChargeState, int maximumAssumedPrecursorChargeState,
             double absoluteThreshold, double relativeThresholdPercent, int maximumNumberOfPeaks,
             bool assignChargeStates, int maximumThreads)
@@ -42,6 +40,7 @@ namespace Morpheus
             raw.Open(rawFilepath);
             raw.SetCurrentController(0, 1);
 
+            Dictionary<int, double[,]> ms1s;
             if(GET_PRECURSOR_MZ_AND_INTENSITY_FROM_MS1)
             {
                 ms1s = new Dictionary<int, double[,]>();
@@ -77,7 +76,7 @@ namespace Morpheus
 
                         double precursor_mz;
                         double precursor_intensity;
-                        GetPrecursor(raw, scan_number, scan_filter, first_scan_number, out precursor_mz, out precursor_intensity);
+                        GetPrecursor(ms1s, raw, scan_number, scan_filter, first_scan_number, out precursor_mz, out precursor_intensity);
 
                         int charge = DeterminePrecursorCharge(raw, scan_number);
 
@@ -121,7 +120,6 @@ namespace Morpheus
             );
 
             raw.Close();
-            ms1s = null;
 
             return spectra;
         }
@@ -158,7 +156,7 @@ namespace Morpheus
             }
         }
 
-        private static void GetPrecursor(IXRawfile2 raw, int scanNumber, string scanFilter, int firstScanNumber, out double mz, out double intensity)
+        private static void GetPrecursor(IDictionary<int, double[,]> ms1s, IXRawfile2 raw, int scanNumber, string scanFilter, int firstScanNumber, out double mz, out double intensity)
         {
             if(PRECURSOR_MASS_TYPE == PrecursorMassType.Isolation)
             {
@@ -170,7 +168,7 @@ namespace Morpheus
             }
             if(GET_PRECURSOR_MZ_AND_INTENSITY_FROM_MS1)
             {
-                GetAccurateMZAndIntensity(raw, scanNumber, firstScanNumber, ref mz, out intensity);
+                GetAccurateMZAndIntensity(ms1s, raw, scanNumber, firstScanNumber, ref mz, out intensity);
             }
             else
             {
@@ -178,7 +176,7 @@ namespace Morpheus
             }
         }
 
-        private static bool GetAccurateMZAndIntensity(IXRawfile2 raw, int scanNumber, int firstScanNumber, ref double mz, out double intensity)
+        private static bool GetAccurateMZAndIntensity(IDictionary<int, double[,]> ms1s, IXRawfile2 raw, int scanNumber, int firstScanNumber, ref double mz, out double intensity)
         {
             scanNumber--;
             while(scanNumber >= firstScanNumber)
