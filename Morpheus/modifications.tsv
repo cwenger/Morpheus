@@ -2,6 +2,7 @@ Description	Type	Amino Acid Residue	Monoisotopic Mass Shift (Da)	Average Mass Sh
 carbamidomethylation of C	amino acid residue	C	57.02146373	57.05132	fixed	CH3NO
 oxidation of M	amino acid residue	M	15.99491463	15.9994	variable	O
 acetylation of protein N-terminus	protein N-terminus	n/a	42.01056469	42.03668	none	C2H2O
+acetylation of lysine	amino acid residue	K	42.01056469	42.03668	none	C2H2O
 phosphorylation of S	amino acid residue	S	79.96633092	79.979902	none	HPO3
 phosphorylation of T	amino acid residue	T	79.96633092	79.979902	none	HPO3
 phosphorylation of Y	amino acid residue	Y	79.96633092	79.979902	none	HPO3
