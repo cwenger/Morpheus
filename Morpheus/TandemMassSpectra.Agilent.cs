@@ -25,8 +25,6 @@ namespace Morpheus
                 assignChargeStates, deisotope, maximumThreads);
         }
 
-        private static Dictionary<int, IBDASpecData> ms1s;
-
         public static TandemMassSpectra Load(string agilentDFolderPath, int minimumAssumedPrecursorChargeState, int maximumAssumedPrecursorChargeState,
             double absoluteThreshold, double relativeThresholdPercent, int maximumNumberOfPeaks,
             bool assignChargeStates, bool deisotope, int maximumThreads)
@@ -37,6 +35,7 @@ namespace Morpheus
 
             agilent_d.OpenDataFile(agilentDFolderPath);
 
+            Dictionary<int, IBDASpecData> ms1s;
             if(GET_PRECURSOR_MZ_AND_INTENSITY_FROM_MS1)
             {
                 ms1s = new Dictionary<int, IBDASpecData>();
@@ -83,7 +82,7 @@ namespace Morpheus
                             double precursor_intensity;
                             if(GET_PRECURSOR_MZ_AND_INTENSITY_FROM_MS1)
                             {
-                                GetAccurateMZAndIntensity(agilent_d, agilent_spectrum.ParentScanId, ref precursor_mz, out precursor_intensity);
+                                GetAccurateMZAndIntensity(ms1s, agilent_d, agilent_spectrum.ParentScanId, ref precursor_mz, out precursor_intensity);
                             }
                             else
                             {
@@ -168,12 +167,11 @@ namespace Morpheus
             );
 
             agilent_d.CloseDataFile();
-            ms1s = null;
 
             return spectra;
         }
 
-        private static bool GetAccurateMZAndIntensity(IMsdrDataReader agilentD, int parentScanId, ref double mz, out double intensity)
+        private static bool GetAccurateMZAndIntensity(IDictionary<int, IBDASpecData> ms1s, IMsdrDataReader agilentD, int parentScanId, ref double mz, out double intensity)
         {
             IBDASpecData ms1;
             lock(ms1s)
