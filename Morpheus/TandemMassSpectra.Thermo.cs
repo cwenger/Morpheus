@@ -29,6 +29,8 @@ namespace Morpheus
                 assignChargeStates, maximumThreads);
         }
 
+        private static Dictionary<int, double[,]> ms1s;
+
         public static TandemMassSpectra Load(string rawFilepath, int minimumAssumedPrecursorChargeState, int maximumAssumedPrecursorChargeState,
             double absoluteThreshold, double relativeThresholdPercent, int maximumNumberOfPeaks,
             bool assignChargeStates, int maximumThreads)
@@ -39,6 +41,11 @@ namespace Morpheus
 
             raw.Open(rawFilepath);
             raw.SetCurrentController(0, 1);
+
+            if(GET_PRECURSOR_MZ_AND_INTENSITY_FROM_MS1)
+            {
+                ms1s = new Dictionary<int, double[,]>();
+            }
 
             int first_scan_number = -1;
             raw.GetFirstSpectrumNumber(ref first_scan_number);
@@ -114,6 +121,7 @@ namespace Morpheus
             );
 
             raw.Close();
+            ms1s = null;
 
             return spectra;
         }
@@ -169,8 +177,6 @@ namespace Morpheus
                 intensity = double.NaN;
             }
         }
-
-        private static Dictionary<int, double[,]> ms1s = new Dictionary<int, double[,]>();
 
         private static bool GetAccurateMZAndIntensity(IXRawfile2 raw, int scanNumber, int firstScanNumber, ref double mz, out double intensity)
         {
