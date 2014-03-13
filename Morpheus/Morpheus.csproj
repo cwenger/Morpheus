@@ -60,15 +60,12 @@
     <Compile Include="FilepathEventArgs.cs" />
     <Compile Include="IdentificationWithFalseDiscoveryRate.cs" />
     <Compile Include="ITargetDecoy.cs" />
-    <Compile Include="TandemMassSpectra.BinarySearch.cs">
-      <DependentUpon>TandemMassSpectra.cs</DependentUpon>
-    </Compile>
-    <Compile Include="TandemMassSpectra.cs" />
-    <Compile Include="TandemMassSpectra.Events.cs">
-      <DependentUpon>TandemMassSpectra.cs</DependentUpon>
+    <Compile Include="TandemMassSpectra.mzML.cs" />
+    <Compile Include="TandemMassSpectra.cs">
+      <DependentUpon>TandemMassSpectra.mzML.cs</DependentUpon>
     </Compile>
     <Compile Include="TandemMassSpectra.Filtering.cs">
-      <DependentUpon>TandemMassSpectra.cs</DependentUpon>
+      <DependentUpon>TandemMassSpectra.mzML.cs</DependentUpon>
     </Compile>
     <Compile Include="ProductTypes.cs" />
     <Compile Include="InitiatorMethionineBehavior.cs" />

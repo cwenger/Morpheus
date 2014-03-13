@@ -12,7 +12,7 @@ namespace Morpheus
         Monoisotopic
     }
 
-    public partial class TandemMassSpectra : List<TandemMassSpectrum>
+    public partial class TandemMassSpectra
     {
         private const PrecursorMassType PRECURSOR_MASS_TYPE = PrecursorMassType.Monoisotopic;
         private const bool GET_PRECURSOR_MZ_AND_INTENSITY_FROM_MS1 = true;
