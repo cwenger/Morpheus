@@ -141,10 +141,7 @@
     <Compile Include="Product.cs" />
     <Compile Include="ProductCaps.cs" />
     <Compile Include="TandemMassSpectra.Agilent.cs" />
-    <Compile Include="TandemMassSpectra.BinarySearch.cs">
-      <DependentUpon>TandemMassSpectra.Agilent.cs</DependentUpon>
-    </Compile>
-    <Compile Include="TandemMassSpectra.Events.cs">
+    <Compile Include="TandemMassSpectra.cs">
       <DependentUpon>TandemMassSpectra.Agilent.cs</DependentUpon>
     </Compile>
     <Compile Include="TandemMassSpectrum.cs" />

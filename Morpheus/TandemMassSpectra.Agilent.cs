@@ -6,7 +6,7 @@ using Agilent.MassSpectrometry.DataAnalysis;
 
 namespace Morpheus
 {
-    public partial class TandemMassSpectra : List<TandemMassSpectrum>
+    public partial class TandemMassSpectra
     {
         private const bool GET_PRECURSOR_MZ_AND_INTENSITY_FROM_MS1 = true;
         private const bool ALWAYS_USE_PRECURSOR_CHARGE_STATE_RANGE = false;
