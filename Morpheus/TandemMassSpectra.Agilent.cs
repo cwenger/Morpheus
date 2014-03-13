@@ -14,18 +14,16 @@ namespace Morpheus
         private const double ACCURACY_C1 = 7.0 / 1000000;
         private const string FRAGMENTATION_METHOD = "collision-induced dissociation";
 
-        private TandemMassSpectra() : base() { }
-
-        public static TandemMassSpectra Load(string agilentDFolderPath, int minimumAssumedPrecursorChargeState, int maximumAssumedPrecursorChargeState,
+        public void Load(string agilentDFolderPath, int minimumAssumedPrecursorChargeState, int maximumAssumedPrecursorChargeState,
             double absoluteThreshold, double relativeThresholdPercent, int maximumNumberOfPeaks,
             bool assignChargeStates, bool deisotope, MassTolerance isotopicMZTolerance, int maximumThreads)
         {
-            return Load(agilentDFolderPath, minimumAssumedPrecursorChargeState, maximumAssumedPrecursorChargeState,
+            Load(agilentDFolderPath, minimumAssumedPrecursorChargeState, maximumAssumedPrecursorChargeState,
                 absoluteThreshold, relativeThresholdPercent, maximumNumberOfPeaks,
                 assignChargeStates, deisotope, maximumThreads);
         }
 
-        public static TandemMassSpectra Load(string agilentDFolderPath, int minimumAssumedPrecursorChargeState, int maximumAssumedPrecursorChargeState,
+        public void Load(string agilentDFolderPath, int minimumAssumedPrecursorChargeState, int maximumAssumedPrecursorChargeState,
             double absoluteThreshold, double relativeThresholdPercent, int maximumNumberOfPeaks,
             bool assignChargeStates, bool deisotope, int maximumThreads)
         {
@@ -47,8 +45,6 @@ namespace Morpheus
             ms2_peak_filter.RelativeThreshold = relativeThresholdPercent;
             ms2_peak_filter.MaxNumPeaks = maximumNumberOfPeaks;
             ChargeStateAssignmentWrapper csaw = new ChargeStateAssignmentWrapper();
-
-            TandemMassSpectra spectra = new TandemMassSpectra();
 
             OnReportTaskWithProgress(new EventArgs());
             object progress_lock = new object();
@@ -145,9 +141,9 @@ namespace Morpheus
                                 double precursor_mass = Utilities.MassFromMZ(precursor_mz, c);
 
                                 TandemMassSpectrum spectrum = new TandemMassSpectrum(agilentDFolderPath, spectrum_number, scan_id, null, scan_record.RetentionTime, FRAGMENTATION_METHOD, precursor_mz, precursor_intensity, c, precursor_mass, peaks);
-                                lock(spectra)
+                                lock(this)
                                 {
-                                    spectra.Add(spectrum);
+                                    Add(spectrum);
                                 }
                             }
                         }
@@ -167,8 +163,6 @@ namespace Morpheus
             );
 
             agilent_d.CloseDataFile();
-
-            return spectra;
         }
 
         private static bool GetAccurateMZAndIntensity(IDictionary<int, IBDASpecData> ms1s, IMsdrDataReader agilentD, int parentScanId, ref double mz, out double intensity)

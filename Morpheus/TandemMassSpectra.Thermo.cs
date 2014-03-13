@@ -18,18 +18,16 @@ namespace Morpheus
         private const bool GET_PRECURSOR_MZ_AND_INTENSITY_FROM_MS1 = true;
         private const bool ALWAYS_USE_PRECURSOR_CHARGE_STATE_RANGE = false;
 
-        private TandemMassSpectra() : base() { }
-
-        public static TandemMassSpectra Load(string rawFilepath, int minimumAssumedPrecursorChargeState, int maximumAssumedPrecursorChargeState,
+        public void Load(string rawFilepath, int minimumAssumedPrecursorChargeState, int maximumAssumedPrecursorChargeState,
             double absoluteThreshold, double relativeThresholdPercent, int maximumNumberOfPeaks,
             bool assignChargeStates, bool deisotope, MassTolerance isotopicMZTolerance, int maximumThreads)
         {
-            return Load(rawFilepath, minimumAssumedPrecursorChargeState, maximumAssumedPrecursorChargeState,
+            Load(rawFilepath, minimumAssumedPrecursorChargeState, maximumAssumedPrecursorChargeState,
                 absoluteThreshold, relativeThresholdPercent, maximumNumberOfPeaks, 
                 assignChargeStates, maximumThreads);
         }
 
-        public static TandemMassSpectra Load(string rawFilepath, int minimumAssumedPrecursorChargeState, int maximumAssumedPrecursorChargeState,
+        public void Load(string rawFilepath, int minimumAssumedPrecursorChargeState, int maximumAssumedPrecursorChargeState,
             double absoluteThreshold, double relativeThresholdPercent, int maximumNumberOfPeaks,
             bool assignChargeStates, int maximumThreads)
         {
@@ -50,8 +48,6 @@ namespace Morpheus
             raw.GetFirstSpectrumNumber(ref first_scan_number);
             int last_scan_number = -1;
             raw.GetLastSpectrumNumber(ref last_scan_number);
-
-            TandemMassSpectra spectra = new TandemMassSpectra();
 
             OnReportTaskWithProgress(new EventArgs());
             object progress_lock = new object();
@@ -98,9 +94,9 @@ namespace Morpheus
                                 double precursor_mass = Utilities.MassFromMZ(precursor_mz, c);
 
                                 TandemMassSpectrum spectrum = new TandemMassSpectrum(rawFilepath, scan_number, spectrum_id, null, retention_time_minutes, fragmentation_method, precursor_mz, precursor_intensity, c, precursor_mass, peaks);
-                                lock(spectra)
+                                lock(this)
                                 {
-                                    spectra.Add(spectrum);
+                                    Add(spectrum);
                                 }
                             }
                         }
@@ -120,8 +116,6 @@ namespace Morpheus
             );
 
             raw.Close();
-
-            return spectra;
         }
 
         private static string GetFragmentationMethod(string scanFilter)

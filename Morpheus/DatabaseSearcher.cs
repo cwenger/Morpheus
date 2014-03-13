@@ -228,10 +228,6 @@ namespace Morpheus
                 OnReportTaskWithoutProgress(EventArgs.Empty);
                 OnUpdateProgress(new ProgressEventArgs(0));
 
-                TandemMassSpectra.ReportTaskWithoutProgress += HandleReportTaskWithoutProgress;
-                TandemMassSpectra.ReportTaskWithProgress += HandleReportTaskWithProgress;
-                TandemMassSpectra.UpdateProgress += HandleUpdateProgress;
-
                 // convert all paths to absolute for outputs
                 for(int i = 0; i < dataFilepaths.Count; i++)
                 {
@@ -410,9 +406,19 @@ namespace Morpheus
                     OnReportTaskWithProgress(EventArgs.Empty);
                     OnUpdateProgress(new ProgressEventArgs(0));
 
-                    TandemMassSpectra spectra = TandemMassSpectra.Load(data_filepath, minimumAssumedPrecursorChargeState, maximumAssumedPrecursorChargeState,
-                        absoluteThreshold, relativeThresholdPercent, maximumNumberOfPeaks,
-                        assignChargeStates, deisotope, productMassTolerance, maximumThreads);
+                    TandemMassSpectra spectra = new TandemMassSpectra();
+
+                    spectra.ReportTaskWithoutProgress += HandleReportTaskWithoutProgress;
+                    spectra.ReportTaskWithProgress += HandleReportTaskWithProgress;
+                    spectra.UpdateProgress += HandleUpdateProgress;
+
+                    spectra.Load(data_filepath, minimumAssumedPrecursorChargeState, maximumAssumedPrecursorChargeState,
+                         absoluteThreshold, relativeThresholdPercent, maximumNumberOfPeaks,
+                         assignChargeStates, deisotope, productMassTolerance, maximumThreads);
+
+                    spectra.ReportTaskWithoutProgress -= HandleReportTaskWithoutProgress;
+                    spectra.ReportTaskWithProgress -= HandleReportTaskWithProgress;
+                    spectra.UpdateProgress -= HandleUpdateProgress;
 
                     if(dataFilepaths.Count > 1)
                     {
@@ -947,10 +953,6 @@ namespace Morpheus
                 {
                     protein_fasta_database.Close();
                 }
-
-                TandemMassSpectra.ReportTaskWithoutProgress -= HandleReportTaskWithoutProgress;
-                TandemMassSpectra.ReportTaskWithProgress -= HandleReportTaskWithProgress;
-                TandemMassSpectra.UpdateProgress -= HandleUpdateProgress;
             }
         }
 
