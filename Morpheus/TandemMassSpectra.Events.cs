@@ -4,9 +4,11 @@ namespace Morpheus
 {
     public partial class TandemMassSpectra
     {
-        public static event EventHandler ReportTaskWithoutProgress;
+        public TandemMassSpectra() : base() { }
 
-        protected static void OnReportTaskWithoutProgress(EventArgs e)
+        public event EventHandler ReportTaskWithoutProgress;
+
+        protected virtual void OnReportTaskWithoutProgress(EventArgs e)
         {
             EventHandler handler = ReportTaskWithoutProgress;
 
@@ -16,9 +18,9 @@ namespace Morpheus
             }
         }
 
-        public static event EventHandler ReportTaskWithProgress;
+        public event EventHandler ReportTaskWithProgress;
 
-        protected static void OnReportTaskWithProgress(EventArgs e)
+        protected virtual void OnReportTaskWithProgress(EventArgs e)
         {
             EventHandler handler = ReportTaskWithProgress;
 
@@ -28,13 +30,13 @@ namespace Morpheus
             }
         }
 
-        public static event EventHandler<ProgressEventArgs> UpdateProgress;
+        public event EventHandler<ProgressEventArgs> UpdateProgress;
 
-        protected static void OnUpdateProgress(ProgressEventArgs e)
+        protected virtual void OnUpdateProgress(ProgressEventArgs e)
         {
             EventHandler<ProgressEventArgs> handler = UpdateProgress;
 
-            if (handler != null)
+            if(handler != null)
             {
                 handler(null, e);
             }
