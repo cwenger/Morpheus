@@ -228,9 +228,9 @@ namespace Morpheus
                 OnReportTaskWithoutProgress(EventArgs.Empty);
                 OnUpdateProgress(new ProgressEventArgs(0));
 
-                TandemMassSpectra.ReportTaskWithoutProgress += new EventHandler(HandleReportTaskWithoutProgress);
-                TandemMassSpectra.ReportTaskWithProgress += new EventHandler(HandleReportTaskWithProgress);
-                TandemMassSpectra.UpdateProgress += new EventHandler<ProgressEventArgs>(HandleUpdateProgress);
+                TandemMassSpectra.ReportTaskWithoutProgress += HandleReportTaskWithoutProgress;
+                TandemMassSpectra.ReportTaskWithProgress += HandleReportTaskWithProgress;
+                TandemMassSpectra.UpdateProgress += HandleUpdateProgress;
 
                 // convert all paths to absolute for outputs
                 for(int i = 0; i < dataFilepaths.Count; i++)
