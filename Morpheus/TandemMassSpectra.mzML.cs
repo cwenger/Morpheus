@@ -298,24 +298,24 @@ namespace Morpheus
             }
         }
 
-        private static double[] ReadBase64EncodedDoubleArray(string s, int wordLengthInBytes, bool zlibCompressed)
+        private static double[] ReadBase64EncodedDoubleArray(string base64EncodedData, int wordLengthInBytes, bool zlibCompressed)
         {
-            byte[] bytes = Convert.FromBase64String(s);
+            byte[] bytes = Convert.FromBase64String(base64EncodedData);
             if(zlibCompressed)
             {
                 bytes = ZlibStream.UncompressBuffer(bytes);
             }
             double[] doubles = new double[bytes.Length / wordLengthInBytes];
-            for(int i = doubles.GetLowerBound(0); i <= doubles.GetUpperBound(0); i++)
+            if(wordLengthInBytes == 4)
             {
-                if(wordLengthInBytes == 4)
+                for(int i = doubles.GetLowerBound(0); i <= doubles.GetUpperBound(0); i++)
                 {
                     doubles[i] = BitConverter.ToSingle(bytes, i * wordLengthInBytes);
                 }
-                else if(wordLengthInBytes == 8)
-                {
-                    doubles[i] = BitConverter.ToDouble(bytes, i * wordLengthInBytes);
-                }
+            }
+            else if(wordLengthInBytes == 8)
+            {
+                Buffer.BlockCopy(bytes, 0, doubles, 0, bytes.Length);
             }
             return doubles;
         }
