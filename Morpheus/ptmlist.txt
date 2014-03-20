@@ -9,7 +9,7 @@
 
 Description: Controlled vocabulary of posttranslational modifications (PTM)
 Name:        ptmlist.txt
-Release:     2014_02 of 19-Feb-2014
+Release:     2014_03 of 19-Mar-2014
 
 ---------------------------------------------------------------------------
 
@@ -3313,6 +3313,21 @@ KW   Isopeptide bond.
 DR   RESID; AA0294.
 DR   PSI-MOD; 00299.
 //
+ID   Isoaspartyl lysine isopeptide (Lys-Asp)
+AC   PTM-0486
+FT   CROSSLNK
+TG   Lysine-Aspartate.
+PA   Amino acid side chain-Amino acid side chain.
+PP   Anywhere-Anywhere.
+CF   H-2 O-1
+MM   -18.010565
+MA   -18.02
+LC   Extracellular localisation.
+TR   Bacteria; taxId:1301 (Streptococcus).
+KW   Isopeptide bond.
+DR   RESID; AA0294.
+DR   PSI-MOD; 01917.
+//
 ID   Isodityrosine (Tyr-Tyr)
 AC   PTM-0155
 FT   CROSSLNK
@@ -3337,6 +3352,7 @@ CF   H-3 N-1
 MM   -17.026549
 MA   -17.03
 LC   Extracellular and lumenal localisation.
+TR   Bacteria; taxId:2 (Bacteria).
 TR   Eukaryota; taxId:33208 (Metazoa).
 KW   Thioester bond.
 DR   RESID; AA0108.
@@ -3760,6 +3776,8 @@ MM   43.054227
 MA   43.09
 TR   Eukaryota; taxId:40674 (Mammalia).
 KW   Methylation.
+DR   RESID; AA0619.
+DR   PSI-MOD; 01982.
 //
 ID   N,N,N-trimethylserine
 AC   PTM-0430
@@ -3800,9 +3818,11 @@ PA   Amino acid backbone.
 PP   N-terminal.
 CF   C2 H4
 MM   28.031300
-MA   28.06
+MA   28.05
 TR   Eukaryota; taxId:40674 (Mammalia).
 KW   Methylation.
+DR   RESID; AA0620.
+DR   PSI-MOD; 01983.
 //
 ID   N,N-dimethylleucine
 AC   PTM-0435
@@ -5245,6 +5265,15 @@ TR   Bacteria; taxId:2037 (Actinomycetales).
 DR   RESID; AA0239.
 DR   PSI-MOD; 00244.
 //
+ID   Peptide (Met-Gly) (interchain with G-...)
+AC   PTM-0247
+FT   CROSSLNK
+TG   Methionine-Glycine.
+PA   Amino acid backbone-Amino acid backbone.
+PP   N-terminal-C-terminal.
+LC   Intracellular localisation.
+TR   Eukaryota; taxId:40674 (Mammalia).
+//
 ID   Pentaglycyl murein peptidoglycan amidated alanine
 AC   PTM-0245
 FT   MOD_RES
@@ -5268,15 +5297,6 @@ TR   Bacteria; taxId:2 (Bacteria).
 KW   Peptidoglycan-anchor.
 DR   RESID; AA0345.
 DR   PSI-MOD; 00350.
-//
-ID   Peptide (Met-Gly) (interchain with G-...)
-AC   PTM-0247
-FT   CROSSLNK
-TG   Methionine-Glycine.
-PA   Amino acid backbone-Amino acid backbone.
-PP   N-terminal-C-terminal.
-LC   Intracellular localisation.
-TR   Eukaryota; taxId:40674 (Mammalia).
 //
 ID   Phenylalanine amide
 AC   PTM-0248
@@ -6563,4 +6583,3 @@ DR   PSI-MOD; 00109.
 Copyrighted by the UniProt Consortium, see http://www.uniprot.org/terms
 Distributed under the Creative Commons Attribution-NoDerivs License
 -----------------------------------------------------------------------
-
