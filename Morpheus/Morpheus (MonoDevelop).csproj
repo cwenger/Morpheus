@@ -85,14 +85,42 @@
   <ItemGroup>
     <Compile Include="AminoAcidMasses.cs" />
     <Compile Include="AminoAcidPolymer.cs" />
+    <Compile Include="CleavageSpecificity.cs" />
     <Compile Include="Constants.cs" />
     <Compile Include="DatabaseSearcher.cs" />
     <Compile Include="ExceptionEventArgs.cs" />
     <Compile Include="Exporters.cs" />
     <Compile Include="FalseDiscoveryRate.cs" />
     <Compile Include="FilepathEventArgs.cs" />
+    <Compile Include="frmMain.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmMain.Designer.cs">
+      <DependentUpon>frmMain.cs</DependentUpon>
+    </Compile>
     <Compile Include="IdentificationWithFalseDiscoveryRate.cs" />
+    <Compile Include="InitiatorMethionineBehavior.cs" />
     <Compile Include="ITargetDecoy.cs" />
+    <Compile Include="MassTolerance.cs" />
+    <Compile Include="MassToleranceUnits.cs" />
+    <Compile Include="MassType.cs" />
+    <Compile Include="Modification.cs" />
+    <Compile Include="ModificationDictionary.cs" />
+    <Compile Include="ModificationType.cs" />
+    <Compile Include="MSPeak.cs" />
+    <Compile Include="Peptide.cs" />
+    <Compile Include="PeptideSpectrumMatch.cs" />
+    <Compile Include="Product.cs" />
+    <Compile Include="ProductCaps.cs" />
+    <Compile Include="ProductType.cs" />
+    <Compile Include="ProductTypes.cs" />
+    <Compile Include="Program.cs" />
+    <Compile Include="ProgressEventArgs.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ProteaseDictionary.cs" />
+    <Compile Include="ProteinGroup.cs" />
+    <Compile Include="ProteomeDatabaseReader.cs" />
+    <Compile Include="StatusEventArgs.cs" />
     <Compile Include="TandemMassSpectra.mzML.cs" />
     <Compile Include="TandemMassSpectra.cs">
       <DependentUpon>TandemMassSpectra.mzML.cs</DependentUpon>
@@ -100,35 +128,7 @@
     <Compile Include="TandemMassSpectra.Filtering.cs">
       <DependentUpon>TandemMassSpectra.mzML.cs</DependentUpon>
     </Compile>
-    <Compile Include="ProductTypes.cs" />
-    <Compile Include="InitiatorMethionineBehavior.cs" />
-    <Compile Include="Modification.cs" />
-    <Compile Include="ModificationDictionary.cs" />
-    <Compile Include="ModificationType.cs" />
     <Compile Include="TandemMassSpectrum.cs" />
-    <Compile Include="ProductType.cs" />
-    <Compile Include="Product.cs" />
-    <Compile Include="ProductCaps.cs" />
-    <Compile Include="MassTolerance.cs" />
-    <Compile Include="MSPeak.cs" />
-    <Compile Include="Peptide.cs" />
-    <Compile Include="PeptideSpectrumMatch.cs" />
-    <Compile Include="ProgressEventArgs.cs" />
-    <Compile Include="ProteaseDictionary.cs" />
-    <Compile Include="ProteomeDatabaseReader.cs" />
-    <Compile Include="frmMain.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="frmMain.Designer.cs">
-      <DependentUpon>frmMain.cs</DependentUpon>
-    </Compile>
-    <Compile Include="MassToleranceUnits.cs" />
-    <Compile Include="MassType.cs" />
-    <Compile Include="Program.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="CleavageSpecificity.cs" />
-    <Compile Include="ProteinGroup.cs" />
-    <Compile Include="StatusEventArgs.cs" />
     <Compile Include="Terminus.cs" />
     <Compile Include="Utilities.cs" />
     <EmbeddedResource Include="frmMain.resx">
