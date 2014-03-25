@@ -6,12 +6,6 @@ using MSFileReaderLib;
 
 namespace Morpheus
 {
-    internal enum PrecursorMassType
-    {
-        Isolation,
-        Monoisotopic
-    }
-
     public partial class TandemMassSpectra
     {
         private const PrecursorMassType PRECURSOR_MASS_TYPE = PrecursorMassType.Monoisotopic;
@@ -311,5 +305,21 @@ namespace Morpheus
 
             return GetIsolationMZ(scanFilter);
         }
+    }
+
+    internal enum PrecursorMassType
+    {
+        Isolation,
+        Monoisotopic
+    }
+
+    internal enum RawLabelDataColumn
+    {
+        MZ = 0,
+        Intensity = 1,
+        Resolution = 2,
+        NoiseBaseline = 3,
+        NoiseLevel = 4,
+        Charge = 5
     }
 }
