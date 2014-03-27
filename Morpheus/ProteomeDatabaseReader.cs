@@ -168,7 +168,7 @@ namespace Morpheus
             }
         }
 
-        public static int CountFastaProteins(FileStream fastaProteomeDatabase, bool onTheFlyDecoys, out int targetProteins, out int decoyProteins, out int onTheFlyDecoyProteins)
+        private static int CountFastaProteins(FileStream fastaProteomeDatabase, bool onTheFlyDecoys, out int targetProteins, out int decoyProteins, out int onTheFlyDecoyProteins)
         {
             targetProteins = 0;
             decoyProteins = 0;
@@ -220,7 +220,7 @@ namespace Morpheus
             return targetProteins + decoyProteins + onTheFlyDecoyProteins;
         }
 
-        public static int CountUniProtXmlProteins(FileStream uniProtXmlProteomeDatabase, bool onTheFlyDecoys, out int targetProteins, out int decoyProteins, out int onTheFlyDecoyProteins)
+        private static int CountUniProtXmlProteins(FileStream uniProtXmlProteomeDatabase, bool onTheFlyDecoys, out int targetProteins, out int decoyProteins, out int onTheFlyDecoyProteins)
         {
             targetProteins = 0;
             decoyProteins = 0;
@@ -348,7 +348,7 @@ namespace Morpheus
             }
         }
 
-        public static IEnumerable<Protein> ReadFastaProteins(FileStream fastaProteomeDatabase, bool onTheFlyDecoys)
+        private static IEnumerable<Protein> ReadFastaProteins(FileStream fastaProteomeDatabase, bool onTheFlyDecoys)
         {
             StreamReader fasta = new StreamReader(fastaProteomeDatabase);
 
@@ -407,7 +407,7 @@ namespace Morpheus
             fastaProteomeDatabase.Seek(0, SeekOrigin.Begin);
         }
 
-        public static IEnumerable<Protein> ReadUniProtXmlProteins(FileStream uniProtXmlProteomeDatabase, bool onTheFlyDecoys, IDictionary<string, Modification> knownVariableModifications)
+        private static IEnumerable<Protein> ReadUniProtXmlProteins(FileStream uniProtXmlProteomeDatabase, bool onTheFlyDecoys, IDictionary<string, Modification> knownVariableModifications)
         {
             XmlReader xml = XmlReader.Create(uniProtXmlProteomeDatabase);
 
