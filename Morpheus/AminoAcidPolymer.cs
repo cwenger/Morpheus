@@ -232,7 +232,21 @@ namespace Morpheus
             get { return Sequence.Replace('I', 'L'); }
         }
 
-        private static readonly Regex INVALID_AMINO_ACIDS = new Regex("[^ACDEFGHIKLMNPQRSTUVWY]", RegexOptions.Compiled);
+        private static readonly Regex INVALID_AMINO_ACIDS;
+
+        static AminoAcidPolymer()
+        {
+            StringBuilder invalid_amino_acids = new StringBuilder("[^");
+            for(char amino_acid = 'A'; amino_acid <= 'Z'; amino_acid++)
+            {
+                if(AminoAcidMasses.GetMonoisotopicMass(amino_acid) != 0.0)
+                {
+                    invalid_amino_acids.Append(amino_acid);
+                }
+            }
+            invalid_amino_acids.Append(']');
+            INVALID_AMINO_ACIDS = new Regex(invalid_amino_acids.ToString(), RegexOptions.Compiled);
+        }
 
         protected AminoAcidPolymer(string baseSequence, bool prevalidated)
         {
