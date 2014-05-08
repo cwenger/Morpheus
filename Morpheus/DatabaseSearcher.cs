@@ -462,7 +462,7 @@ namespace Morpheus
 #if NON_MULTITHREADED
                     int proteins = 0;
                     int old_progress = 0;
-                    foreach(Protein protein in ProteinFastaReader.ReadProteins(protein_fasta_database, onTheFlyDecoys, known_variable_modifications))
+                    foreach(Protein protein in ProteomeDatabaseReader.ReadProteins(protein_fasta_database, onTheFlyDecoys, known_variable_modifications))
                     {
                         foreach(Peptide peptide in protein.Digest(protease, maximumMissedCleavages, initiatorMethionineBehavior, null, null))
                         {
