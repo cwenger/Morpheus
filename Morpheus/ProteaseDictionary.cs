@@ -13,7 +13,7 @@ namespace Morpheus
         {
             using(StreamReader proteases = new StreamReader(Path.Combine(Path.GetDirectoryName(Environment.GetCommandLineArgs()[0]), "proteases.tsv")))
             {
-                string header = proteases.ReadLine();
+                proteases.ReadLine();
 
                 while(proteases.Peek() != -1)
                 {

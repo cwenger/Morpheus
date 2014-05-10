@@ -13,7 +13,7 @@ namespace Morpheus
         {
             using(StreamReader amino_acids = new StreamReader(Path.Combine(Path.GetDirectoryName(Environment.GetCommandLineArgs()[0]), "amino_acids.tsv")))
             {
-                string header = amino_acids.ReadLine();
+                amino_acids.ReadLine();
 
                 while(amino_acids.Peek() != -1)
                 {
