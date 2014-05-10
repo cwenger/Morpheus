@@ -3,6 +3,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -304,7 +305,7 @@ namespace Morpheus
                     overall_log = new StreamWriter(Path.Combine(outputFolder, "log.txt"));
                     overall_log.AutoFlush = true;
 
-                    overall_log.WriteLine("MORPHEUS LOG");
+                    overall_log.WriteLine("MORPHEUS (revision " + Assembly.GetExecutingAssembly().GetName().Version.Minor.ToString() + ") LOG");
                     overall_log.WriteLine();
 
                     overall_log.WriteLine("PARAMETERS");
@@ -369,7 +370,7 @@ namespace Morpheus
                     log = new StreamWriter(Path.Combine(outputFolder, Path.GetFileNameWithoutExtension(data_filepath) + ".log.txt"));
                     log.AutoFlush = true;
 
-                    log.WriteLine("MORPHEUS LOG");
+                    log.WriteLine("MORPHEUS (revision " + Assembly.GetExecutingAssembly().GetName().Version.Minor.ToString() + ") LOG");
                     log.WriteLine();
 
                     log.WriteLine("PARAMETERS");
