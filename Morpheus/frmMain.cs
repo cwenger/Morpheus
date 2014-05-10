@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Globalization;
 using System.IO;
+using System.Reflection;
 using System.Threading;
 using System.Windows.Forms;
 
@@ -34,6 +35,8 @@ namespace Morpheus
                 DIRECTORY = false;
                 LABEL = "Thermo data files (*.raw)";
             }
+
+            TITLE += " revision " + Assembly.GetExecutingAssembly().GetName().Version.Minor.ToString();
 
             InitializeComponent();
         }
