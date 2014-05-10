@@ -18,6 +18,11 @@
     <DebugType>none</DebugType>
     <WarningLevel>4</WarningLevel>
     <Optimize>false</Optimize>
+    <CustomCommands>
+      <CustomCommands>
+        <Command type="BeforeBuild" command="sh &quot;${SolutionDir}/update_version_number.sh&quot; ${SolutionDir}" workingdir="${ProjectDir}" />
+      </CustomCommands>
+    </CustomCommands>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|AnyCPU'">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -25,6 +30,11 @@
     <DebugType>none</DebugType>
     <WarningLevel>4</WarningLevel>
     <Optimize>false</Optimize>
+    <CustomCommands>
+      <CustomCommands>
+        <Command type="BeforeBuild" command="sh &quot;${SolutionDir}/update_version_number.sh&quot; ${SolutionDir}" workingdir="${ProjectDir}" />
+      </CustomCommands>
+    </CustomCommands>
   </PropertyGroup>
   <PropertyGroup>
     <ApplicationIcon>Morpheus.ico</ApplicationIcon>
