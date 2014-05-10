@@ -14,7 +14,7 @@ namespace Morpheus
         {
             using(StreamReader product_caps = new StreamReader(Path.Combine(Path.GetDirectoryName(Environment.GetCommandLineArgs()[0]), "product_caps.tsv")))
             {
-                string header = product_caps.ReadLine();
+                product_caps.ReadLine();
 
                 while(product_caps.Peek() != -1)
                 {

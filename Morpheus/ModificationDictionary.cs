@@ -14,7 +14,7 @@ namespace Morpheus
         {
             using(StreamReader mods = new StreamReader(Path.Combine(Path.GetDirectoryName(Environment.GetCommandLineArgs()[0]), "modifications.tsv")))
             {
-                string header = mods.ReadLine();
+                mods.ReadLine();
 
                 while(mods.Peek() != -1)
                 {
