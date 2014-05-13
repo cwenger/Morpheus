@@ -64,7 +64,7 @@ copy /Y "..\..\..\..\app.config" "Morpheus (Agilent 32-bit).exe.config"</PostBui
   </PropertyGroup>
   <PropertyGroup>
     <PreBuildEvent>where SubWCRev &gt; NUL
-if not !ERRORCODE!==0 if exist "$(SolutionDir)\..\.svn" SubWCRev "$(ProjectDir)\" "$(ProjectDir)Properties\AssemblyInfo.template.cs" "$(ProjectDir)Properties\AssemblyInfo.cs"</PreBuildEvent>
+if not !ERRORCODE!==0 if exist "$(SolutionDir)\..\.svn" SubWCRev "$(SolutionDir).." "$(ProjectDir)Properties\AssemblyInfo.template.cs" "$(ProjectDir)Properties\AssemblyInfo.cs"</PreBuildEvent>
   </PropertyGroup>
   <Target Name="AfterClean">
     <Delete Files="$(OutDir)\BaseCommon.dll" ContinueOnError="true" />
