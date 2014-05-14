@@ -268,7 +268,7 @@ namespace Morpheus
                 }
                 else if(Directory.Exists(filepath))
                 {
-                    if(!AddDataFromDirectory(filepath))
+                    if(!AddDataFromDirectory(filepath) && !lstData.Items.Contains(filepath))
                     {
                         txtOutputFolder.Text = filepath;
                     }
