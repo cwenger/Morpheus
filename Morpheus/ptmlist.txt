@@ -9,7 +9,7 @@
 
 Description: Controlled vocabulary of posttranslational modifications (PTM)
 Name:        ptmlist.txt
-Release:     2014_04 of 16-Apr-2014
+Release:     2014_05 of 14-May-2014
 
 ---------------------------------------------------------------------------
 
@@ -2897,6 +2897,7 @@ CF   C10 H12 N5 O6 P1
 MM   329.05252
 MA   329.21
 LC   Intracellular localisation.
+TR   Archaea; taxId:2157 (Archaea).
 TR   Bacteria; taxId:1224 (Proteobacteria).
 TR   Eukaryota; taxId:2759 (Eukaryota).
 KW   Nucleotide-binding.
@@ -6583,3 +6584,4 @@ DR   PSI-MOD; 00109.
 Copyrighted by the UniProt Consortium, see http://www.uniprot.org/terms
 Distributed under the Creative Commons Attribution-NoDerivs License
 -----------------------------------------------------------------------
+
