@@ -83,7 +83,6 @@
     <Compile Include="ProteaseDictionary.cs" />
     <Compile Include="ProteinGroup.cs" />
     <Compile Include="ProteomeDatabaseReader.cs" />
-    <Compile Include="RawLabelDataColumn.cs" />
     <Compile Include="StatusEventArgs.cs" />
     <Compile Include="TandemMassSpectra.Thermo.cs" />
     <Compile Include="TandemMassSpectra.cs">
