@@ -62,6 +62,8 @@ namespace Morpheus
                         double retention_time_minutes = double.NaN;
                         raw.RTFromScanNum(scan_number, ref retention_time_minutes);
 
+                        int polarity = DeterminePolarity(scan_filter);
+
                         string fragmentation_method = GetFragmentationMethod(scan_filter);
 
                         double precursor_mz;
@@ -69,6 +71,10 @@ namespace Morpheus
                         GetPrecursor(ms1s, raw, scan_number, scan_filter, first_scan_number, out precursor_mz, out precursor_intensity);
 
                         int charge = DeterminePrecursorCharge(raw, scan_number);
+                        if(polarity < 0)
+                        {
+                            charge = -charge;
+                        }
 
                         double[,] label_data = GetFragmentationData(raw, scan_number, scan_filter);
                         List<MSPeak> peaks = new List<MSPeak>(label_data.GetLength(1));
@@ -76,7 +82,7 @@ namespace Morpheus
                         {
                             peaks.Add(new MSPeak(label_data[(int)RawLabelDataColumn.MZ, peak_index],
                                 label_data[(int)RawLabelDataColumn.Intensity, peak_index],
-                                assignChargeStates && (int)RawLabelDataColumn.Charge < label_data.GetLength(0) ? (int)label_data[(int)RawLabelDataColumn.Charge, peak_index] : 0));
+                                assignChargeStates && (int)RawLabelDataColumn.Charge < label_data.GetLength(0) ? (int)label_data[(int)RawLabelDataColumn.Charge, peak_index] : 0, polarity));
                         }
 
                         peaks = FilterPeaks(peaks, absoluteThreshold, relativeThresholdPercent, maximumNumberOfPeaks);
@@ -126,6 +132,11 @@ namespace Morpheus
             {
                 return "pulsed q dissociation";
             }
+            //hack: HCD at energy of 1.50 means nETD
+            //else if(scanFilter.Contains("hcd1.50"))
+            //{
+            //    return "negative electron transfer dissociation";
+            //}
             else if(scanFilter.Contains("hcd"))
             {
                 return "high-energy collision-induced dissociation";
@@ -249,6 +260,22 @@ namespace Morpheus
             }
 
             return data;
+        }
+
+        private static int DeterminePolarity(string scanFilter)
+        {
+            if(scanFilter.Contains(" + "))
+            {
+                return 1;
+            }
+            else if(scanFilter.Contains(" - "))
+            {
+                return -1;
+            }
+            else
+            {
+                throw new ArgumentException("Unknown polarity.");
+            }
         }
 
         private static int DeterminePrecursorCharge(IXRawfile2 raw, int scanNumber)

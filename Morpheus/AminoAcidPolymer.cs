@@ -593,9 +593,11 @@ namespace Morpheus
 
             switch(productType)
             {
+                case ProductType.adot:
                 case ProductType.b:
                 case ProductType.c:
                     return cumulativeNTerminalMass[productNumber] + PRODUCT_CAPS[productType, productMassType];
+                case ProductType.x:
                 case ProductType.y:
                 case ProductType.zdot:
                     return cumulativeCTerminalMass[productNumber] + PRODUCT_CAPS[productType, productMassType];

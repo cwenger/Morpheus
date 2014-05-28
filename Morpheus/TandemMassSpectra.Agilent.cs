@@ -71,6 +71,16 @@ namespace Morpheus
 
                         if(agilent_spectrum.TotalDataPoints > 0)
                         {
+                            int polarity = 0;
+                            if(agilent_spectrum.IonPolarity == IonPolarity.Positive)
+                            {
+                                polarity = 1;
+                            }
+                            else if(agilent_spectrum.IonPolarity == IonPolarity.Negative)
+                            {
+                                polarity = -1;
+                            }
+
                             int spectrum_number = row_number + 1;
                             string scan_id = "scanId=" + agilent_spectrum.ScanId.ToString();
 
@@ -87,6 +97,10 @@ namespace Morpheus
 
                             int charge;
                             agilent_spectrum.GetPrecursorCharge(out charge);
+                            if(polarity < 0)
+                            {
+                                charge = -charge;
+                            }
 
                             List<MSPeak> peaks = null;
                             if(!assignChargeStates)
@@ -94,7 +108,7 @@ namespace Morpheus
                                 peaks = new List<MSPeak>(agilent_spectrum.TotalDataPoints);
                                 for(int i = 0; i < agilent_spectrum.TotalDataPoints; i++)
                                 {
-                                    peaks.Add(new MSPeak(agilent_spectrum.XArray[i], agilent_spectrum.YArray[i], 0));
+                                    peaks.Add(new MSPeak(agilent_spectrum.XArray[i], agilent_spectrum.YArray[i], 0, polarity));
                                 }
                             }
 
@@ -129,7 +143,7 @@ namespace Morpheus
                                         bool isotopic_peak = observed_peak_clusters.Contains(peak_clusters[i]);
                                         if(!deisotope || !isotopic_peak)
                                         {
-                                            peaks.Add(new MSPeak(peak_mzs[i], peak_intensities[i], peak_charge_states[i]));
+                                            peaks.Add(new MSPeak(peak_mzs[i], peak_intensities[i], peak_charge_states[i], polarity));
                                             if(peak_clusters[i] > 0 && !isotopic_peak)
                                             {
                                                 observed_peak_clusters.Add(peak_clusters[i]);
