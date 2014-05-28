@@ -10,24 +10,19 @@
 
         public double Mass { get; private set; }
 
-        public MSPeak(double mz, double intensity, int charge)
+        public MSPeak(double mz, double intensity, int charge, int polarity)
         {
             MZ = mz;
             Intensity = intensity;
             Charge = charge;
-            CalculateMass();
+            CalculateMass(charge, polarity);
         }
 
-        private void CalculateMass()
-        {
-            CalculateMass(Charge);
-        }
-
-        private void CalculateMass(int charge)
+        private void CalculateMass(int charge, int polarity)
         {
             if(charge == 0)
             {
-                charge = 1;
+                charge = polarity;
             }
             Mass = Utilities.MassFromMZ(MZ, charge);
         }

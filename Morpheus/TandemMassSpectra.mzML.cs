@@ -93,6 +93,7 @@ namespace Morpheus
                     string spectrum_id = spectrum_navigator.GetAttribute("id", string.Empty);
                     string spectrum_title = null;
                     int ms_level = -1;
+                    int polarity = 0;
                     double retention_time_minutes = double.NaN;
                     string precursor_scan_id = null;
                     double precursor_mz = double.NaN;
@@ -110,6 +111,14 @@ namespace Morpheus
                             {
                                 ms_level = int.Parse(spectrum_child_navigator.GetAttribute("value", string.Empty));
                             }
+                            else if(spectrum_child_navigator.GetAttribute("name", string.Empty).Equals("positive scan", StringComparison.OrdinalIgnoreCase))
+                            {
+                                polarity = 1;
+                            }
+                            else if(spectrum_child_navigator.GetAttribute("name", string.Empty).Equals("negative scan", StringComparison.OrdinalIgnoreCase))
+                            {
+                                polarity = -1;
+                            }
                             else if(spectrum_child_navigator.GetAttribute("name", string.Empty).Equals("spectrum title", StringComparison.OrdinalIgnoreCase))
                             {
                                 spectrum_title = spectrum_child_navigator.GetAttribute("value", string.Empty);
@@ -124,7 +133,14 @@ namespace Morpheus
                                     if(navigator.GetAttribute("name", string.Empty).Equals("ms level", StringComparison.OrdinalIgnoreCase))
                                     {
                                         ms_level = int.Parse(navigator.GetAttribute("value", string.Empty));
-                                        break;
+                                    }
+                                    else if(navigator.GetAttribute("name", string.Empty).Equals("positive scan", StringComparison.OrdinalIgnoreCase))
+                                    {
+                                        polarity = 1;
+                                    }
+                                    else if(navigator.GetAttribute("name", string.Empty).Equals("negative scan", StringComparison.OrdinalIgnoreCase))
+                                    {
+                                        polarity = -1;
                                     }
                                 }
                             }
@@ -156,6 +172,10 @@ namespace Morpheus
                                 else if(navigator.GetAttribute("name", string.Empty).Equals("charge state", StringComparison.OrdinalIgnoreCase))
                                 {
                                     charge = int.Parse(navigator.GetAttribute("value", string.Empty));
+                                    if(polarity < 0)
+                                    {
+                                        charge = -charge;
+                                    }
                                 }
                                 else if(navigator.GetAttribute("name", string.Empty).Equals("peak intensity", StringComparison.OrdinalIgnoreCase))
                                 {
@@ -206,7 +226,7 @@ namespace Morpheus
                             List<MSPeak> peaks = new List<MSPeak>(mz.Length);
                             for(int i = 0; i < mz.Length; i++)
                             {
-                                peaks.Add(new MSPeak(mz[i], intensity[i], 0));
+                                peaks.Add(new MSPeak(mz[i], intensity[i], 0, polarity));
                             }
 
                             peaks = FilterPeaks(peaks, absoluteThreshold, relativeThresholdPercent, maximumNumberOfPeaks);
@@ -218,10 +238,10 @@ namespace Morpheus
                                     List<MSPeak> new_peaks = peaks;
                                     if(assignChargeStates)
                                     {
-                                        new_peaks = AssignChargeStates(new_peaks, c, isotopicMZTolerance);
+                                        new_peaks = AssignChargeStates(new_peaks, c, polarity, isotopicMZTolerance);
                                         if(deisotope)
                                         {
-                                            new_peaks = Deisotope(new_peaks, c, isotopicMZTolerance);
+                                            new_peaks = Deisotope(new_peaks, c, polarity, isotopicMZTolerance);
                                         }
                                     }
 
@@ -320,7 +340,7 @@ namespace Morpheus
             return doubles;
         }
 
-        private static List<MSPeak> AssignChargeStates(IList<MSPeak> peaks, int maxCharge, MassTolerance isotopicMZTolerance)
+        private static List<MSPeak> AssignChargeStates(IList<MSPeak> peaks, int maxAbsoluteCharge, int polarity, MassTolerance isotopicMZTolerance)
         {
             List<MSPeak> new_peaks = new List<MSPeak>();
 
@@ -335,7 +355,7 @@ namespace Morpheus
                         break;
                     }
 
-                    for(int c = maxCharge; c >= 1; c--)
+                    for(int c = polarity * maxAbsoluteCharge; polarity > 0 ? c >= 1 : c <= -1; c -= polarity)
                     {
                         // remove harmonic charges, e.g. don't consider peak as a +2 (0.5 Th spacing) if it could be a +4 (0.25 Th spacing)
                         if(HARMONIC_CHARGE_DETECTION)
@@ -357,7 +377,7 @@ namespace Morpheus
 
                         if(Math.Abs(MassTolerance.CalculateMassError(peaks[j].MZ, peaks[i].MZ + Constants.C12_C13_MASS_DIFFERENCE / c, isotopicMZTolerance.Units)) <= isotopicMZTolerance.Value)
                         {
-                            new_peaks.Add(new MSPeak(peaks[i].MZ, peaks[i].Intensity, c));
+                            new_peaks.Add(new MSPeak(peaks[i].MZ, peaks[i].Intensity, c, polarity));
                             charges.Add(c);
                         }
                     }
@@ -366,14 +386,14 @@ namespace Morpheus
                 }
                 if(charges.Count == 0)
                 {
-                    new_peaks.Add(new MSPeak(peaks[i].MZ, peaks[i].Intensity, 0));
+                    new_peaks.Add(new MSPeak(peaks[i].MZ, peaks[i].Intensity, 0, polarity));
                 }
             }
 
             return new_peaks;
         }
 
-        private static List<MSPeak> Deisotope(IEnumerable<MSPeak> peaks, int maxCharge, MassTolerance isotopicMZTolerance)
+        private static List<MSPeak> Deisotope(IEnumerable<MSPeak> peaks, int maxAbsoluteCharge, int polarity, MassTolerance isotopicMZTolerance)
         {
             List<MSPeak> new_peaks = new List<MSPeak>(peaks);
 
@@ -391,9 +411,9 @@ namespace Morpheus
 
                     if(new_peaks[p].Intensity < new_peaks[q].Intensity)
                     {
-                        for(int c = 1; c <= maxCharge; c++)
+                        for(int c = polarity; polarity > 0 ? c <= maxAbsoluteCharge : c >= -maxAbsoluteCharge; c += polarity)
                         {
-                            if(Math.Abs(MassTolerance.CalculateMassError(new_peaks[p].MZ, new_peaks[q].MZ + Constants.C12_C13_MASS_DIFFERENCE / c, isotopicMZTolerance.Units)) <= isotopicMZTolerance.Value)
+                            if(Math.Abs(MassTolerance.CalculateMassError(new_peaks[p].MZ, new_peaks[q].MZ + Constants.C12_C13_MASS_DIFFERENCE / Math.Abs(c), isotopicMZTolerance.Units)) <= isotopicMZTolerance.Value)
                             {
                                 new_peaks.RemoveAt(p);
                                 removed = true;
