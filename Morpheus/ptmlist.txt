@@ -9,7 +9,7 @@
 
 Description: Controlled vocabulary of posttranslational modifications (PTM)
 Name:        ptmlist.txt
-Release:     2014_05 of 14-May-2014
+Release:     2014_06 of 11-Jun-2014
 
 ---------------------------------------------------------------------------
 
@@ -2938,7 +2938,7 @@ ID   Glycyl cysteine thioester (Cys-Gly) (interchain with G-...)
 AC   PTM-0429
 FT   CROSSLNK
 TG   Cysteine-Glycine.
-PA   Amino acid side chain-C-terminal.
+PA   Amino acid side chain-Amino acid backbone.
 PP   Anywhere-C-terminal.
 LC   Intracellular localisation.
 TR   Eukaryota; taxId:2759 (Eukaryota).
@@ -3038,7 +3038,7 @@ PA   Amino acid backbone.
 PP   C-terminal.
 LC   Extracellular and lumenal localisation.
 TR   Eukaryota; taxId:2759 (Eukaryota).
-KW   GPI-anchor.
+KW   GPI-anchor; Glycoprotein; Lipoprotein.
 DR   RESID; AA0163.
 DR   PSI-MOD; 00172.
 //
@@ -3050,7 +3050,7 @@ PA   Amino acid backbone.
 PP   C-terminal.
 LC   Extracellular and lumenal localisation.
 TR   Eukaryota; taxId:2759 (Eukaryota).
-KW   GPI-anchor.
+KW   GPI-anchor; Glycoprotein; Lipoprotein.
 DR   RESID; AA0158.
 DR   PSI-MOD; 00167.
 //
@@ -3062,7 +3062,7 @@ PA   Amino acid backbone.
 PP   C-terminal.
 LC   Extracellular and lumenal localisation.
 TR   Eukaryota; taxId:2759 (Eukaryota).
-KW   GPI-anchor.
+KW   GPI-anchor; Glycoprotein; Lipoprotein.
 DR   RESID; AA0159.
 DR   PSI-MOD; 00168.
 //
@@ -3074,7 +3074,7 @@ PA   Amino acid backbone.
 PP   C-terminal.
 LC   Extracellular and lumenal localisation.
 TR   Eukaryota; taxId:2759 (Eukaryota).
-KW   GPI-anchor.
+KW   GPI-anchor; Glycoprotein; Lipoprotein.
 DR   PSI-MOD; 00818.
 //
 ID   GPI-anchor amidated cysteine
@@ -3085,7 +3085,7 @@ PA   Amino acid backbone.
 PP   C-terminal.
 LC   Extracellular and lumenal localisation.
 TR   Eukaryota; taxId:2759 (Eukaryota).
-KW   GPI-anchor.
+KW   GPI-anchor; Glycoprotein; Lipoprotein.
 DR   RESID; AA0160.
 DR   PSI-MOD; 00169.
 //
@@ -3097,7 +3097,7 @@ PA   Amino acid backbone.
 PP   C-terminal.
 LC   Extracellular and lumenal localisation.
 TR   Eukaryota; taxId:2759 (Eukaryota).
-KW   GPI-anchor.
+KW   GPI-anchor; Glycoprotein; Lipoprotein.
 DR   RESID; AA0161.
 DR   PSI-MOD; 00170.
 //
@@ -3121,7 +3121,7 @@ PA   Amino acid backbone.
 PP   C-terminal.
 LC   Extracellular and lumenal localisation.
 TR   Eukaryota; taxId:10090 (Mus musculus).
-KW   GPI-anchor.
+KW   GPI-anchor; Glycoprotein; Lipoprotein.
 DR   RESID; AA0164.
 DR   PSI-MOD; 00173.
 //
@@ -3133,7 +3133,7 @@ PA   Amino acid backbone.
 PP   C-terminal.
 LC   Extracellular and lumenal localisation.
 TR   Eukaryota; taxId:746128 (Neosartorya fumigata).
-KW   GPI-anchor.
+KW   GPI-anchor; Glycoprotein; Lipoprotein.
 DR   RESID; AA0424.
 DR   PSI-MOD; 01172.
 //
@@ -3145,7 +3145,7 @@ PA   Amino acid backbone.
 PP   C-terminal.
 LC   Extracellular and lumenal localisation.
 TR   Eukaryota; taxId:746128 (Neosartorya fumigata).
-KW   GPI-anchor.
+KW   GPI-anchor; Glycoprotein; Lipoprotein.
 DR   RESID; AA0425.
 DR   PSI-MOD; 01173.
 //
@@ -3169,7 +3169,7 @@ PA   Amino acid backbone.
 PP   C-terminal.
 LC   Extracellular and lumenal localisation.
 TR   Eukaryota; taxId:44689 (Dictyostelium discoideum), taxId:746128 (Neosartorya fumigata).
-KW   GPI-anchor.
+KW   GPI-anchor; Glycoprotein; Lipoprotein.
 DR   RESID; AA0165.
 DR   PSI-MOD; 00174.
 //
@@ -3181,7 +3181,7 @@ PA   Amino acid backbone.
 PP   C-terminal.
 LC   Extracellular and lumenal localisation.
 TR   Eukaryota; taxId:44689 (Dictyostelium discoideum), taxId:746128 (Neosartorya fumigata).
-KW   GPI-anchor.
+KW   GPI-anchor; Glycoprotein; Lipoprotein.
 DR   RESID; AA0166.
 DR   PSI-MOD; 00175.
 //
@@ -4312,6 +4312,19 @@ TR   Bacteria; taxId:2 (Bacteria).
 TR   Eukaryota; taxId:2759 (Eukaryota).
 DR   RESID; AA0545.
 DR   PSI-MOD; 01819.
+//
+ID   N6-glutaryllysine
+AC   PTM-0487
+FT   MOD_RES
+TG   Lysine.
+PA   Amino acid side chain.
+PP   Anywhere.
+CF   C5 H6 O3
+MM   114.031694
+MA   114.10
+LC   Intracellular localisation.
+TR   Bacteria; taxId:2 (Bacteria).
+TR   Eukaryota; taxId:2759 (Eukaryota).
 //
 ID   N-[(12R)-12-hydroxymyristoyl]cysteine
 AC   PTM-0419
