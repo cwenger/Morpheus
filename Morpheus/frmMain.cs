@@ -840,13 +840,24 @@ namespace Morpheus
 
         private void HandleThrowException(object sender, ExceptionEventArgs e)
         {
-            MessageBox.Show(e.Exception.ToString());
+            ShowGridErrorDialog(null, e.Exception.Message, e.Exception.ToString());
             SetListBoxSelectedItem(lstData, null);
             SetToolStripItemText(tsslStatus, "Ready");
             SetToolStripProgressBarStyle(tspbProgress, ProgressBarStyle.Blocks);
             SetToolStripProgressBarValue(tspbProgress, 0);
             SetDropAllowed(this, true);
             SetControlEnabled(pnlMain, true);
+        }
+
+        // from http://stackoverflow.com/a/8653764/60067
+        private static DialogResult ShowGridErrorDialog(string title, string message, string details)
+        {
+            Type type = typeof(Form).Assembly.GetType("System.Windows.Forms.PropertyGridInternal.GridErrorDlg");
+            Form dialog = (Form)Activator.CreateInstance(type, new PropertyGrid());
+            dialog.Text = title;
+            type.GetProperty("Message").SetValue(dialog, message, null);
+            type.GetProperty("Details").SetValue(dialog, details, null);
+            return dialog.ShowDialog();
         }
 
         private void HandleFinishedFile(object sender, FilepathEventArgs e)
