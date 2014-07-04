@@ -274,6 +274,11 @@ namespace Morpheus
                     }
                 }
             }
+
+            if(lstData.Items.Count > 0)
+            {
+                btnClear.Enabled = true;
+            }
         }
 
         private bool AddDataFromDirectory(string directory)
@@ -354,6 +359,11 @@ namespace Morpheus
                     ofdData.InitialDirectory = Path.GetDirectoryName(ofdData.FileName);
                 }
             }
+
+            if(lstData.Items.Count > 0)
+            {
+                btnClear.Enabled = true;
+            }
         }
 
         private void btnRemove_Click(object sender, EventArgs e)
@@ -363,12 +373,31 @@ namespace Morpheus
                 lstData.Items.Remove(lstData.SelectedItem);
                 tspbProgress.Value = tspbProgress.Minimum;
             }
+
+            if(lstData.Items.Count == 0)
+            {
+                btnClear.Enabled = false;
+            }
         }
 
         private void btnClear_Click(object sender, EventArgs e)
         {
             lstData.Items.Clear();
+            btnRemove.Enabled = false;
+            btnClear.Enabled = false;
             tspbProgress.Value = tspbProgress.Minimum;
+        }
+
+        private void lstData_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if(lstData.SelectedItems.Count > 0)
+            {
+                btnRemove.Enabled = true;
+            }
+            else
+            {
+                btnRemove.Enabled = false;
+            }
         }
 
         private void chkAbsoluteThreshold_CheckedChanged(object sender, EventArgs e)
