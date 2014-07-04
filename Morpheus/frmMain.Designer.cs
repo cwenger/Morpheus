@@ -125,6 +125,7 @@
             // 
             // btnClear
             // 
+            this.btnClear.Enabled = false;
             this.btnClear.Location = new System.Drawing.Point(625, 139);
             this.btnClear.Name = "btnClear";
             this.btnClear.Size = new System.Drawing.Size(75, 23);
@@ -142,9 +143,11 @@
             this.lstData.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended;
             this.lstData.Size = new System.Drawing.Size(688, 108);
             this.lstData.TabIndex = 1;
+            this.lstData.SelectedIndexChanged += new System.EventHandler(this.lstData_SelectedIndexChanged);
             // 
             // btnRemove
             // 
+            this.btnRemove.Enabled = false;
             this.btnRemove.Location = new System.Drawing.Point(318, 139);
             this.btnRemove.Name = "btnRemove";
             this.btnRemove.Size = new System.Drawing.Size(75, 23);
@@ -201,7 +204,8 @@
             // 
             // ofdFasta
             // 
-            this.ofdFasta.Filter = "FASTA proteome database files|*.fa;*.mpfa;*.fna;*.fsa;*.fas;*.fasta|UniProt XML proteome database files|*.xml";
+            this.ofdFasta.Filter = "FASTA proteome database files|*.fa;*.mpfa;*.fna;*.fsa;*.fas;*.fasta|UniProt XML p" +
+    "roteome database files|*.xml";
             this.ofdFasta.Multiselect = true;
             // 
             // cboProtease
