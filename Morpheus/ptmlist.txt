@@ -9,7 +9,7 @@
 
 Description: Controlled vocabulary of posttranslational modifications (PTM)
 Name:        ptmlist.txt
-Release:     2014_06 of 11-Jun-2014
+Release:     2014_07 of 09-Jul-2014
 
 ---------------------------------------------------------------------------
 
@@ -3519,7 +3519,7 @@ CF   C1 H2
 MM   14.015650
 MA   14.03
 LC   Intracellular localisation.
-TR   Eukaryota; taxId:7742 (Vertebrata).
+TR   Eukaryota; taxId:2759 (Eukaryota).
 KW   Methylation.
 DR   RESID; AA0299.
 DR   PSI-MOD; 00304.
@@ -4147,7 +4147,7 @@ TR   Eukaryota; taxId:2763 (Rhodophyta), taxId:2830 (Haptophyceae), taxId:3027 (
 DR   RESID; AA0114.
 DR   PSI-MOD; 00123.
 //
-ID   N6-crotonyl-L-lysine
+ID   N6-crotonyllysine
 AC   PTM-0475
 FT   MOD_RES
 TG   Lysine.
@@ -4455,6 +4455,7 @@ MM   42.010565
 MA   42.04
 LC   Intracellular localisation.
 TR   Eukaryota; taxId:10116 (Rattus norvegicus).
+TR   Bacteria; taxId:2 (Bacteria).
 KW   Acetylation.
 DR   RESID; AA0047.
 DR   PSI-MOD; 00056.
@@ -4487,6 +4488,7 @@ MM   42.010565
 MA   42.04
 LC   Intracellular localisation.
 TR   Eukaryota; taxId:33090 (Viridiplantae), taxId:40674 (Mammalia).
+TR   Bacteria; taxId:2 (Bacteria).
 KW   Acetylation.
 DR   RESID; AA0050.
 DR   PSI-MOD; 00059.
@@ -4550,6 +4552,7 @@ MM   42.010565
 MA   42.04
 LC   Intracellular localisation.
 TR   Eukaryota; taxId:3055 (Chlamydomonas reinhardtii), taxId:33208 (Metazoa).
+TR   Bacteria; taxId:2 (Bacteria).
 KW   Acetylation.
 DR   RESID; AA0054.
 DR   PSI-MOD; 00063.
@@ -5353,6 +5356,7 @@ MM   79.966330
 MA   79.98
 LC   Intracellular localisation.
 TR   Eukaryota; taxId:40674 (Mammalia).
+TR   Bacteria; taxId:2 (Bacteria).
 KW   Phosphoprotein.
 DR   RESID; AA0222.
 DR   PSI-MOD; 00227.
@@ -6593,8 +6597,21 @@ KW   Amidation.
 DR   RESID; AA0100.
 DR   PSI-MOD; 00109.
 //
+ID   L-isoglutamyl histamine
+AC   PTM-0488
+FT   MOD_RES
+TG   Glutamine.
+PA   Amino acid side chain.
+PP   Anywhere.
+CF   C 5 H 6 N 2
+MM   222.111676
+MA   222.25
+LC   Intracellular localisation.
+TR   Eukaryota; taxId:2759 (Eukaryota).
+DR   RESID; AA0596.
+DR   PSI-MOD; 01950.
+//
 -----------------------------------------------------------------------
 Copyrighted by the UniProt Consortium, see http://www.uniprot.org/terms
 Distributed under the Creative Commons Attribution-NoDerivs License
 -----------------------------------------------------------------------
-
