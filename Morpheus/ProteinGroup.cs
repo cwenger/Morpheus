@@ -135,9 +135,9 @@ namespace Morpheus
             StringBuilder length = new StringBuilder();
             foreach(Protein protein in this)
             {
-                description.Append(protein.Description + "; ");
-                sequence.Append(protein.Sequence + "; ");
-                length.Append(protein.Sequence.Length.ToString() + "; ");
+                description.Append(protein.Description + ";; ");
+                sequence.Append(protein.Sequence + ";; ");
+                length.Append(protein.Sequence.Length.ToString() + ";; ");
             }
             description = description.Remove(description.Length - 2, 2);
             sequence = sequence.Remove(sequence.Length - 2, 2);
