@@ -9,7 +9,7 @@
 
 Description: Controlled vocabulary of posttranslational modifications (PTM)
 Name:        ptmlist.txt
-Release:     2014_07 of 09-Jul-2014
+Release:     2014_08 of 03-Sep-2014
 
 ---------------------------------------------------------------------------
 
@@ -1797,26 +1797,35 @@ TR   Eukaryota; taxId:2763 (Rhodophyta), taxId:3027 (Cryptophyta), taxId:33090 (
 DR   RESID; AA0373.
 DR   PSI-MOD; 00378.
 //
-ID   Aspartyl isopeptide (Asn)
-AC   PTM-0065
-FT   MOD_RES
-TG   Asparagine.
-PA   Amino acid backbone.
-PP   Protein core.
-CF   H-1 N-1 O1
-MM   0.984016
-MA   0.98
-LC   Intracellular localisation.
-TR   Eukaryota; taxId:40674 (Mammalia).
-//
-ID   Aspartyl isopeptide (Asp)
-AC   PTM-0313
-FT   MOD_RES
-TG   Aspartate.
-PA   Amino acid backbone.
-PP   Protein core.
+ID   Isoaspartyl glycine isopeptide (Asn-Gly)
+AC   PTM-0489
+FT   CROSSLNK
+TG   Asparagine-Glycine.
+PA   Amino acid side chain-Amino acid backbone.
+PP   Anywhere-Anywhere.
+CF   H-3 N-1
+MM   -17.026549
+MA   -17.03
 LC   Extracellular and lumenal localisation.
-TR   Eukaryota; taxId:3674 (Momordica cochinchinensis).
+TR   Eukaryota; taxId:2759 (Eukaryota).
+KW   Isopeptide bond.
+DR   RESID; AA0126.
+DR   PSI-MOD; 00135.
+//
+ID   Isoaspartyl glycine isopeptide (Asp-Gly)
+AC   PTM-0490
+FT   CROSSLNK
+TG   Aspartate-Glycine.
+PA   Amino acid side chain-Amino acid backbone.
+PP   Anywhere-Anywhere.
+CF   H-2 O-1
+MM   -18.010565
+MA   -18.02
+LC   Extracellular and lumenal localisation.
+TR   Eukaryota; taxId:2759 (Eukaryota).
+KW   Isopeptide bond.
+DR   RESID; AA0126.
+DR   PSI-MOD; 00135.
 //
 ID   Asymmetric dimethylarginine
 AC   PTM-0066
@@ -2900,7 +2909,7 @@ LC   Intracellular localisation.
 TR   Archaea; taxId:2157 (Archaea).
 TR   Bacteria; taxId:1224 (Proteobacteria).
 TR   Eukaryota; taxId:2759 (Eukaryota).
-KW   Nucleotide-binding.
+KW   Nucleotide-binding; Phosphoprotein.
 DR   RESID; AA0511.
 DR   PSI-MOD; 01614.
 //
@@ -5029,7 +5038,7 @@ LC   Intracellular localisation.
 TR   Archaea; taxId:2157 (Archaea).
 TR   Bacteria; taxId:2 (Bacteria).
 TR   Eukaryota; taxId:2759 (Eukaryota).
-KW   Nucleotide-binding.
+KW   Nucleotide-binding; Phosphoprotein.
 DR   RESID; AA0203.
 DR   PSI-MOD; 00208.
 //
@@ -5044,7 +5053,7 @@ MM   329.05252
 MA   329.21
 LC   Intracellular localisation.
 TR   Eukaryota; taxId:2759 (Eukaryota).
-KW   Nucleotide-binding.
+KW   Nucleotide-binding; Phosphoprotein.
 DR   RESID; AA0267.
 DR   PSI-MOD; 00272.
 //
