@@ -139,9 +139,9 @@ namespace Morpheus
                 sequence.Append(protein.Sequence + ";; ");
                 length.Append(protein.Sequence.Length.ToString() + ";; ");
             }
-            description = description.Remove(description.Length - 2, 2);
-            sequence = sequence.Remove(sequence.Length - 2, 2);
-            length = length.Remove(length.Length - 2, 2);
+            description = description.Remove(description.Length - 3, 3);
+            sequence = sequence.Remove(sequence.Length - 3, 3);
+            length = length.Remove(length.Length - 3, 3);
 
             StringBuilder sb = new StringBuilder();
 
@@ -156,9 +156,9 @@ namespace Morpheus
             StringBuilder sequence_coverage = new StringBuilder();
             foreach(Protein protein in this)
             {
-                sequence_coverage.Append((protein.CalculateSequenceCoverage() * 100.0).ToString() + "; ");
+                sequence_coverage.Append((protein.CalculateSequenceCoverage() * 100.0).ToString() + ";; ");
             }
-            sequence_coverage = sequence_coverage.Remove(sequence_coverage.Length - 2, 2);
+            sequence_coverage = sequence_coverage.Remove(sequence_coverage.Length - 3, 3);
             sb.Append(sequence_coverage.ToString() + '\t');
             sb.Append(SummedMorpheusScore.ToString());
 
