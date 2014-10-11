@@ -9,7 +9,7 @@
 
 Description: Controlled vocabulary of posttranslational modifications (PTM)
 Name:        ptmlist.txt
-Release:     2014_08 of 03-Sep-2014
+Release:     2014_09 of 01-Oct-2014
 
 ---------------------------------------------------------------------------
 
@@ -937,6 +937,7 @@ MM   45.987721
 MA   46.09
 LC   Intracellular localisation.
 TR   Bacteria; taxId:2 (Bacteria).
+KW   Methylation.
 DR   RESID; AA0232.
 DR   PSI-MOD; 00237.
 //
@@ -2393,6 +2394,7 @@ MM   45.987721
 MA   46.09
 LC   Intracellular localisation.
 TR   Bacteria; taxId:2 (Bacteria).
+KW   Methylation.
 DR   RESID; AA0101.
 DR   PSI-MOD; 00110.
 //
@@ -2755,7 +2757,7 @@ MM   438.094050
 MA   438.33
 LC   Intracellular localisation.
 TR   Bacteria; taxId:1224 (Proteobacteria).
-KW   FMN; Phosphoprotein.
+KW   Flavoprotein; FMN; Phosphoprotein.
 DR   RESID; AA0350.
 DR   PSI-MOD; 00355.
 //
@@ -2770,7 +2772,7 @@ MM   438.094050
 MA   438.33
 LC   Intracellular localisation.
 TR   Bacteria; taxId:2 (Bacteria).
-KW   FMN; Phosphoprotein.
+KW   Flavoprotein; FMN; Phosphoprotein.
 DR   RESID; AA0349.
 DR   PSI-MOD; 00354.
 //
@@ -5217,7 +5219,7 @@ LC   Intracellular localisation.
 TR   Archaea; taxId:2157 (Archaea).
 TR   Bacteria; taxId:2 (Bacteria).
 TR   Eukaryota; taxId:2797 (Bangiophyceae).
-KW   Nucleotide-binding.
+KW   Nucleotide-binding; Phosphoprotein.
 DR   RESID; AA0256.
 DR   PSI-MOD; 00261.
 //
