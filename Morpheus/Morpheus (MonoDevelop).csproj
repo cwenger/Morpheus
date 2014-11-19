@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -27,7 +27,7 @@
     <WarningLevel>4</WarningLevel>
     <CustomCommands>
       <CustomCommands>
-        <Command type="BeforeBuild" command="sh &quot;${SolutionDir}/update_version_number.sh&quot; ${SolutionDir}" workingdir="${ProjectDir}" />
+        <Command type="BeforeBuild" command="sh &quot;${SolutionDir}/update_version_number.sh&quot; ${SolutionDir}/.." workingdir="${ProjectDir}" />
       </CustomCommands>
     </CustomCommands>
   </PropertyGroup>
@@ -90,7 +90,6 @@
     <Compile Include="ProductTypes.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="ProgressEventArgs.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ProteaseDictionary.cs" />
     <Compile Include="ProteinGroup.cs" />
     <Compile Include="ProteomeDatabaseReader.cs" />
