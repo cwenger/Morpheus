@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -20,7 +20,7 @@
     <Optimize>false</Optimize>
     <CustomCommands>
       <CustomCommands>
-        <Command type="BeforeBuild" command="sh &quot;${SolutionDir}/update_version_number.sh&quot; ${SolutionDir}" workingdir="${ProjectDir}" />
+        <Command type="BeforeBuild" command="sh &quot;${SolutionDir}/update_version_number.sh&quot; ${SolutionDir}/.." workingdir="${ProjectDir}" />
       </CustomCommands>
     </CustomCommands>
   </PropertyGroup>
@@ -48,11 +48,11 @@
     <Compile Include="..\Morpheus %28command line%29\Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\external\CommandLine\CommandLine\CommandLine (MonoDevelop).csproj">
+    <ProjectReference Include="..\..\external\CommandLine\CommandLine\CommandLine %28MonoDevelop%29.csproj">
       <Project>{E2EED323-9E53-4193-B0D6-FA3987FE9834}</Project>
       <Name>CommandLine (MonoDevelop)</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Morpheus (MonoDevelop).csproj">
+    <ProjectReference Include="..\Morpheus %28MonoDevelop%29.csproj">
       <Project>{288CC061-1067-4FBD-8E79-FB4C7B3F3FB4}</Project>
       <Name>Morpheus (MonoDevelop)</Name>
     </ProjectReference>
