@@ -9,7 +9,7 @@
 
 Description: Controlled vocabulary of posttranslational modifications (PTM)
 Name:        ptmlist.txt
-Release:     2014_10 of 29-Oct-2014
+Release:     2014_11 of 26-Nov-2014
 
 ---------------------------------------------------------------------------
 
@@ -5324,7 +5324,7 @@ TG   Alanine.
 PA   Amino acid side chain.
 PP   Anywhere.
 LC   Extracellular and lumenal localisation.
-TR   Bacteria; taxId:1260 (Peptostreptococcus magnus).
+TR   Bacteria; taxId:1239 (Firmicutes).
 KW   Peptidoglycan-anchor.
 DR   RESID; AA0383.
 DR   PSI-MOD; 00388.
