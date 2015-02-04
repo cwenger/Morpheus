@@ -1,4 +1,5 @@
 Fragmentation Method / Product Type	adot	b	c	x	y	zdot
+beam-type collision-induced dissociation	0	1	0	0	1	0
 collision-induced dissociation	0	1	0	0	1	0
 electron capture dissociation	0	0	1	0	0	1
 electron transfer dissociation	0	0	1	0	0	1
