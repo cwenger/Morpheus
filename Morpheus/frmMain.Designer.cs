@@ -718,7 +718,7 @@
             this.numProductMassTolerance.DecimalPlaces = 3;
             this.numProductMassTolerance.Location = new System.Drawing.Point(450, 545);
             this.numProductMassTolerance.Name = "numProductMassTolerance";
-            this.numProductMassTolerance.Size = new System.Drawing.Size(58, 20);
+            this.numProductMassTolerance.Size = new System.Drawing.Size(74, 20);
             this.numProductMassTolerance.TabIndex = 32;
             this.numProductMassTolerance.Value = new decimal(new int[] {
             25,
@@ -731,7 +731,7 @@
             // 
             this.cboProductMassToleranceUnits.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cboProductMassToleranceUnits.FormattingEnabled = true;
-            this.cboProductMassToleranceUnits.Location = new System.Drawing.Point(514, 545);
+            this.cboProductMassToleranceUnits.Location = new System.Drawing.Point(530, 544);
             this.cboProductMassToleranceUnits.Name = "cboProductMassToleranceUnits";
             this.cboProductMassToleranceUnits.Size = new System.Drawing.Size(59, 21);
             this.cboProductMassToleranceUnits.TabIndex = 33;
@@ -769,8 +769,13 @@
             // 
             this.numPrecursorMassTolerance.DecimalPlaces = 3;
             this.numPrecursorMassTolerance.Location = new System.Drawing.Point(450, 439);
+            this.numPrecursorMassTolerance.Maximum = new decimal(new int[] {
+            1000,
+            0,
+            0,
+            0});
             this.numPrecursorMassTolerance.Name = "numPrecursorMassTolerance";
-            this.numPrecursorMassTolerance.Size = new System.Drawing.Size(58, 20);
+            this.numPrecursorMassTolerance.Size = new System.Drawing.Size(74, 20);
             this.numPrecursorMassTolerance.TabIndex = 23;
             this.numPrecursorMassTolerance.Value = new decimal(new int[] {
             21,
@@ -783,7 +788,7 @@
             // 
             this.cboPrecursorMassToleranceUnits.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cboPrecursorMassToleranceUnits.FormattingEnabled = true;
-            this.cboPrecursorMassToleranceUnits.Location = new System.Drawing.Point(514, 439);
+            this.cboPrecursorMassToleranceUnits.Location = new System.Drawing.Point(530, 438);
             this.cboPrecursorMassToleranceUnits.Name = "cboPrecursorMassToleranceUnits";
             this.cboPrecursorMassToleranceUnits.Size = new System.Drawing.Size(59, 21);
             this.cboPrecursorMassToleranceUnits.TabIndex = 24;
