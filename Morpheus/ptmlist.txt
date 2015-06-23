@@ -9,7 +9,7 @@
 
 Description: Controlled vocabulary of posttranslational modifications (PTM)
 Name:        ptmlist.txt
-Release:     2015_04 of 01-Apr-2015
+Release:     2015_06 of 27-May-2015
 
 ---------------------------------------------------------------------------
 
@@ -2757,7 +2757,7 @@ MM   438.094050
 MA   438.33
 LC   Intracellular localisation.
 TR   Bacteria; taxId:1224 (Proteobacteria).
-KW   Flavoprotein; FMN; Phosphoprotein.
+KW   FMN; Phosphoprotein.
 DR   RESID; AA0350.
 DR   PSI-MOD; 00355.
 //
@@ -2772,7 +2772,7 @@ MM   438.094050
 MA   438.33
 LC   Intracellular localisation.
 TR   Bacteria; taxId:2 (Bacteria).
-KW   Flavoprotein; FMN; Phosphoprotein.
+KW   FMN; Phosphoprotein.
 DR   RESID; AA0349.
 DR   PSI-MOD; 00354.
 //
@@ -3049,7 +3049,7 @@ PA   Amino acid backbone.
 PP   C-terminal.
 LC   Extracellular and lumenal localisation.
 TR   Eukaryota; taxId:2759 (Eukaryota).
-KW   GPI-anchor; Glycoprotein; Lipoprotein.
+KW   GPI-anchor.
 DR   RESID; AA0163.
 DR   PSI-MOD; 00172.
 //
@@ -3061,7 +3061,7 @@ PA   Amino acid backbone.
 PP   C-terminal.
 LC   Extracellular and lumenal localisation.
 TR   Eukaryota; taxId:2759 (Eukaryota).
-KW   GPI-anchor; Glycoprotein; Lipoprotein.
+KW   GPI-anchor.
 DR   RESID; AA0158.
 DR   PSI-MOD; 00167.
 //
@@ -3073,7 +3073,7 @@ PA   Amino acid backbone.
 PP   C-terminal.
 LC   Extracellular and lumenal localisation.
 TR   Eukaryota; taxId:2759 (Eukaryota).
-KW   GPI-anchor; Glycoprotein; Lipoprotein.
+KW   GPI-anchor.
 DR   RESID; AA0159.
 DR   PSI-MOD; 00168.
 //
@@ -3085,7 +3085,7 @@ PA   Amino acid backbone.
 PP   C-terminal.
 LC   Extracellular and lumenal localisation.
 TR   Eukaryota; taxId:2759 (Eukaryota).
-KW   GPI-anchor; Glycoprotein; Lipoprotein.
+KW   GPI-anchor.
 DR   PSI-MOD; 00818.
 //
 ID   GPI-anchor amidated cysteine
@@ -3096,7 +3096,7 @@ PA   Amino acid backbone.
 PP   C-terminal.
 LC   Extracellular and lumenal localisation.
 TR   Eukaryota; taxId:2759 (Eukaryota).
-KW   GPI-anchor; Glycoprotein; Lipoprotein.
+KW   GPI-anchor.
 DR   RESID; AA0160.
 DR   PSI-MOD; 00169.
 //
@@ -3108,7 +3108,7 @@ PA   Amino acid backbone.
 PP   C-terminal.
 LC   Extracellular and lumenal localisation.
 TR   Eukaryota; taxId:2759 (Eukaryota).
-KW   GPI-anchor; Glycoprotein; Lipoprotein.
+KW   GPI-anchor.
 DR   RESID; AA0161.
 DR   PSI-MOD; 00170.
 //
@@ -3132,7 +3132,7 @@ PA   Amino acid backbone.
 PP   C-terminal.
 LC   Extracellular and lumenal localisation.
 TR   Eukaryota; taxId:10090 (Mus musculus).
-KW   GPI-anchor; Glycoprotein; Lipoprotein.
+KW   GPI-anchor.
 DR   RESID; AA0164.
 DR   PSI-MOD; 00173.
 //
@@ -3144,7 +3144,7 @@ PA   Amino acid backbone.
 PP   C-terminal.
 LC   Extracellular and lumenal localisation.
 TR   Eukaryota; taxId:746128 (Neosartorya fumigata).
-KW   GPI-anchor; Glycoprotein; Lipoprotein.
+KW   GPI-anchor.
 DR   RESID; AA0424.
 DR   PSI-MOD; 01172.
 //
@@ -3156,7 +3156,7 @@ PA   Amino acid backbone.
 PP   C-terminal.
 LC   Extracellular and lumenal localisation.
 TR   Eukaryota; taxId:746128 (Neosartorya fumigata).
-KW   GPI-anchor; Glycoprotein; Lipoprotein.
+KW   GPI-anchor.
 DR   RESID; AA0425.
 DR   PSI-MOD; 01173.
 //
@@ -3180,7 +3180,7 @@ PA   Amino acid backbone.
 PP   C-terminal.
 LC   Extracellular and lumenal localisation.
 TR   Eukaryota; taxId:44689 (Dictyostelium discoideum), taxId:746128 (Neosartorya fumigata).
-KW   GPI-anchor; Glycoprotein; Lipoprotein.
+KW   GPI-anchor.
 DR   RESID; AA0165.
 DR   PSI-MOD; 00174.
 //
@@ -3192,7 +3192,7 @@ PA   Amino acid backbone.
 PP   C-terminal.
 LC   Extracellular and lumenal localisation.
 TR   Eukaryota; taxId:44689 (Dictyostelium discoideum), taxId:746128 (Neosartorya fumigata).
-KW   GPI-anchor; Glycoprotein; Lipoprotein.
+KW   GPI-anchor.
 DR   RESID; AA0166.
 DR   PSI-MOD; 00175.
 //
@@ -6637,6 +6637,20 @@ LC   Intracellular localisation.
 TR   Eukaryota; taxId:2759 (Eukaryota).
 DR   RESID; AA0596.
 DR   PSI-MOD; 01950.
+//
+ID   O-palmitoleyl serine
+AC   PTM-0493
+FT   LIPID
+TG   Serine.
+PA   Amino acid side chain.
+PP   Anywhere.
+CF   C 16 H 28 O 1
+MM   236.214016
+MA   236.40
+TR   Eukaryota; taxId:2759 (Eukaryota).
+KW   Lipoprotein.
+DR   RESID; AA0455.
+DR   PSI-MOD; 01381.
 //
 -----------------------------------------------------------------------
 Copyrighted by the UniProt Consortium, see http://www.uniprot.org/terms
