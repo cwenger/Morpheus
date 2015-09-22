@@ -116,7 +116,7 @@ namespace Morpheus_Protein_Summarizer
 
                         if(double.Parse(fields[q_value_index]) <= MAXIMUM_FDR_PERCENT && !bool.Parse(fields[decoy_index]))
                         {
-                            foreach(string protein in fields[protein_description_index].Split(new string[] { "; " }, StringSplitOptions.RemoveEmptyEntries))
+                            foreach(string protein in fields[protein_description_index].Split(new string[] { ";; " }, StringSplitOptions.RemoveEmptyEntries))
                             {
                                 proteins[dataset].Add(protein, new KeyValuePair<int, int>(int.Parse(fields[4]), int.Parse(fields[5])));
                                 distinct_proteins.Add(protein);
