@@ -27,7 +27,7 @@
     <WarningLevel>4</WarningLevel>
     <CustomCommands>
       <CustomCommands>
-        <Command type="BeforeBuild" command="sh &quot;${SolutionDir}/update_version_number.sh&quot; ${SolutionDir}/.." workingdir="${ProjectDir}" />
+        <Command type="BeforeBuild" command="" workingdir="${ProjectDir}" />
       </CustomCommands>
     </CustomCommands>
   </PropertyGroup>
