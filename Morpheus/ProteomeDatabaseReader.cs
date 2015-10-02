@@ -138,7 +138,7 @@ namespace Morpheus
                             case "//":
                                 if(feature_type == "MOD_RES" && modifications_in_database.Contains(description) && (!double.IsNaN(monoisotopic_mass_shift) || !double.IsNaN(average_mass_shift)))
                                 {
-                                    Modification modification = new Modification("UniProt: " + description, ModificationType.AminoAcidResidue, amino_acid_residue, monoisotopic_mass_shift, average_mass_shift, false, true, true);
+                                    Modification modification = new Modification("UniProt: " + description, ModificationType.AminoAcidResidue, amino_acid_residue, monoisotopic_mass_shift, average_mass_shift, 0.0, 0.0, false, true, true);
                                     modifications.Add(modification.Description, modification);
                                 }
                                 description = null;

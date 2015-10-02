@@ -441,7 +441,7 @@ namespace Morpheus
                 {
                     foreach(Modification fixed_modification in prot_n_term_fixed_mods)
                     {
-                        mass_shift += productMassType == MassType.Average ? fixed_modification.AverageMassShift : fixed_modification.MonoisotopicMassShift;
+                        mass_shift += productMassType == MassType.Average ? (fixed_modification.AverageMassShift - fixed_modification.AverageNeutralLossMass) : (fixed_modification.MonoisotopicMassShift - fixed_modification.AverageNeutralLossMass);
                     }
                 }
             }
@@ -451,7 +451,7 @@ namespace Morpheus
                 Modification protein_n_term_variable_mod;
                 if(variableModifications.TryGetValue(0, out protein_n_term_variable_mod))
                 {
-                    mass_shift += productMassType == MassType.Average ? protein_n_term_variable_mod.AverageMassShift : protein_n_term_variable_mod.MonoisotopicMassShift;
+                    mass_shift += productMassType == MassType.Average ? (protein_n_term_variable_mod.AverageMassShift - protein_n_term_variable_mod.AverageNeutralLossMass) : (protein_n_term_variable_mod.MonoisotopicMassShift - protein_n_term_variable_mod.AverageNeutralLossMass);
                 }
             }
             // fixed modifications on peptide N-terminus
@@ -462,7 +462,7 @@ namespace Morpheus
                 {
                     foreach(Modification fixed_modification in pep_n_term_fixed_mods)
                     {
-                        mass_shift += productMassType == MassType.Average ? fixed_modification.AverageMassShift : fixed_modification.MonoisotopicMassShift;
+                        mass_shift += productMassType == MassType.Average ? (fixed_modification.AverageMassShift - fixed_modification.AverageNeutralLossMass) : (fixed_modification.MonoisotopicMassShift - fixed_modification.AverageNeutralLossMass);
                     }
                 }
             }
@@ -472,7 +472,7 @@ namespace Morpheus
                 Modification pep_n_term_variable_mod;
                 if(variableModifications.TryGetValue(1, out pep_n_term_variable_mod))
                 {
-                    mass_shift += productMassType == MassType.Average ? pep_n_term_variable_mod.AverageMassShift : pep_n_term_variable_mod.MonoisotopicMassShift;
+                    mass_shift += productMassType == MassType.Average ? (pep_n_term_variable_mod.AverageMassShift - pep_n_term_variable_mod.AverageNeutralLossMass) : (pep_n_term_variable_mod.MonoisotopicMassShift - pep_n_term_variable_mod.AverageNeutralLossMass);
                 }
             }
             cumulativeNTerminalMass[0] = mass_shift;
@@ -488,7 +488,7 @@ namespace Morpheus
                     {
                         foreach(Modification fixed_modification in residue_fixed_mods)
                         {
-                            mass_shift += productMassType == MassType.Average ? fixed_modification.AverageMassShift : fixed_modification.MonoisotopicMassShift;
+                            mass_shift += productMassType == MassType.Average ? (fixed_modification.AverageMassShift - fixed_modification.AverageNeutralLossMass) : (fixed_modification.MonoisotopicMassShift - fixed_modification.AverageNeutralLossMass);
                         }
                     }
                 }
@@ -498,7 +498,7 @@ namespace Morpheus
                     Modification residue_variable_mod;
                     if(variableModifications.TryGetValue(r + 1, out residue_variable_mod))
                     {
-                        mass_shift += residue_variable_mod.MonoisotopicMassShift;
+                        mass_shift += productMassType == MassType.Average ? (residue_variable_mod.AverageMassShift - residue_variable_mod.AverageNeutralLossMass) : (residue_variable_mod.MonoisotopicMassShift - residue_variable_mod.MonoisotopicNeutralLossMass);
                     }
                 }
                 cumulativeNTerminalMass[r] = cumulativeNTerminalMass[r - 1] + (productMassType == MassType.Average ? AminoAcidMasses.GetAverageMass(this[r - 1]) : AminoAcidMasses.GetMonoisotopicMass(this[r - 1])) + mass_shift;
@@ -515,7 +515,7 @@ namespace Morpheus
                 {
                     foreach(Modification fixed_modification in prot_c_term_fixed_mods)
                     {
-                        mass_shift += productMassType == MassType.Average ? fixed_modification.AverageMassShift : fixed_modification.MonoisotopicMassShift;
+                        mass_shift += productMassType == MassType.Average ? (fixed_modification.AverageMassShift - fixed_modification.AverageNeutralLossMass) : (fixed_modification.MonoisotopicMassShift - fixed_modification.AverageNeutralLossMass);
                     }
                 }
             }
@@ -525,7 +525,7 @@ namespace Morpheus
                 Modification prot_c_term_variable_mod;
                 if(variableModifications.TryGetValue(Length + 3, out prot_c_term_variable_mod))
                 {
-                    mass_shift += prot_c_term_variable_mod.MonoisotopicMassShift;
+                    mass_shift += productMassType == MassType.Average ? (prot_c_term_variable_mod.AverageMassShift - prot_c_term_variable_mod.AverageNeutralLossMass) : (prot_c_term_variable_mod.MonoisotopicMassShift - prot_c_term_variable_mod.MonoisotopicNeutralLossMass);
                 }
             }
             // fixed modifications on peptide C-terminus
@@ -536,7 +536,7 @@ namespace Morpheus
                 {
                     foreach(Modification fixed_modification in pep_c_term_fixed_mods)
                     {
-                        mass_shift += productMassType == MassType.Average ? fixed_modification.AverageMassShift : fixed_modification.MonoisotopicMassShift;
+                        mass_shift += productMassType == MassType.Average ? (fixed_modification.AverageMassShift - fixed_modification.AverageNeutralLossMass) : (fixed_modification.MonoisotopicMassShift - fixed_modification.MonoisotopicNeutralLossMass);
                     }
                 }
             }
@@ -546,7 +546,7 @@ namespace Morpheus
                 Modification pep_c_term_variable_mod;
                 if(variableModifications.TryGetValue(Length + 2, out pep_c_term_variable_mod))
                 {
-                    mass_shift += productMassType == MassType.Average ? pep_c_term_variable_mod.AverageMassShift : pep_c_term_variable_mod.MonoisotopicMassShift;
+                    mass_shift += productMassType == MassType.Average ? (pep_c_term_variable_mod.AverageMassShift - pep_c_term_variable_mod.AverageNeutralLossMass) : (pep_c_term_variable_mod.MonoisotopicMassShift - pep_c_term_variable_mod.MonoisotopicNeutralLossMass);
                 }
             }
             cumulativeCTerminalMass[0] = mass_shift;
@@ -562,7 +562,7 @@ namespace Morpheus
                     {
                         foreach(Modification fixed_modification in residue_fixed_mods)
                         {
-                            mass_shift += productMassType == MassType.Average ? fixed_modification.AverageMassShift : fixed_modification.MonoisotopicMassShift;
+                            mass_shift += productMassType == MassType.Average ? (fixed_modification.AverageMassShift - fixed_modification.AverageNeutralLossMass) : (fixed_modification.MonoisotopicMassShift - fixed_modification.MonoisotopicNeutralLossMass);
                         }
                     }
                 }
@@ -572,7 +572,7 @@ namespace Morpheus
                     Modification residue_variable_mod;
                     if(variableModifications.TryGetValue(Length - r + 2, out residue_variable_mod))
                     {
-                        mass_shift += productMassType == MassType.Average ? residue_variable_mod.AverageMassShift : residue_variable_mod.MonoisotopicMassShift;
+                        mass_shift += productMassType == MassType.Average ? (residue_variable_mod.AverageMassShift - residue_variable_mod.AverageNeutralLossMass) : (residue_variable_mod.MonoisotopicMassShift - residue_variable_mod.MonoisotopicNeutralLossMass);
                     }
                 }
 

@@ -12,6 +12,10 @@
 
         public double AverageMassShift { get; private set; }
 
+        public double MonoisotopicNeutralLossMass { get; private set; }
+
+        public double AverageNeutralLossMass { get; private set; }
+
         public bool DefaultFixed { get; private set; }
 
         public bool DefaultVariable { get; private set; }
@@ -19,13 +23,15 @@
         public bool Known { get; private set; }
 
         public Modification(string description, ModificationType type, char aminoAcid, double monoisotopicMassShift,
-            double averageMassShift, bool defaultFixed, bool defaultVariable, bool known)
+            double averageMassShift, double monoisotopicNeutralLossMass, double averageNeutralLossMass, bool defaultFixed, bool defaultVariable, bool known)
         {
             Description = description;
             Type = type;
             AminoAcid = aminoAcid;
             MonoisotopicMassShift = monoisotopicMassShift;
             AverageMassShift = averageMassShift;
+            MonoisotopicNeutralLossMass = monoisotopicNeutralLossMass;
+            AverageNeutralLossMass = averageNeutralLossMass;
             DefaultFixed = defaultFixed;
             DefaultVariable = defaultVariable;
             Known = known;
