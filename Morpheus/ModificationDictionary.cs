@@ -51,10 +51,12 @@ namespace Morpheus
                     char.TryParse(fields[2], out amino_acid);
                     double monoisotopic_mass_shift = double.Parse(fields[3], CultureInfo.InvariantCulture);
                     double average_mass_shift = double.Parse(fields[4], CultureInfo.InvariantCulture);
-                    string default_mod = fields[5];
+                    double monoisotopic_neutral_loss_mass = double.Parse(fields[5], CultureInfo.InvariantCulture);
+                    double average_neutral_loss_mass = double.Parse(fields[6], CultureInfo.InvariantCulture);
+                    string default_mod = fields[7];
                     bool default_fixed = default_mod.Equals("fixed", StringComparison.OrdinalIgnoreCase);
                     bool default_variable = default_mod.Equals("variable", StringComparison.OrdinalIgnoreCase);
-                    Modification modification = new Modification(description, modification_type, amino_acid, monoisotopic_mass_shift, average_mass_shift, default_fixed, default_variable, false);
+                    Modification modification = new Modification(description, modification_type, amino_acid, monoisotopic_mass_shift, average_mass_shift, monoisotopic_neutral_loss_mass, average_neutral_loss_mass, default_fixed, default_variable, false);
                     Add(modification);
                 }
             }
