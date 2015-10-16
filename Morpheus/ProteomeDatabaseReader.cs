@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Net;
 using System.Xml;
 
 namespace Morpheus
@@ -94,8 +95,33 @@ namespace Morpheus
                 }
             }
 
+            string old_ptmlist_filepath = Path.Combine(Path.GetDirectoryName(Environment.GetCommandLineArgs()[0]), "ptmlist.txt");
+            try
+            {
+                string new_ptmlist_filepath = Path.Combine(Path.GetDirectoryName(Environment.GetCommandLineArgs()[0]), "ptmlist.new.txt");
+                using(WebClient client = new WebClient())
+                {
+                    client.DownloadFile("http://www.uniprot.org/docs/ptmlist.txt", new_ptmlist_filepath);
+                }
+                string old_ptmlist = File.ReadAllText(old_ptmlist_filepath);
+                string new_ptmlist = File.ReadAllText(new_ptmlist_filepath);
+                if(string.Equals(old_ptmlist, new_ptmlist))
+                {
+                    File.Delete(new_ptmlist_filepath);
+                }
+                else
+                {
+                    File.Delete(old_ptmlist_filepath);
+                    File.Move(new_ptmlist_filepath, old_ptmlist_filepath);
+                }
+            }
+            catch
+            {
+
+            }
+
             Dictionary<string, Modification> modifications = new Dictionary<string, Modification>();
-            using(StreamReader uniprot_mods = new StreamReader(Path.Combine(Path.GetDirectoryName(Environment.GetCommandLineArgs()[0]), "ptmlist.txt")))
+            using(StreamReader uniprot_mods = new StreamReader(old_ptmlist_filepath))
             {
                 string description = null;
                 string feature_type = null;
