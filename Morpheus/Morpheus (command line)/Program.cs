@@ -52,9 +52,14 @@ namespace Morpheus
                 }
                 string database = arguments["db"];
                 Dictionary<string, Modification> known_variable_modifications = null;
+                HashSet<Modification> variable_mods = new HashSet<Modification>();
                 if(Path.GetExtension(database).Equals(".xml", StringComparison.InvariantCultureIgnoreCase))
                 {
                     known_variable_modifications = ProteomeDatabaseReader.ReadUniProtXmlModifications(database);
+                    if(arguments["noup"] == null)
+                    {
+                        variable_mods.UnionWith(known_variable_modifications.Values);
+                    }
                 }
                 bool append_decoys = false;
                 if(arguments["ad"] != null)
@@ -90,7 +95,6 @@ namespace Morpheus
                         fixed_mods.Add(mods[fixed_mod]);
                     }
                 }
-                List<Modification> variable_mods = new List<Modification>();
                 if(arguments["vm"] != null)
                 {
                     foreach(string variable_mod in arguments["vm"].Split(';'))
