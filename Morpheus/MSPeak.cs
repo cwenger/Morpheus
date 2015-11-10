@@ -27,6 +27,11 @@
             Mass = Utilities.MassFromMZ(MZ, charge);
         }
 
+        public static int AscendingMZComparison(MSPeak left, MSPeak right)
+        {
+            return left.MZ.CompareTo(right.MZ);
+        }
+
         public static int DescendingIntensityComparison(MSPeak left, MSPeak right)
         {
             return -(left.Intensity.CompareTo(right.Intensity));

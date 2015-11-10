@@ -1,4 +1,6 @@
-﻿using System;
+﻿//#define NON_MULTITHREADED
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -40,7 +42,11 @@ namespace Morpheus
             if(GET_PRECURSOR_MZ_AND_INTENSITY_FROM_MS1)
             {
                 ms1s = new Dictionary<string, SpectrumNavigator>();
+#if NON_MULTITHREADED
+                foreach(XPathNavigator spectrum_navigator in mzML.Select("//mzML:mzML/mzML:run/mzML:spectrumList/mzML:spectrum", xnm).Cast<XPathNavigator>())
+#else
                 Parallel.ForEach(mzML.Select("//mzML:mzML/mzML:run/mzML:spectrumList/mzML:spectrum", xnm).Cast<XPathNavigator>(), parallel_options, spectrum_navigator =>
+#endif
                     {
                         string scan_id = spectrum_navigator.GetAttribute("id", string.Empty);
                         int ms_level = -1;
@@ -78,7 +84,9 @@ namespace Morpheus
                             }
                         }
                     }
+#if !NON_MULTITHREADED
                 );
+#endif
             }
 
             int num_spectra = int.Parse(mzML.SelectSingleNode("//mzML:mzML/mzML:run/mzML:spectrumList", xnm).GetAttribute("count", string.Empty));
@@ -88,7 +96,11 @@ namespace Morpheus
             int spectra_processed = 0;
             int old_progress = 0;
 
+#if NON_MULTITHREADED
+            foreach(XPathNavigator spectrum_navigator in mzML.Select("//mzML:mzML/mzML:run/mzML:spectrumList/mzML:spectrum", xnm).Cast<XPathNavigator>())
+#else
             Parallel.ForEach(mzML.Select("//mzML:mzML/mzML:run/mzML:spectrumList/mzML:spectrum", xnm).Cast<XPathNavigator>(), parallel_options, spectrum_navigator =>
+#endif
                 {
                     int spectrum_index = int.Parse(spectrum_navigator.GetAttribute("index", string.Empty));
                     int spectrum_number = spectrum_index + 1;
@@ -234,6 +246,7 @@ namespace Morpheus
                             peaks = FilterPeaks(peaks, absoluteThreshold, relativeThresholdPercent, maximumNumberOfPeaks);
                             if(peaks.Count > 0)
                             {
+                                peaks.Sort(MSPeak.AscendingMZComparison);
                                 for(int c = (ALWAYS_USE_PRECURSOR_CHARGE_STATE_RANGE || charge == 0 ? minimumAssumedPrecursorChargeState : charge);
                                     c <= (ALWAYS_USE_PRECURSOR_CHARGE_STATE_RANGE || charge == 0 ? maximumAssumedPrecursorChargeState : charge); c++)
                                 {
@@ -270,7 +283,9 @@ namespace Morpheus
                         }
                     }
                 }
+#if !NON_MULTITHREADED
             );
+#endif
         }
 
         internal static void ReadDataFromSpectrumNavigator(XPathNodeIterator binaryDataArrayChildNodes, out double[] mz, out double[] intensity)
@@ -413,13 +428,25 @@ namespace Morpheus
 
                     if(new_peaks[p].Intensity < new_peaks[q].Intensity)
                     {
-                        for(int c = polarity; polarity > 0 ? c <= maxAbsoluteCharge : c >= -maxAbsoluteCharge; c += polarity)
+                        if(polarity == 0)
                         {
-                            if(Math.Abs(MassTolerance.CalculateMassError(new_peaks[p].MZ, new_peaks[q].MZ + Constants.C12_C13_MASS_DIFFERENCE / Math.Abs(c), isotopicMZTolerance.Units)) <= isotopicMZTolerance.Value)
+                            if(Math.Abs(MassTolerance.CalculateMassError(new_peaks[p].MZ, new_peaks[q].MZ + Constants.C12_C13_MASS_DIFFERENCE, isotopicMZTolerance.Units)) <= isotopicMZTolerance.Value)
                             {
                                 new_peaks.RemoveAt(p);
                                 removed = true;
                                 break;
+                            }
+                        }
+                        else
+                        {
+                            for(int c = polarity; polarity > 0 ? c <= maxAbsoluteCharge : c >= -maxAbsoluteCharge; c += polarity)
+                            {
+                                if(Math.Abs(MassTolerance.CalculateMassError(new_peaks[p].MZ, new_peaks[q].MZ + Constants.C12_C13_MASS_DIFFERENCE / Math.Abs(c), isotopicMZTolerance.Units)) <= isotopicMZTolerance.Value)
+                                {
+                                    new_peaks.RemoveAt(p);
+                                    removed = true;
+                                    break;
+                                }
                             }
                         }
                         if(removed)
