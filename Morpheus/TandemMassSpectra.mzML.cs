@@ -20,10 +20,12 @@ namespace Morpheus
         {
             OnReportTaskWithoutProgress(EventArgs.Empty);
 
-            XPathNavigator mzML = new XPathDocument(mzmlFilepath).CreateNavigator();
+            XmlDocument mzML_temp = new XmlDocument();
+            mzML_temp.Load(mzmlFilepath);
+            XPathNavigator mzML = mzML_temp.CreateNavigator();
 
             XmlNamespaceManager xnm = new XmlNamespaceManager(mzML.NameTable);
-            xnm.AddNamespace("mzML", "http://psi.hupo.org/ms/mzml");
+            xnm.AddNamespace("mzML", mzML_temp.DocumentElement.NamespaceURI);
 
             Dictionary<string, XPathNodeIterator> referenceable_param_groups = new Dictionary<string, XPathNodeIterator>();
             foreach(XPathNavigator referenceable_param_group in mzML.Select("//mzML:mzML/mzML:referenceableParamGroupList/mzML:referenceableParamGroup", xnm))
