@@ -128,6 +128,7 @@
     </Compile>
     <Compile Include="Protease.cs" />
     <Compile Include="Protein.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="amino_acids.tsv">
