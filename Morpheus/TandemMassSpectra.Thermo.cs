@@ -91,7 +91,7 @@ namespace Morpheus
                             for(int c = (ALWAYS_USE_PRECURSOR_CHARGE_STATE_RANGE || charge == 0 ? minimumAssumedPrecursorChargeState : charge);
                                 c <= (ALWAYS_USE_PRECURSOR_CHARGE_STATE_RANGE || charge == 0 ? maximumAssumedPrecursorChargeState : charge); c++)
                             {
-                                double precursor_mass = Utilities.MassFromMZ(precursor_mz, c);
+                                double precursor_mass = MSPeak.MassFromMZ(precursor_mz, c);
 
                                 TandemMassSpectrum spectrum = new TandemMassSpectrum(rawFilepath, scan_number, spectrum_id, null, retention_time_minutes, fragmentation_method, precursor_mz, precursor_intensity, c, precursor_mass, peaks);
                                 lock(this)

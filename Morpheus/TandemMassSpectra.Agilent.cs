@@ -152,7 +152,7 @@ namespace Morpheus
                                     }
                                 }
 
-                                double precursor_mass = Utilities.MassFromMZ(precursor_mz, c);
+                                double precursor_mass = MSPeak.MassFromMZ(precursor_mz, c);
 
                                 TandemMassSpectrum spectrum = new TandemMassSpectrum(agilentDFolderPath, spectrum_number, scan_id, null, scan_record.RetentionTime, FRAGMENTATION_METHOD, precursor_mz, precursor_intensity, c, precursor_mass, peaks);
                                 lock(this)
