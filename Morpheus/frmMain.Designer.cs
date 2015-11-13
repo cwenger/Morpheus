@@ -204,8 +204,8 @@
             // 
             // ofdFasta
             // 
-            this.ofdFasta.Filter = "FASTA proteome database files|*.fa;*.FA;*.fsa;*.FSA;*.fas;*.FAS;*.fasta;*.FASTA|U" +
-    "niProt XML proteome database files|*.xml;*.XML";
+            this.ofdFasta.Filter = "FASTA proteome database files|*.fa;*.FA;*.faa;*.FAA;*.fas;*.FAS;*.fasta;*.FASTA;*" +
+    ".fsa;*.FSA|UniProt XML proteome database files|*.xml;*.XML";
             this.ofdFasta.Multiselect = true;
             // 
             // cboProtease
