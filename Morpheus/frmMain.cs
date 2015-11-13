@@ -230,6 +230,8 @@ namespace Morpheus
             numMaxThreads.Value = numMaxThreads.Maximum;
         }
 
+        private static readonly string FASTA_EXTENSIONS = ".fa;.faa;.fas;.fasta;.fsa";
+
         private void frmMain_DragEnter(object sender, DragEventArgs e)
         {
             if(e.Data.GetDataPresent(DataFormats.FileDrop))
@@ -239,7 +241,7 @@ namespace Morpheus
                 foreach(string filepath in filepaths)
                 {
                     if(((!DIRECTORY || Directory.Exists(filepath)) && Path.GetExtension(filepath).Equals(EXTENSION, StringComparison.InvariantCultureIgnoreCase) && !lstData.Items.Contains(filepath))
-                        || Path.GetExtension(filepath).Equals(".fasta", StringComparison.InvariantCultureIgnoreCase)
+                        || FASTA_EXTENSIONS.Contains(Path.GetExtension(filepath).ToLower())
                         || Path.GetExtension(filepath).Equals(".xml", StringComparison.InvariantCultureIgnoreCase)
                         || Directory.Exists(filepath))
                     {
@@ -261,7 +263,7 @@ namespace Morpheus
                     lstData.Items.Add(filepath);
                     tspbProgress.Value = tspbProgress.Minimum;
                 }
-                else if(Path.GetExtension(filepath).Equals(".fasta", StringComparison.InvariantCultureIgnoreCase)
+                else if(FASTA_EXTENSIONS.Contains(Path.GetExtension(filepath).ToLower())
                     || Path.GetExtension(filepath).Equals(".xml", StringComparison.InvariantCultureIgnoreCase))
                 {
                     txtFastaFile.Text = filepath;
