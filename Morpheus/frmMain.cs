@@ -12,7 +12,7 @@ namespace Morpheus
     public partial class frmMain : Form
     {
         private string TITLE = null;
-        private string EXTENSION = ".mzML";
+        private string EXTENSION = ".mzML;*.mzml;*.MZML";
         private bool DIRECTORY = false;
         private string LABEL = "mzML data files (*.mzML)";
         private string DIALOG_FILTER
