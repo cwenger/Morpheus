@@ -240,7 +240,7 @@ namespace Morpheus
 
                 foreach(string filepath in filepaths)
                 {
-                    if(((!DIRECTORY || Directory.Exists(filepath)) && Path.GetExtension(filepath).Equals(EXTENSION, StringComparison.InvariantCultureIgnoreCase) && !lstData.Items.Contains(filepath))
+                    if(((!DIRECTORY || Directory.Exists(filepath)) && EXTENSION.Contains(Path.GetExtension(filepath)) && !lstData.Items.Contains(filepath))
                         || FASTA_EXTENSIONS.Contains(Path.GetExtension(filepath).ToLower())
                         || Path.GetExtension(filepath).Equals(".xml", StringComparison.InvariantCultureIgnoreCase)
                         || Directory.Exists(filepath))
@@ -258,7 +258,7 @@ namespace Morpheus
 
             foreach(string filepath in filepaths)
             {
-                if(((!DIRECTORY || Directory.Exists(filepath)) && Path.GetExtension(filepath).Equals(EXTENSION, StringComparison.InvariantCultureIgnoreCase) && !lstData.Items.Contains(filepath)))
+                if(((!DIRECTORY || Directory.Exists(filepath)) && EXTENSION.Contains(Path.GetExtension(filepath)) && !lstData.Items.Contains(filepath)))
                 {
                     lstData.Items.Add(filepath);
                     tspbProgress.Value = tspbProgress.Minimum;
