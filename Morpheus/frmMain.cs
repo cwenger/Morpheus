@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using System.Threading;
 using System.Windows.Forms;
@@ -240,8 +241,8 @@ namespace Morpheus
 
                 foreach(string filepath in filepaths)
                 {
-                    if(((!DIRECTORY || Directory.Exists(filepath)) && EXTENSION.Contains(Path.GetExtension(filepath)) && !lstData.Items.Contains(filepath))
-                        || FASTA_EXTENSIONS.Contains(Path.GetExtension(filepath).ToLower())
+                    if(((!DIRECTORY || Directory.Exists(filepath)) && File.Exists(filepath) && EXTENSION.Contains(Path.GetExtension(filepath)) && !lstData.Items.Contains(filepath))
+                        || File.Exists(filepath) && FASTA_EXTENSIONS.Contains(Path.GetExtension(filepath).ToLower())
                         || Path.GetExtension(filepath).Equals(".xml", StringComparison.InvariantCultureIgnoreCase)
                         || Directory.Exists(filepath))
                     {
@@ -258,12 +259,12 @@ namespace Morpheus
 
             foreach(string filepath in filepaths)
             {
-                if(((!DIRECTORY || Directory.Exists(filepath)) && EXTENSION.Contains(Path.GetExtension(filepath)) && !lstData.Items.Contains(filepath)))
+                if(((!DIRECTORY || Directory.Exists(filepath)) && File.Exists(filepath) && EXTENSION.Contains(Path.GetExtension(filepath)) && !lstData.Items.Contains(filepath)))
                 {
                     lstData.Items.Add(filepath);
                     tspbProgress.Value = tspbProgress.Minimum;
                 }
-                else if(FASTA_EXTENSIONS.Contains(Path.GetExtension(filepath).ToLower())
+                else if(File.Exists(filepath) && FASTA_EXTENSIONS.Contains(Path.GetExtension(filepath).ToLower())
                     || Path.GetExtension(filepath).Equals(".xml", StringComparison.InvariantCultureIgnoreCase))
                 {
                     txtFastaFile.Text = filepath;
@@ -289,7 +290,7 @@ namespace Morpheus
 
             if(DIRECTORY)
             {
-                string[] directories = Directory.GetDirectories(directory, '*' + EXTENSION, SearchOption.AllDirectories);
+                string[] directories = Directory.GetDirectories(directory, "*.*", SearchOption.AllDirectories).Where(x => EXTENSION.Contains(Path.GetExtension(x))).ToArray();
                 if(directories.Length > 0)
                 {
                     foreach(string subdirectory in directories)
@@ -305,7 +306,7 @@ namespace Morpheus
             }
             else
             {
-                string[] files = Directory.GetFiles(directory, '*' + EXTENSION, SearchOption.AllDirectories);
+                string[] files = Directory.GetFiles(directory, "*.*", SearchOption.AllDirectories).Where(x => EXTENSION.Contains(Path.GetExtension(x))).ToArray();
                 if(files.Length > 0)
                 {
                     foreach(string file in files)
