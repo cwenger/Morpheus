@@ -16,6 +16,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
     <PlatformTarget>AnyCPU</PlatformTarget>
     <OutputPath>bin\Thermo\Debug\</OutputPath>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|AnyCPU'">
     <PlatformTarget>AnyCPU</PlatformTarget>
