@@ -170,7 +170,7 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
-    <None Include="app.config">
+    <None Include="Agilent 32-bit\app.config">
       <SubType>Designer</SubType>
     </None>
     <None Include="Properties\Settings.settings">

@@ -51,7 +51,7 @@
     <Content Include="Morpheus.ico" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="app.config" />
+    <None Include="..\Agilent 32-bit\app.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
