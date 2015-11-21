@@ -2,6 +2,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Reflection;
 using System.Threading;
@@ -317,8 +318,8 @@ namespace Morpheus
                     data_filepaths = data_filepaths.Substring(0, data_filepaths.Length - 2);
                     overall_log.WriteLine("Input Data Files: " + data_filepaths);
                     overall_log.WriteLine("Unknown Precursor Charge State Range: " + minimumAssumedPrecursorChargeState.ToString("+0;-0;0") + ".." + maximumAssumedPrecursorChargeState.ToString("+0;-0;0"));
-                    overall_log.WriteLine("Absolute MS/MS Intensity Threshold: " + (absoluteThreshold >= 0.0 ? absoluteThreshold.ToString() : "disabled"));
-                    overall_log.WriteLine("Relative MS/MS Intensity Threshold: " + (relativeThresholdPercent >= 0.0 ? relativeThresholdPercent.ToString() + '%' : "disabled"));
+                    overall_log.WriteLine("Absolute MS/MS Intensity Threshold: " + (absoluteThreshold >= 0.0 ? absoluteThreshold.ToString(CultureInfo.InvariantCulture) : "disabled"));
+                    overall_log.WriteLine("Relative MS/MS Intensity Threshold: " + (relativeThresholdPercent >= 0.0 ? relativeThresholdPercent.ToString(CultureInfo.InvariantCulture) + '%' : "disabled"));
                     overall_log.WriteLine("Maximum Number of MS/MS Peaks: " + (maximumNumberOfPeaks >= 0 ? maximumNumberOfPeaks.ToString() : "disabled"));
                     overall_log.WriteLine("Assign Charge States: " + assignChargeStates.ToString().ToLower());
                     overall_log.WriteLine("De-isotope: " + deisotope.ToString().ToLower());
@@ -330,10 +331,10 @@ namespace Morpheus
                     overall_log.WriteLine("Fixed Modifications: " + fixed_modifications);
                     overall_log.WriteLine("Variable Modifications: " + variable_modifications);
                     overall_log.WriteLine("Maximum Variable Modification Isoforms Per Peptide: " + maximumVariableModificationIsoforms.ToString());
-                    overall_log.WriteLine("Precursor Mass Tolerance: ±" + precursorMassTolerance.Value.ToString() + ' ' + precursorMassTolerance.Units.ToString() + " (" + precursorMassType.ToString().ToLower() + ')');
+                    overall_log.WriteLine("Precursor Mass Tolerance: ±" + precursorMassTolerance.Value.ToString(CultureInfo.InvariantCulture) + ' ' + precursorMassTolerance.Units.ToString() + " (" + precursorMassType.ToString().ToLower() + ')');
                     overall_log.WriteLine("Precursor Monoisotopic Peak Correction: " + (precursorMonoisotopicPeakCorrection ? minimumPrecursorMonoisotopicPeakOffset.ToString("+0;-0;0") + ".." + maximumPrecursorMonoisotopicPeakOffset.ToString("+0;-0;0") : "disabled"));
-                    overall_log.WriteLine("Product Mass Tolerance: ±" + productMassTolerance.Value.ToString() + ' ' + productMassTolerance.Units.ToString() + " (" + productMassType.ToString().ToLower() + ')');
-                    overall_log.WriteLine("Maximum False Discovery Rate: " + (maximumFalseDiscoveryRate * 100).ToString() + '%');
+                    overall_log.WriteLine("Product Mass Tolerance: ±" + productMassTolerance.Value.ToString(CultureInfo.InvariantCulture) + ' ' + productMassTolerance.Units.ToString() + " (" + productMassType.ToString().ToLower() + ')');
+                    overall_log.WriteLine("Maximum False Discovery Rate: " + (maximumFalseDiscoveryRate * 100).ToString(CultureInfo.InvariantCulture) + '%');
                     overall_log.WriteLine("Consider Modified Forms as Unique Peptides: " + considerModifiedFormsAsUniquePeptides.ToString().ToLower());
                     overall_log.WriteLine("Maximum Threads: " + maximumThreads.ToString());
                     overall_log.WriteLine("Minimize Memory Usage: " + minimizeMemoryUsage.ToString().ToLower());
@@ -376,8 +377,8 @@ namespace Morpheus
                     log.WriteLine("PARAMETERS");
                     log.WriteLine("Input Data File: " + data_filepath);
                     log.WriteLine("Unknown Precursor Charge State Range: " + minimumAssumedPrecursorChargeState.ToString("+0;-0;0") + ".." + maximumAssumedPrecursorChargeState.ToString("+0;-0;0"));
-                    log.WriteLine("Absolute MS/MS Intensity Threshold: " + (absoluteThreshold >= 0.0 ? absoluteThreshold.ToString() : "disabled"));
-                    log.WriteLine("Relative MS/MS Intensity Threshold: " + (relativeThresholdPercent >= 0.0 ? relativeThresholdPercent.ToString() + '%' : "disabled"));
+                    log.WriteLine("Absolute MS/MS Intensity Threshold: " + (absoluteThreshold >= 0.0 ? absoluteThreshold.ToString(CultureInfo.InvariantCulture) : "disabled"));
+                    log.WriteLine("Relative MS/MS Intensity Threshold: " + (relativeThresholdPercent >= 0.0 ? relativeThresholdPercent.ToString(CultureInfo.InvariantCulture) + '%' : "disabled"));
                     log.WriteLine("Maximum Number of MS/MS Peaks: " + (maximumNumberOfPeaks >= 0 ? maximumNumberOfPeaks.ToString() : "disabled"));
                     log.WriteLine("Assign Charge States: " + assignChargeStates.ToString().ToLower());
                     log.WriteLine("De-isotope: " + deisotope.ToString().ToLower());
@@ -389,10 +390,10 @@ namespace Morpheus
                     log.WriteLine("Fixed Modifications: " + fixed_modifications);
                     log.WriteLine("Variable Modifications: " + variable_modifications);
                     log.WriteLine("Maximum Variable Modification Isoforms Per Peptide: " + maximumVariableModificationIsoforms.ToString());
-                    log.WriteLine("Precursor Mass Tolerance: ±" + precursorMassTolerance.Value.ToString() + ' ' + precursorMassTolerance.Units.ToString() + " (" + precursorMassType.ToString().ToLower() + ')');
+                    log.WriteLine("Precursor Mass Tolerance: ±" + precursorMassTolerance.Value.ToString(CultureInfo.InvariantCulture) + ' ' + precursorMassTolerance.Units.ToString() + " (" + precursorMassType.ToString().ToLower() + ')');
                     log.WriteLine("Precursor Monoisotopic Peak Correction: " + (precursorMonoisotopicPeakCorrection ? minimumPrecursorMonoisotopicPeakOffset.ToString("+0;-0;0") + ".." + maximumPrecursorMonoisotopicPeakOffset.ToString("+0;-0;0") : "disabled"));
-                    log.WriteLine("Product Mass Tolerance: ±" + productMassTolerance.Value.ToString() + ' ' + productMassTolerance.Units.ToString() + " (" + productMassType.ToString().ToLower() + ')');
-                    log.WriteLine("Maximum False Discovery Rate: " + (maximumFalseDiscoveryRate * 100).ToString() + '%');
+                    log.WriteLine("Product Mass Tolerance: ±" + productMassTolerance.Value.ToString(CultureInfo.InvariantCulture) + ' ' + productMassTolerance.Units.ToString() + " (" + productMassType.ToString().ToLower() + ')');
+                    log.WriteLine("Maximum False Discovery Rate: " + (maximumFalseDiscoveryRate * 100).ToString(CultureInfo.InvariantCulture) + '%');
                     log.WriteLine("Consider Modified Forms as Unique Peptides: " + considerModifiedFormsAsUniquePeptides.ToString().ToLower());
                     log.WriteLine("Maximum Threads: " + maximumThreads.ToString());
                     log.WriteLine("Minimize Memory Usage: " + minimizeMemoryUsage.ToString().ToLower());

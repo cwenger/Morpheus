@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System.Globalization;
+using System.Text;
 
 namespace Morpheus
 {
@@ -27,7 +28,7 @@ namespace Morpheus
             sb.Append(Identification.Decoy.ToString() + '\t');
             sb.Append(CumulativeTarget.ToString() + '\t');
             sb.Append(CumulativeDecoy.ToString() + '\t');
-            sb.Append((QValue * 100.0).ToString());
+            sb.Append((QValue * 100.0).ToString(CultureInfo.InvariantCulture));
 
             return sb.ToString();
         }
