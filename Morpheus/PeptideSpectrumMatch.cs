@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using System.Text;
 
 namespace Morpheus
@@ -156,28 +157,28 @@ namespace Morpheus
             sb.Append(Spectrum.SpectrumNumber.ToString() + '\t');
             sb.Append(Spectrum.SpectrumId + '\t');
             sb.Append(Spectrum.SpectrumTitle + '\t');
-            sb.Append(Spectrum.RetentionTimeMinutes.ToString() + '\t');
-            sb.Append(Spectrum.PrecursorMZ.ToString() + '\t');
-            sb.Append(Spectrum.PrecursorIntensity.ToString() + '\t');
+            sb.Append(Spectrum.RetentionTimeMinutes.ToString(CultureInfo.InvariantCulture) + '\t');
+            sb.Append(Spectrum.PrecursorMZ.ToString(CultureInfo.InvariantCulture) + '\t');
+            sb.Append(Spectrum.PrecursorIntensity.ToString(CultureInfo.InvariantCulture) + '\t');
             sb.Append(Spectrum.PrecursorCharge.ToString() + '\t');
-            sb.Append(Spectrum.PrecursorMass.ToString() + '\t');
+            sb.Append(Spectrum.PrecursorMass.ToString(CultureInfo.InvariantCulture) + '\t');
             sb.Append(Spectrum.Masses.Length.ToString() + '\t');
-            sb.Append(Spectrum.TotalIntensity.ToString() + '\t');
+            sb.Append(Spectrum.TotalIntensity.ToString(CultureInfo.InvariantCulture) + '\t');
             sb.Append(Peptide.ExtendedSequence + '\t');
             sb.Append(Peptide.BaseSequence + '\t');
             sb.Append(Peptide.Parent.Description + '\t');
             sb.Append(Peptide.StartResidueNumber.ToString() + '\t');
             sb.Append(Peptide.EndResidueNumber.ToString() + '\t');
             sb.Append(Peptide.MissedCleavages.ToString() + '\t');
-            sb.Append((precursorMassType == MassType.Average ? Peptide.AverageMass : Peptide.MonoisotopicMass).ToString() + '\t');
-            sb.Append(PrecursorMassErrorDa.ToString() + '\t');
-            sb.Append(PrecursorMassErrorPpm.ToString() + '\t');
+            sb.Append((precursorMassType == MassType.Average ? Peptide.AverageMass : Peptide.MonoisotopicMass).ToString(CultureInfo.InvariantCulture) + '\t');
+            sb.Append(PrecursorMassErrorDa.ToString(CultureInfo.InvariantCulture) + '\t');
+            sb.Append(PrecursorMassErrorPpm.ToString(CultureInfo.InvariantCulture) + '\t');
             sb.Append(MatchingProducts.ToString() + '\t');
             sb.Append(TotalProducts.ToString() + '\t');
-            sb.Append(MatchingProductsFraction.ToString() + '\t');
-            sb.Append(MatchingIntensity.ToString() + '\t');
-            sb.Append(MatchingIntensityFraction.ToString() + '\t');
-            sb.Append(MorpheusScore.ToString());
+            sb.Append(MatchingProductsFraction.ToString(CultureInfo.InvariantCulture) + '\t');
+            sb.Append(MatchingIntensity.ToString(CultureInfo.InvariantCulture) + '\t');
+            sb.Append(MatchingIntensityFraction.ToString(CultureInfo.InvariantCulture) + '\t');
+            sb.Append(MorpheusScore.ToString(CultureInfo.InvariantCulture));
 
             return sb.ToString();
         }

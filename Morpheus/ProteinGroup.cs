@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Text;
 using System.Threading.Tasks;
@@ -151,16 +152,16 @@ namespace Morpheus
             sb.Append(Count.ToString() + '\t');
             sb.Append(PeptideSpectrumMatches.Count.ToString() + '\t');
             sb.Append(UniquePeptides.Count.ToString() + '\t');
-            sb.Append(SummedPeptideSpectrumMatchPrecursorIntensity.ToString() + '\t');
-            sb.Append(SummedUniquePeptidePrecursorIntensity.ToString() + '\t');
+            sb.Append(SummedPeptideSpectrumMatchPrecursorIntensity.ToString(CultureInfo.InvariantCulture) + '\t');
+            sb.Append(SummedUniquePeptidePrecursorIntensity.ToString(CultureInfo.InvariantCulture) + '\t');
             StringBuilder sequence_coverage = new StringBuilder();
             foreach(Protein protein in this)
             {
-                sequence_coverage.Append((protein.CalculateSequenceCoverage() * 100.0).ToString() + ";; ");
+                sequence_coverage.Append((protein.CalculateSequenceCoverage() * 100.0).ToString(CultureInfo.InvariantCulture) + ";; ");
             }
             sequence_coverage = sequence_coverage.Remove(sequence_coverage.Length - 3, 3);
             sb.Append(sequence_coverage.ToString() + '\t');
-            sb.Append(SummedMorpheusScore.ToString());
+            sb.Append(SummedMorpheusScore.ToString(CultureInfo.InvariantCulture));
 
             return sb.ToString();
         }

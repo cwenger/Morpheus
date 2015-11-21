@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Text;
 using System.Xml;
@@ -30,7 +31,6 @@ namespace Morpheus
                 }
                 foreach(T item in items)
                 {
-
                     output.WriteLine(item.ToString());
                 }
             }
@@ -98,8 +98,8 @@ namespace Morpheus
                     {
                         output.WriteStartElement("aminoacid_modification");
                         output.WriteAttributeString("aminoacid", fixed_mod.AminoAcid.ToString());
-                        output.WriteAttributeString("massdiff", fixed_mod.MonoisotopicMassShift.ToString());  // which kind of mass to use?
-                        output.WriteAttributeString("mass", (AminoAcidMasses.GetMonoisotopicMass(fixed_mod.AminoAcid) + fixed_mod.MonoisotopicMassShift).ToString());  // which kind of mass to use?
+                        output.WriteAttributeString("massdiff", fixed_mod.MonoisotopicMassShift.ToString(CultureInfo.InvariantCulture));  // which kind of mass to use?
+                        output.WriteAttributeString("mass", (AminoAcidMasses.GetMonoisotopicMass(fixed_mod.AminoAcid) + fixed_mod.MonoisotopicMassShift).ToString(CultureInfo.InvariantCulture));  // which kind of mass to use?
                         output.WriteAttributeString("variable", "N");
                         output.WriteAttributeString("description", fixed_mod.Description);
                         output.WriteEndElement();  // aminoacid_modification
@@ -109,8 +109,8 @@ namespace Morpheus
                         output.WriteStartElement("terminal_modification");
                         Terminus terminus = fixed_mod.Type == ModificationType.ProteinNTerminus || fixed_mod.Type == ModificationType.PeptideNTerminus ? Terminus.N : Terminus.C;
                         output.WriteAttributeString("terminus", terminus.ToString().ToLower());
-                        output.WriteAttributeString("massdiff", fixed_mod.MonoisotopicMassShift.ToString());  // which kind of mass to use?
-                        output.WriteAttributeString("mass", ((terminus == Terminus.N ? Constants.PEPTIDE_N_TERMINAL_MONOISOTOPIC_MASS : Constants.PEPTIDE_C_TERMINAL_MONOISOTOPIC_MASS) + fixed_mod.MonoisotopicMassShift).ToString());  // which kind of mass to use?
+                        output.WriteAttributeString("massdiff", fixed_mod.MonoisotopicMassShift.ToString(CultureInfo.InvariantCulture));  // which kind of mass to use?
+                        output.WriteAttributeString("mass", ((terminus == Terminus.N ? Constants.PEPTIDE_N_TERMINAL_MONOISOTOPIC_MASS : Constants.PEPTIDE_C_TERMINAL_MONOISOTOPIC_MASS) + fixed_mod.MonoisotopicMassShift).ToString(CultureInfo.InvariantCulture));  // which kind of mass to use?
                         output.WriteAttributeString("variable", "N");
                         output.WriteAttributeString("protein_terminus", fixed_mod.Type == ModificationType.ProteinNTerminus || fixed_mod.Type == ModificationType.ProteinCTerminus ? "Y" : "N");  // "whether modification can reside only at protein terminus (specified n or c)" (http://sashimi.sourceforge.net/schema_revision/pepXML/pepXML_v114.xsd)
                         output.WriteAttributeString("description", fixed_mod.Description);
@@ -123,19 +123,19 @@ namespace Morpheus
                     {
                         output.WriteStartElement("aminoacid_modification");
                         output.WriteAttributeString("aminoacid", variable_mod.AminoAcid.ToString());
-                        output.WriteAttributeString("massdiff", variable_mod.MonoisotopicMassShift.ToString());  // which kind of mass to use?
-                        output.WriteAttributeString("mass", (AminoAcidMasses.GetMonoisotopicMass(variable_mod.AminoAcid) + variable_mod.MonoisotopicMassShift).ToString());  // which kind of mass to use?
+                        output.WriteAttributeString("massdiff", variable_mod.MonoisotopicMassShift.ToString(CultureInfo.InvariantCulture));  // which kind of mass to use?
+                        output.WriteAttributeString("mass", (AminoAcidMasses.GetMonoisotopicMass(variable_mod.AminoAcid) + variable_mod.MonoisotopicMassShift).ToString(CultureInfo.InvariantCulture));  // which kind of mass to use?
                         output.WriteAttributeString("variable", "Y");
                         output.WriteAttributeString("description", variable_mod.Description);
-                        output.WriteEndElement();  // aminoacid_modification
+                        output.WriteEndElement();  // aminoacid_modificationdc
                     }
                     else
                     {
                         output.WriteStartElement("terminal_modification");
                         Terminus terminus = variable_mod.Type == ModificationType.ProteinNTerminus || variable_mod.Type == ModificationType.PeptideNTerminus ? Terminus.N : Terminus.C;
                         output.WriteAttributeString("terminus", terminus.ToString().ToLower());
-                        output.WriteAttributeString("massdiff", variable_mod.MonoisotopicMassShift.ToString());  // which kind of mass to use?
-                        output.WriteAttributeString("mass", ((terminus == Terminus.N ? Constants.PEPTIDE_N_TERMINAL_MONOISOTOPIC_MASS : Constants.PEPTIDE_C_TERMINAL_MONOISOTOPIC_MASS) + variable_mod.MonoisotopicMassShift).ToString());  // which kind of mass to use?
+                        output.WriteAttributeString("massdiff", variable_mod.MonoisotopicMassShift.ToString(CultureInfo.InvariantCulture));  // which kind of mass to use?
+                        output.WriteAttributeString("mass", ((terminus == Terminus.N ? Constants.PEPTIDE_N_TERMINAL_MONOISOTOPIC_MASS : Constants.PEPTIDE_C_TERMINAL_MONOISOTOPIC_MASS) + variable_mod.MonoisotopicMassShift).ToString(CultureInfo.InvariantCulture));  // which kind of mass to use?
                         output.WriteAttributeString("variable", "Y");
                         output.WriteAttributeString("protein_terminus", variable_mod.Type == ModificationType.ProteinNTerminus || variable_mod.Type == ModificationType.ProteinCTerminus ? "Y" : "N");  // "whether modification can reside only at protein terminus (specified n or c)" (http://sashimi.sourceforge.net/schema_revision/pepXML/pepXML_v114.xsd)
                         output.WriteAttributeString("description", variable_mod.Description);
@@ -152,11 +152,11 @@ namespace Morpheus
                 output.WriteEndElement();  // parameter
                 output.WriteStartElement("parameter");
                 output.WriteAttributeString("name", "Absolute MS/MS Intensity Threshold");
-                output.WriteAttributeString("value", (absoluteThreshold >= 0.0 ? absoluteThreshold.ToString() : "disabled"));
+                output.WriteAttributeString("value", (absoluteThreshold >= 0.0 ? absoluteThreshold.ToString(CultureInfo.InvariantCulture) : "disabled"));
                 output.WriteEndElement();  // parameter
                 output.WriteStartElement("parameter");
                 output.WriteAttributeString("name", "Relative MS/MS Intensity Threshold");
-                output.WriteAttributeString("value", (relativeThresholdPercent >= 0.0 ? relativeThresholdPercent.ToString() + '%' : "disabled"));
+                output.WriteAttributeString("value", (relativeThresholdPercent >= 0.0 ? relativeThresholdPercent.ToString(CultureInfo.InvariantCulture) + '%' : "disabled"));
                 output.WriteEndElement();  // parameter
                 output.WriteStartElement("parameter");
                 output.WriteAttributeString("name", "Maximum Number of MS/MS Peaks");
@@ -204,7 +204,7 @@ namespace Morpheus
                 output.WriteEndElement();  // parameter
                 output.WriteStartElement("parameter");
                 output.WriteAttributeString("name", "Precursor Mass Tolerance");
-                output.WriteAttributeString("value", '±' + precursorMassTolerance.Value.ToString() + ' ' + precursorMassTolerance.Units.ToString() + " (" + precursorMassType.ToString().ToLower() + ')');
+                output.WriteAttributeString("value", '±' + precursorMassTolerance.Value.ToString(CultureInfo.InvariantCulture) + ' ' + precursorMassTolerance.Units.ToString() + " (" + precursorMassType.ToString().ToLower() + ')');
                 output.WriteEndElement();  // parameter
                 output.WriteStartElement("parameter");
                 output.WriteAttributeString("name", "Precursor Monoisotopic Peak Correction");
@@ -212,11 +212,11 @@ namespace Morpheus
                 output.WriteEndElement();  // parameter
                 output.WriteStartElement("parameter");
                 output.WriteAttributeString("name", "Product Mass Tolerance");
-                output.WriteAttributeString("value", '±' + productMassTolerance.Value.ToString() + ' ' + productMassTolerance.Units.ToString() + " (" + productMassType.ToString().ToLower() + ')');
+                output.WriteAttributeString("value", '±' + productMassTolerance.Value.ToString(CultureInfo.InvariantCulture) + ' ' + productMassTolerance.Units.ToString() + " (" + productMassType.ToString().ToLower() + ')');
                 output.WriteEndElement();  // parameter
                 output.WriteStartElement("parameter");
                 output.WriteAttributeString("name", "Maximum False Discovery Rate");
-                output.WriteAttributeString("value", (maximumFalseDiscoveryRate * 100).ToString() + '%');
+                output.WriteAttributeString("value", (maximumFalseDiscoveryRate * 100).ToString(CultureInfo.InvariantCulture) + '%');
                 output.WriteEndElement();  // parameter
                 output.WriteStartElement("parameter");
                 output.WriteAttributeString("name", "Consider Modified Forms as Unique Peptides");
@@ -246,10 +246,10 @@ namespace Morpheus
                     output.WriteAttributeString("end_scan", psm.Spectrum.SpectrumNumber.ToString());
                     if(!double.IsNaN(psm.Spectrum.RetentionTimeMinutes))
                     {
-                        output.WriteAttributeString("retention_time_sec", TimeSpan.FromMinutes(psm.Spectrum.RetentionTimeMinutes).TotalSeconds.ToString());
+                        output.WriteAttributeString("retention_time_sec", TimeSpan.FromMinutes(psm.Spectrum.RetentionTimeMinutes).TotalSeconds.ToString(CultureInfo.InvariantCulture));
                     }
                     //output.WriteAttributeString("activation_method", psm.Spectrum.FragmentationMethod);
-                    output.WriteAttributeString("precursor_neutral_mass", psm.Spectrum.PrecursorMass.ToString());
+                    output.WriteAttributeString("precursor_neutral_mass", psm.Spectrum.PrecursorMass.ToString(CultureInfo.InvariantCulture));
                     output.WriteAttributeString("assumed_charge", psm.Spectrum.PrecursorCharge.ToString());
                     output.WriteAttributeString("index", index.ToString());
                     output.WriteStartElement("search_result");
@@ -262,8 +262,8 @@ namespace Morpheus
                     output.WriteAttributeString("num_tot_proteins", "1");  // needs to be updated
                     output.WriteAttributeString("num_matched_ions", psm.MatchingProducts.ToString());
                     output.WriteAttributeString("tot_num_ions", psm.TotalProducts.ToString());
-                    output.WriteAttributeString("calc_neutral_pep_mass", precursorMassType == MassType.Average ? psm.Peptide.AverageMass.ToString() : psm.Peptide.MonoisotopicMass.ToString());
-                    output.WriteAttributeString("massdiff", (psm.Spectrum.PrecursorMass - (precursorMassType == MassType.Average ? psm.Peptide.AverageMass : psm.Peptide.MonoisotopicMass)).ToString());
+                    output.WriteAttributeString("calc_neutral_pep_mass", precursorMassType == MassType.Average ? psm.Peptide.AverageMass.ToString(CultureInfo.InvariantCulture) : psm.Peptide.MonoisotopicMass.ToString(CultureInfo.InvariantCulture));
+                    output.WriteAttributeString("massdiff", (psm.Spectrum.PrecursorMass - (precursorMassType == MassType.Average ? psm.Peptide.AverageMass : psm.Peptide.MonoisotopicMass)).ToString(CultureInfo.InvariantCulture));
                     output.WriteAttributeString("is_rejected", "0");
                     output.WriteAttributeString("protein_descr", psm.Peptide.Parent.Description);
                     if((psm.Peptide.FixedModifications != null && psm.Peptide.FixedModifications.Count > 0) || (psm.Peptide.VariableModifications != null && psm.Peptide.VariableModifications.Count > 0))
@@ -288,7 +288,7 @@ namespace Morpheus
                             {
                                 output.WriteStartElement("mod_aminoacid_mass");
                                 output.WriteAttributeString("position", (i + 1).ToString());
-                                output.WriteAttributeString("mass", ((precursorMassType == MassType.Average ? AminoAcidMasses.GetAverageMass(psm.Peptide[i]) : AminoAcidMasses.GetMonoisotopicMass(psm.Peptide[i])) + mass_shift).ToString());
+                                output.WriteAttributeString("mass", ((precursorMassType == MassType.Average ? AminoAcidMasses.GetAverageMass(psm.Peptide[i]) : AminoAcidMasses.GetMonoisotopicMass(psm.Peptide[i])) + mass_shift).ToString(CultureInfo.InvariantCulture));
                                 output.WriteEndElement();  // mod_aminoacid_mass
                             }
                         }
@@ -296,11 +296,11 @@ namespace Morpheus
                     }
                     output.WriteStartElement("search_score");
                     output.WriteAttributeString("name", "Morpheus Score");
-                    output.WriteAttributeString("value", psm.MorpheusScore.ToString());
+                    output.WriteAttributeString("value", psm.MorpheusScore.ToString(CultureInfo.InvariantCulture));
                     output.WriteEndElement();  // search_score
                     output.WriteStartElement("search_score");
                     output.WriteAttributeString("name", "PSM q-value");
-                    output.WriteAttributeString("value", psm_with_fdr.QValue.ToString());
+                    output.WriteAttributeString("value", psm_with_fdr.QValue.ToString(CultureInfo.InvariantCulture));
                     output.WriteEndElement();  // search_score
                     output.WriteEndElement();  // search_hit
                     output.WriteEndElement();  // search_result
