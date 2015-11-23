@@ -2,7 +2,7 @@
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{9E22E4AC-C0D7-4E7B-8C6F-73827FA79177}</ProjectGuid>
@@ -10,50 +10,57 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Morpheus</RootNamespace>
     <AssemblyName>morpheus_cl</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
     <PlatformTarget>AnyCPU</PlatformTarget>
     <OutputPath>bin\Debug\</OutputPath>
+    <DebugType>none</DebugType>
+    <WarningLevel>4</WarningLevel>
+    <Optimize>false</Optimize>
+    <CustomCommands>
+      <CustomCommands>
+        <Command type="BeforeBuild" command="" workingdir="${ProjectDir}" />
+      </CustomCommands>
+    </CustomCommands>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|AnyCPU'">
     <PlatformTarget>AnyCPU</PlatformTarget>
     <OutputPath>bin\Release\</OutputPath>
-    <Prefer32Bit>false</Prefer32Bit>
+    <DebugType>none</DebugType>
+    <WarningLevel>4</WarningLevel>
+    <Optimize>false</Optimize>
+    <CustomCommands>
+      <CustomCommands>
+        <Command type="BeforeBuild" command="" workingdir="${ProjectDir}" />
+      </CustomCommands>
+    </CustomCommands>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>Morpheus.ico</ApplicationIcon>
+    <ApplicationIcon>..\..\..\Morpheus\Morpheus.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Program.cs" />
+    <Compile Include="..\..\..\Morpheus\command line\Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\external\CommandLine\CommandLine\CommandLine.csproj">
+    <ProjectReference Include="..\..\..\..\external\CommandLine\CommandLine\CommandLine %28MonoDevelop%29.csproj">
       <Project>{E2EED323-9E53-4193-B0D6-FA3987FE9834}</Project>
-      <Name>CommandLine</Name>
+      <Name>CommandLine %28MonoDevelop%29</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Morpheus.csproj">
+    <ProjectReference Include="..\Morpheus %28MonoDevelop%29.csproj">
       <Project>{288CC061-1067-4FBD-8E79-FB4C7B3F3FB4}</Project>
-      <Name>Morpheus</Name>
+      <Name>Morpheus (MonoDevelop)</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Morpheus.ico" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="..\app.config" />
+    <Content Include="..\..\..\Morpheus\Morpheus.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <PropertyGroup>
-    <PreBuildEvent>
-    </PreBuildEvent>
-  </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

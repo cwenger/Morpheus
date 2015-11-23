@@ -3,11 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
 VisualStudioVersion = 12.0.21005.1
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Morpheus (Thermo)", "Morpheus (Thermo).csproj", "{288CC061-1067-4FBD-8E79-FB4C7B3F3FB4}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Morpheus (Thermo)", "Thermo\Morpheus (Thermo).csproj", "{288CC061-1067-4FBD-8E79-FB4C7B3F3FB4}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CommandLine", "..\external\CommandLine\CommandLine\CommandLine.csproj", "{E2EED323-9E53-4193-B0D6-FA3987FE9834}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Morpheus (Thermo command line)", "Morpheus (command line)\Morpheus (Thermo command line).csproj", "{9E22E4AC-C0D7-4E7B-8C6F-73827FA79177}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Morpheus (Thermo command line)", "Thermo\command line\Morpheus (Thermo command line).csproj", "{9E22E4AC-C0D7-4E7B-8C6F-73827FA79177}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

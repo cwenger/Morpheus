@@ -16,16 +16,16 @@
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>Morpheus.ico</ApplicationIcon>
+    <ApplicationIcon>..\..\..\Morpheus\Morpheus.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
     <DebugSymbols>true</DebugSymbols>
-    <OutputPath>bin\Agilent\64-bit\Debug\</OutputPath>
+    <OutputPath>bin\Debug\</OutputPath>
     <PlatformTarget>x64</PlatformTarget>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
-    <OutputPath>bin\Agilent\64-bit\Release\</OutputPath>
+    <OutputPath>bin\Release\</OutputPath>
     <PlatformTarget>x64</PlatformTarget>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
@@ -34,11 +34,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Program.cs" />
+    <Compile Include="..\..\..\Morpheus\command line\Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\external\CommandLine\CommandLine\CommandLine.csproj">
+    <ProjectReference Include="..\..\..\..\external\CommandLine\CommandLine\CommandLine.csproj">
       <Project>{E2EED323-9E53-4193-B0D6-FA3987FE9834}</Project>
       <Name>CommandLine</Name>
     </ProjectReference>
@@ -48,16 +48,32 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Morpheus.ico" />
+    <Content Include="..\..\..\Morpheus\Morpheus.ico" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\app.config" />
+    <None Include="..\..\..\Morpheus\app.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>copy /Y "..\..\..\..\..\..\external\Agilent\64-bit\BaseCommon.dll"
+copy /Y "..\..\..\..\..\..\external\Agilent\64-bit\BaseError.dll"
+copy /Y "..\..\..\..\..\..\external\Agilent\64-bit\BaseTof.dll"
+copy /Y "..\..\..\..\..\..\external\Agilent\64-bit\CoreTypes.dll"
+copy /Y "..\..\..\..\..\..\external\Agilent\64-bit\CoreUI.dll"
+copy /Y "..\..\..\..\..\Morpheus\app.config" "Morpheus (Agilent 64-bit).exe.config"</PostBuildEvent>
+  </PropertyGroup>
   <PropertyGroup>
     <PreBuildEvent>
     </PreBuildEvent>
   </PropertyGroup>
+  <Target Name="AfterClean">
+    <Delete Files="$(OutDir)\BaseCommon.dll" ContinueOnError="true" />
+    <Delete Files="$(OutDir)\BaseError.dll" ContinueOnError="true" />
+    <Delete Files="$(OutDir)\BaseTof.dll" ContinueOnError="true" />
+    <Delete Files="$(OutDir)\CoreTypes.dll" ContinueOnError="true" />
+    <Delete Files="$(OutDir)\CoreUI.dll" ContinueOnError="true" />
+    <Delete Files="$(OutDir)\Morpheus (Agilent 64-bit).exe.config" ContinueOnError="true" />
+  </Target>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
