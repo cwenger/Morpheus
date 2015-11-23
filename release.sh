@@ -8,6 +8,7 @@ mkdir "release/revision $revision"
 mkdir "release/revision $revision/Morpheus (Linux)"
 mdtool build "Morpheus/Morpheus (MonoDevelop).sln" -t:Clean -c:Release
 mdtool build "Morpheus/Morpheus (MonoDevelop).sln" -t:Build -c:Release
+cp -r "Morpheus/mzML/MonoDevelop/bin/Release/." "release/revision $revision/Morpheus (Linux)"
 cp -r "Morpheus/mzML/MonoDevelop/command line/bin/Release/." "release/revision $revision/Morpheus (Linux)"
 
 cd "release/revision $revision"
