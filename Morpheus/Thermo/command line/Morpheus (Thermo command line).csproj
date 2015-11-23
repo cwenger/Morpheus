@@ -15,26 +15,26 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
     <PlatformTarget>AnyCPU</PlatformTarget>
-    <OutputPath>bin\Thermo\Debug\</OutputPath>
+    <OutputPath>bin\Debug\</OutputPath>
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|AnyCPU'">
     <PlatformTarget>AnyCPU</PlatformTarget>
-    <OutputPath>bin\Thermo\Release\</OutputPath>
+    <OutputPath>bin\Release\</OutputPath>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>Morpheus.ico</ApplicationIcon>
+    <ApplicationIcon>..\..\Morpheus\Morpheus.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Program.cs" />
+    <Compile Include="..\..\Morpheus\command line\Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\external\CommandLine\CommandLine\CommandLine.csproj">
+    <ProjectReference Include="..\..\..\external\CommandLine\CommandLine\CommandLine.csproj">
       <Project>{E2EED323-9E53-4193-B0D6-FA3987FE9834}</Project>
       <Name>CommandLine</Name>
     </ProjectReference>
@@ -44,10 +44,10 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Morpheus.ico" />
+    <Content Include="..\..\Morpheus\Morpheus.ico" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\app.config" />
+    <None Include="..\..\Morpheus\app.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

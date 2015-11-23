@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -10,7 +10,6 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Morpheus</RootNamespace>
     <AssemblyName>Morpheus</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <FileUpgradeFlags>
     </FileUpgradeFlags>
@@ -26,6 +25,11 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <CustomCommands>
+      <CustomCommands>
+        <Command type="BeforeBuild" command="" workingdir="${ProjectDir}" />
+      </CustomCommands>
+    </CustomCommands>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -34,70 +38,72 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <Prefer32Bit>false</Prefer32Bit>
+    <CustomCommands>
+      <CustomCommands>
+        <Command type="BeforeBuild" command="" workingdir="${ProjectDir}" />
+      </CustomCommands>
+    </CustomCommands>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>Morpheus.ico</ApplicationIcon>
+    <ApplicationIcon>..\..\Morpheus\Morpheus.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Ionic.Zlib, Version=1.9.1.8, Culture=neutral, PublicKeyToken=edbe51ad942a3f5c, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\external\DotNetZip\Ionic.Zlib.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
-    <Reference Include="System.XML" />
+    <Reference Include="Ionic.Zlib">
+      <HintPath>..\..\..\external\DotNetZip\Ionic.Zlib.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AminoAcidMasses.cs" />
-    <Compile Include="AminoAcidPolymer.cs" />
-    <Compile Include="CleavageSpecificity.cs" />
-    <Compile Include="Constants.cs" />
-    <Compile Include="DatabaseSearcher.cs" />
-    <Compile Include="ExceptionEventArgs.cs" />
-    <Compile Include="Exporters.cs" />
-    <Compile Include="FalseDiscoveryRate.cs" />
-    <Compile Include="FilepathEventArgs.cs" />
-    <Compile Include="frmMain.cs">
+    <Compile Include="..\..\Morpheus\AminoAcidMasses.cs" />
+    <Compile Include="..\..\Morpheus\AminoAcidPolymer.cs" />
+    <Compile Include="..\..\Morpheus\CleavageSpecificity.cs" />
+    <Compile Include="..\..\Morpheus\Constants.cs" />
+    <Compile Include="..\..\Morpheus\DatabaseSearcher.cs" />
+    <Compile Include="..\..\Morpheus\ExceptionEventArgs.cs" />
+    <Compile Include="..\..\Morpheus\Exporters.cs" />
+    <Compile Include="..\..\Morpheus\FalseDiscoveryRate.cs" />
+    <Compile Include="..\..\Morpheus\FilepathEventArgs.cs" />
+    <Compile Include="..\..\Morpheus\frmMain.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="frmMain.Designer.cs">
+    <Compile Include="..\..\Morpheus\frmMain.Designer.cs">
       <DependentUpon>frmMain.cs</DependentUpon>
     </Compile>
-    <Compile Include="IdentificationWithFalseDiscoveryRate.cs" />
-    <Compile Include="InitiatorMethionineBehavior.cs" />
-    <Compile Include="ITargetDecoy.cs" />
-    <Compile Include="MassTolerance.cs" />
-    <Compile Include="MassToleranceUnits.cs" />
-    <Compile Include="MassType.cs" />
-    <Compile Include="Modification.cs" />
-    <Compile Include="ModificationDictionary.cs" />
-    <Compile Include="ModificationType.cs" />
-    <Compile Include="MSPeak.cs" />
-    <Compile Include="Peptide.cs" />
-    <Compile Include="PeptideSpectrumMatch.cs" />
-    <Compile Include="Product.cs" />
-    <Compile Include="ProductCaps.cs" />
-    <Compile Include="ProductType.cs" />
-    <Compile Include="ProductTypes.cs" />
-    <Compile Include="Program.cs" />
-    <Compile Include="ProgressEventArgs.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ProteaseDictionary.cs" />
-    <Compile Include="ProteinGroup.cs" />
-    <Compile Include="ProteomeDatabaseReader.cs" />
-    <Compile Include="StatusEventArgs.cs" />
-    <Compile Include="TandemMassSpectra.mzML.cs" />
-    <Compile Include="TandemMassSpectra.cs">
+    <Compile Include="..\..\Morpheus\IdentificationWithFalseDiscoveryRate.cs" />
+    <Compile Include="..\..\Morpheus\InitiatorMethionineBehavior.cs" />
+    <Compile Include="..\..\Morpheus\ITargetDecoy.cs" />
+    <Compile Include="..\..\Morpheus\MassTolerance.cs" />
+    <Compile Include="..\..\Morpheus\MassToleranceUnits.cs" />
+    <Compile Include="..\..\Morpheus\MassType.cs" />
+    <Compile Include="..\..\Morpheus\Modification.cs" />
+    <Compile Include="..\..\Morpheus\ModificationDictionary.cs" />
+    <Compile Include="..\..\Morpheus\ModificationType.cs" />
+    <Compile Include="..\..\Morpheus\MSPeak.cs" />
+    <Compile Include="..\..\Morpheus\Peptide.cs" />
+    <Compile Include="..\..\Morpheus\PeptideSpectrumMatch.cs" />
+    <Compile Include="..\..\Morpheus\Product.cs" />
+    <Compile Include="..\..\Morpheus\ProductCaps.cs" />
+    <Compile Include="..\..\Morpheus\ProductType.cs" />
+    <Compile Include="..\..\Morpheus\ProductTypes.cs" />
+    <Compile Include="..\..\Morpheus\Program.cs" />
+    <Compile Include="..\..\Morpheus\ProgressEventArgs.cs" />
+    <Compile Include="..\..\Morpheus\ProteaseDictionary.cs" />
+    <Compile Include="..\..\Morpheus\ProteinGroup.cs" />
+    <Compile Include="..\..\Morpheus\ProteomeDatabaseReader.cs" />
+    <Compile Include="..\..\Morpheus\StatusEventArgs.cs" />
+    <Compile Include="..\TandemMassSpectra.mzML.cs" />
+    <Compile Include="..\..\Morpheus\TandemMassSpectra.cs">
       <DependentUpon>TandemMassSpectra.mzML.cs</DependentUpon>
     </Compile>
-    <Compile Include="TandemMassSpectra.Filtering.cs">
+    <Compile Include="..\..\Morpheus\TandemMassSpectra.Filtering.cs">
       <DependentUpon>TandemMassSpectra.mzML.cs</DependentUpon>
     </Compile>
-    <Compile Include="TandemMassSpectrum.cs" />
-    <Compile Include="Terminus.cs" />
-    <EmbeddedResource Include="frmMain.resx">
+    <Compile Include="..\..\Morpheus\TandemMassSpectrum.cs" />
+    <Compile Include="..\..\Morpheus\Terminus.cs" />
+    <EmbeddedResource Include="..\..\Morpheus\frmMain.resx">
       <DependentUpon>frmMain.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
@@ -111,7 +117,6 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
-    <None Include="app.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -121,38 +126,35 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
-    <Compile Include="Protease.cs" />
-    <Compile Include="Protein.cs" />
+    <Compile Include="..\..\Morpheus\Protease.cs" />
+    <Compile Include="..\..\Morpheus\Protein.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="amino_acids.tsv">
+    <Content Include="..\..\Morpheus\amino_acids.tsv">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="MIT_License.Morpheus.txt">
+    <Content Include="..\..\Morpheus\MIT_License.Morpheus.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="modifications.tsv">
+    <Content Include="..\..\Morpheus\modifications.tsv">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Morpheus.ico" />
-    <Content Include="product_caps.tsv">
+    <Content Include="..\..\Morpheus\Morpheus.ico" />
+    <Content Include="..\..\Morpheus\product_caps.tsv">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="product_types.tsv">
+    <Content Include="..\..\Morpheus\product_types.tsv">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="proteases.tsv">
+    <Content Include="..\..\Morpheus\proteases.tsv">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="ptmlist.txt">
+    <Content Include="..\..\Morpheus\ptmlist.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <PropertyGroup>
-    <PreBuildEvent>
-    </PreBuildEvent>
-  </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

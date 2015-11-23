@@ -3,15 +3,15 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
 VisualStudioVersion = 12.0.21005.1
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Morpheus (Agilent 64-bit)", "Morpheus (Agilent 64-bit).csproj", "{288CC061-1067-4FBD-8E79-FB4C7B3F3FB4}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Morpheus (Agilent 64-bit)", "Agilent\64-bit\Morpheus (Agilent 64-bit).csproj", "{288CC061-1067-4FBD-8E79-FB4C7B3F3FB4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Morpheus (Agilent 32-bit)", "Morpheus (Agilent 32-bit).csproj", "{07D21D73-18B5-4D6F-B249-E8AD462BDCAD}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Morpheus (Agilent 32-bit)", "Agilent\32-bit\Morpheus (Agilent 32-bit).csproj", "{07D21D73-18B5-4D6F-B249-E8AD462BDCAD}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CommandLine", "..\external\CommandLine\CommandLine\CommandLine.csproj", "{E2EED323-9E53-4193-B0D6-FA3987FE9834}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Morpheus (Agilent 64-bit command line)", "Morpheus (command line)\Morpheus (Agilent 64-bit command line).csproj", "{9E22E4AC-C0D7-4E7B-8C6F-73827FA79177}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Morpheus (Agilent 64-bit command line)", "Agilent\64-bit\command line\Morpheus (Agilent 64-bit command line).csproj", "{9E22E4AC-C0D7-4E7B-8C6F-73827FA79177}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Morpheus (Agilent 32-bit command line)", "Morpheus (command line)\Morpheus (Agilent 32-bit command line).csproj", "{9D03EE10-77B2-45F6-B7EC-222AA19A74E9}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Morpheus (Agilent 32-bit command line)", "Agilent\32-bit\command line\Morpheus (Agilent 32-bit command line).csproj", "{9D03EE10-77B2-45F6-B7EC-222AA19A74E9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
