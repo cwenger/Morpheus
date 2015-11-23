@@ -30,24 +30,96 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\..\Morpheus\AminoAcidMasses.cs" />
+    <Compile Include="..\..\Morpheus\AminoAcidPolymer.cs" />
+    <Compile Include="..\..\Morpheus\CleavageSpecificity.cs" />
+    <Compile Include="..\..\Morpheus\Constants.cs" />
+    <Compile Include="..\..\Morpheus\DatabaseSearcher.cs" />
+    <Compile Include="..\..\Morpheus\ExceptionEventArgs.cs" />
+    <Compile Include="..\..\Morpheus\Exporters.cs" />
+    <Compile Include="..\..\Morpheus\FalseDiscoveryRate.cs" />
+    <Compile Include="..\..\Morpheus\FilepathEventArgs.cs" />
+    <Compile Include="..\..\Morpheus\IdentificationWithFalseDiscoveryRate.cs" />
+    <Compile Include="..\..\Morpheus\InitiatorMethionineBehavior.cs" />
+    <Compile Include="..\..\Morpheus\ITargetDecoy.cs" />
+    <Compile Include="..\..\Morpheus\MassTolerance.cs" />
+    <Compile Include="..\..\Morpheus\MassToleranceUnits.cs" />
+    <Compile Include="..\..\Morpheus\MassType.cs" />
+    <Compile Include="..\..\Morpheus\Modification.cs" />
+    <Compile Include="..\..\Morpheus\ModificationDictionary.cs" />
+    <Compile Include="..\..\Morpheus\ModificationType.cs" />
+    <Compile Include="..\..\Morpheus\MSPeak.cs" />
+    <Compile Include="..\..\Morpheus\Peptide.cs" />
+    <Compile Include="..\..\Morpheus\PeptideSpectrumMatch.cs" />
+    <Compile Include="..\..\Morpheus\Product.cs" />
+    <Compile Include="..\..\Morpheus\ProductCaps.cs" />
+    <Compile Include="..\..\Morpheus\ProductType.cs" />
+    <Compile Include="..\..\Morpheus\ProductTypes.cs" />
     <Compile Include="..\..\Morpheus\command line\Program.cs" />
+    <Compile Include="..\..\Morpheus\ProgressEventArgs.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="..\..\Morpheus\Protease.cs" />
+    <Compile Include="..\..\Morpheus\ProteaseDictionary.cs" />
+    <Compile Include="..\..\Morpheus\Protein.cs" />
+    <Compile Include="..\..\Morpheus\ProteinGroup.cs" />
+    <Compile Include="..\..\Morpheus\ProteomeDatabaseReader.cs" />
+    <Compile Include="..\..\Morpheus\StatusEventArgs.cs" />
+    <Compile Include="..\TandemMassSpectra.Thermo.cs" />
+    <Compile Include="..\..\Morpheus\TandemMassSpectra.cs">
+      <DependentUpon>TandemMassSpectra.Thermo.cs</DependentUpon>
+    </Compile>
+    <Compile Include="..\..\Morpheus\TandemMassSpectra.Filtering.cs">
+      <DependentUpon>TandemMassSpectra.Thermo.cs</DependentUpon>
+    </Compile>
+    <Compile Include="..\..\Morpheus\TandemMassSpectrum.cs" />
+    <Compile Include="..\..\Morpheus\Terminus.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\external\CommandLine\CommandLine\CommandLine.csproj">
       <Project>{E2EED323-9E53-4193-B0D6-FA3987FE9834}</Project>
       <Name>CommandLine</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Morpheus %28Thermo%29.csproj">
-      <Project>{288cc061-1067-4fbd-8e79-fb4c7b3f3fb4}</Project>
-      <Name>Morpheus %28Thermo%29</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="..\..\Morpheus\amino_acids.tsv">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\EULA.MSFileReader.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\..\Morpheus\MIT_License.Morpheus.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\..\Morpheus\modifications.tsv">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="..\..\Morpheus\Morpheus.ico" />
+    <Content Include="..\..\Morpheus\product_caps.tsv">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\..\Morpheus\product_types.tsv">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\..\Morpheus\proteases.tsv">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\..\Morpheus\ptmlist.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\Morpheus\app.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <COMReference Include="MSFileReaderLib">
+      <Guid>{F0C5F3E3-4F2A-443E-A74D-0AABE3237494}</Guid>
+      <VersionMajor>1</VersionMajor>
+      <VersionMinor>0</VersionMinor>
+      <Lcid>0</Lcid>
+      <WrapperTool>tlbimp</WrapperTool>
+      <Isolated>False</Isolated>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </COMReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

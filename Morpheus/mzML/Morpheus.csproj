@@ -84,7 +84,9 @@
     <Compile Include="..\Morpheus\Program.cs" />
     <Compile Include="..\Morpheus\ProgressEventArgs.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="..\Morpheus\Protease.cs" />
     <Compile Include="..\Morpheus\ProteaseDictionary.cs" />
+    <Compile Include="..\Morpheus\Protein.cs" />
     <Compile Include="..\Morpheus\ProteinGroup.cs" />
     <Compile Include="..\Morpheus\ProteomeDatabaseReader.cs" />
     <Compile Include="..\Morpheus\StatusEventArgs.cs" />
@@ -121,8 +123,6 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
-    <Compile Include="..\Morpheus\Protease.cs" />
-    <Compile Include="..\Morpheus\Protein.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="..\Morpheus\amino_acids.tsv">
