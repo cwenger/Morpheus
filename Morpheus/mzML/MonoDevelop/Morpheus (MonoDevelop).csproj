@@ -48,12 +48,12 @@
     <ApplicationIcon>..\..\Morpheus\Morpheus.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="System" />
-    <Reference Include="System.Drawing" />
-    <Reference Include="System.Windows.Forms" />
     <Reference Include="Ionic.Zlib">
       <HintPath>..\..\..\external\DotNetZip\Ionic.Zlib.dll</HintPath>
     </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
@@ -90,7 +90,10 @@
     <Compile Include="..\..\Morpheus\ProductTypes.cs" />
     <Compile Include="..\..\Morpheus\Program.cs" />
     <Compile Include="..\..\Morpheus\ProgressEventArgs.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="..\..\Morpheus\Protease.cs" />
     <Compile Include="..\..\Morpheus\ProteaseDictionary.cs" />
+    <Compile Include="..\..\Morpheus\Protein.cs" />
     <Compile Include="..\..\Morpheus\ProteinGroup.cs" />
     <Compile Include="..\..\Morpheus\ProteomeDatabaseReader.cs" />
     <Compile Include="..\..\Morpheus\StatusEventArgs.cs" />
@@ -126,9 +129,6 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
-    <Compile Include="..\..\Morpheus\Protease.cs" />
-    <Compile Include="..\..\Morpheus\Protein.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="..\..\Morpheus\amino_acids.tsv">
