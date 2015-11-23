@@ -55,23 +55,13 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>copy /Y "..\..\..\..\..\..\external\Agilent\64-bit\BaseCommon.dll"
-copy /Y "..\..\..\..\..\..\external\Agilent\64-bit\BaseError.dll"
-copy /Y "..\..\..\..\..\..\external\Agilent\64-bit\BaseTof.dll"
-copy /Y "..\..\..\..\..\..\external\Agilent\64-bit\CoreTypes.dll"
-copy /Y "..\..\..\..\..\..\external\Agilent\64-bit\CoreUI.dll"
-copy /Y "..\..\..\..\..\Morpheus\app.config" "Morpheus (Agilent 64-bit).exe.config"</PostBuildEvent>
+    <PostBuildEvent>copy /Y "..\..\..\..\..\Morpheus\app.config" "Morpheus (Agilent 64-bit).exe.config"</PostBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
     <PreBuildEvent>
     </PreBuildEvent>
   </PropertyGroup>
   <Target Name="AfterClean">
-    <Delete Files="$(OutDir)\BaseCommon.dll" ContinueOnError="true" />
-    <Delete Files="$(OutDir)\BaseError.dll" ContinueOnError="true" />
-    <Delete Files="$(OutDir)\BaseTof.dll" ContinueOnError="true" />
-    <Delete Files="$(OutDir)\CoreTypes.dll" ContinueOnError="true" />
-    <Delete Files="$(OutDir)\CoreUI.dll" ContinueOnError="true" />
     <Delete Files="$(OutDir)\Morpheus (Agilent 64-bit).exe.config" ContinueOnError="true" />
   </Target>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
