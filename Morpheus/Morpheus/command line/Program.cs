@@ -1,14 +1,22 @@
-﻿using System;
+﻿using CommandLine.Utility;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
-using System.Text;
-using CommandLine.Utility;
+using System.Windows.Forms;
 
 namespace Morpheus
 {
     class Program
     {
+        internal static string GetProductNameAndVersion()
+        {
+            string name = Application.ProductName;
+            int revision = new Version(Application.ProductVersion).Revision;
+            string name_and_version = name.Insert(name.IndexOf(')'), ", revision " + revision.ToString());
+            return name_and_version;
+        }
+
         static void Main(string[] args)
         {
             if(args.Length > 0)
@@ -211,7 +219,7 @@ namespace Morpheus
             }
             else
             {
-                Console.WriteLine("USAGE");
+                Console.WriteLine(Program.GetProductNameAndVersion() + " USAGE");
             }
         }
 

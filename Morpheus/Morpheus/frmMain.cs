@@ -12,7 +12,6 @@ namespace Morpheus
 {
     public partial class frmMain : Form
     {
-        private string TITLE = null;
         private string EXTENSION = ".mzML;*.mzml;*.MZML";
         private bool DIRECTORY = false;
         private string LABEL = "mzML data files (*.mzML)";
@@ -23,31 +22,28 @@ namespace Morpheus
 
         public frmMain()
         {
-            TITLE = Path.GetFileNameWithoutExtension(Application.ExecutablePath);
-            if(TITLE.Contains("Agilent"))
+            if(Application.ProductName.Contains("Agilent"))
             {
                 EXTENSION = ".d";
                 DIRECTORY = true;
                 LABEL = "Agilent data directories (*.d)";
             }
-            else if(TITLE.Contains("Thermo"))
+            else if(Application.ProductName.Contains("Thermo"))
             {
                 EXTENSION = ".raw";
                 DIRECTORY = false;
                 LABEL = "Thermo data files (*.raw)";
             }
 
-            TITLE += " revision " + Assembly.GetExecutingAssembly().GetName().Version.Minor.ToString();
-
             InitializeComponent();
         }
 
         private void frmMain_Load(object sender, EventArgs e)
         {
-            Text = TITLE;
+            Text = Program.GetProductNameAndVersion();
             label1.Text = LABEL;
             ofdData.Filter = DIALOG_FILTER;
-            if(Text.Contains("Thermo"))
+            if(Application.ProductName.Contains("Thermo"))
             {
                 chkDeisotope.Enabled = false;
                 chkDeisotope.Checked = false;
@@ -145,7 +141,7 @@ namespace Morpheus
                                     chkAssignChargeStates.Checked = bool.Parse(value);
                                     break;
                                 case "De-isotope":
-                                    if(!TITLE.Contains("Thermo"))
+                                    if(!Application.ProductName.Contains("Thermo"))
                                     {
                                         chkDeisotope.Checked = bool.Parse(value);
                                     }

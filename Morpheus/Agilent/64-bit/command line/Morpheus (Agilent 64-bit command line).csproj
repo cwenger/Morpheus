@@ -75,6 +75,7 @@
       <HintPath>..\..\..\..\external\Agilent\64-bit\QualUI.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
