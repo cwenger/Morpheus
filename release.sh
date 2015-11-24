@@ -12,6 +12,6 @@ rsync -a --exclude=*.mdb "Morpheus/mzML/Mono/bin/Release/." "release/revision $r
 rsync -a --exclude=*.mdb "Morpheus/mzML/Mono/command line/bin/Release/." "release/revision $revision/Morpheus (mzML Linux)"
 
 cd "release/revision $revision"
-tar -czf "Morpheus (Linux).tar.gz" "Morpheus (mzML Linux)"
+tar -czf "Morpheus (mzML Linux).tar.gz" "Morpheus (mzML Linux)"
 
-rm -r "Morpheus (Linux)"
+rm -r "Morpheus (mzML Linux)"
