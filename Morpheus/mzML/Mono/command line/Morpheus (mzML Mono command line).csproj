@@ -9,7 +9,7 @@
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Morpheus</RootNamespace>
-    <AssemblyName>morpheus_cl</AssemblyName>
+    <AssemblyName>morpheus_mzml_mono_cl</AssemblyName>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
@@ -93,7 +93,7 @@
     <Compile Include="..\..\..\Morpheus\Terminus.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\..\external\CommandLine\CommandLine\CommandLine %28MonoDevelop%29.csproj">
+    <ProjectReference Include="..\..\..\..\external\CommandLine\CommandLine\CommandLine %28Mono%29.csproj">
       <Project>{E2EED323-9E53-4193-B0D6-FA3987FE9834}</Project>
       <Name>CommandLine %28MonoDevelop%29</Name>
     </ProjectReference>
