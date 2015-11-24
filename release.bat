@@ -7,7 +7,7 @@ if "%revision%"=="Unversioned" set revision="undefined"
 mkdir release
 mkdir "release\revision %revision%"
 mkdir "release\revision %revision%\Morpheus"
-"C:\Program Files (x86)\Microsoft Visual Studio 14.0\Common7\IDE\devenv.exe" Morpheus\Morpheus.sln /rebuild Release
+"C:\Program Files (x86)\Microsoft Visual Studio 14.0\Common7\IDE\devenv.exe" "Morpheus\Morpheus (mzML).sln" /rebuild Release
 xcopy /y "Morpheus\mzML\bin\Release\*" /EXCLUDE:exclude.txt "release\revision %revision%\Morpheus"
 xcopy /y "Morpheus\mzML\command line\bin\Release\*" /EXCLUDE:exclude.txt "release\revision %revision%\Morpheus"
 mkdir "release\revision %revision%\Morpheus (Agilent 32-bit)"

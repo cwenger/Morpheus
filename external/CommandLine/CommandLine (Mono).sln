@@ -1,6 +1,6 @@
 Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CommandLine", "CommandLine\CommandLine (MonoDevelop).csproj", "{E2EED323-9E53-4193-B0D6-FA3987FE9834}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CommandLine", "CommandLine\CommandLine (Mono).csproj", "{E2EED323-9E53-4193-B0D6-FA3987FE9834}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
