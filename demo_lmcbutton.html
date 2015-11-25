@@ -1,0 +1,74 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>DEMO - LettersMarket Clipboard Button (LMCButton)</title>
+
+<script type="text/javascript" src="lmcbutton.js"></script>
+
+</head>
+
+<body>
+
+
+<script type="text/javascript"> 
+ 
+ function DemoAlert()
+ {
+   alert('This is DemoAlert message');
+ }
+ 
+</script>
+
+
+
+<h2>DEMO: LettersMarket Clipboard Button (LMCButton)</h2>
+<p>LMCButton - is a small and easy to use flash button which allows you to copy text to the clipboard with JavaScript.  Cross-browser version, tested on: Internet Explorer, Mozilla Firefox, Google Chrome, Safari - Windows and Mac OS (Safari, Firefox, Google Chrome).</p>
+<table width="300" border="0" cellspacing="0" cellpadding="3">
+  <tr>
+    <td><input name="textfield" type="text" value="http://www.lettersmarket.com/" size="50" /></td>
+    <td><script type="text/javascript"> ShowLMCButton('http://www.lettersmarket.com/');  </script></td>
+  </tr>
+  <tr>
+    <td><input name="textfield2" type="text" value="Letters Market Clipboard Button" size="50" /></td>
+    <td><script type="text/javascript"> ShowLMCButton('Letters Market Clipboard Button');  </script></td>
+  </tr>
+  <tr>
+    <td align="right">Custom caption: DEMO </td>
+    <td><script type="text/javascript"> ShowLMCButton('Custom caption: DEMO', 'DEMO');  </script></td>
+  </tr>
+  <tr>
+    <td align="right">Call custom JavaScript - DemoAlert() </td>
+    <td><script type="text/javascript"> ShowLMCButton('Call custom JavaScript - DemoAlert()', '', 'DemoAlert()');  </script></td>
+  </tr>
+  <tr>
+    <td align="right">Empty button: </td>
+    <td><script type="text/javascript"> ShowLMCButton('');  </script></td>
+  </tr>
+</table>
+<p>You can paste text here:</p>
+<p>
+  <textarea name="textarea" cols="60" rows="5"></textarea>
+</p>
+<hr size="1" />
+<h3>How to use</h3>
+<p>1) Add small java script in the html page (this script contain two small functions: <em>ShowLMCButton()</em> and <em>isNotEmpty()</em> ):</p>
+<blockquote>
+  <pre>&lt;script type=&quot;text/javascript&quot; src=&quot;lmcbutton.js&quot;&gt;&lt;/script&gt;</pre>
+</blockquote>
+<p>2) Call JS function: <em>ShowLMCButton(cliptext, capt, js, furl)</em> where you want to see LMCButton with parameters. </p>
+<blockquote>
+  <p>Parameters:</p>
+  <ul>
+    <li><em>cliptext</em> - Text for clipboard</li>
+    <li><em>capt</em> - LMCButton caption</li>
+    <li>js - Custom JavaScript function name. </li>
+    <li><em>furl</em> - File name and path for <strong>lmcbutton.swf</strong></li>
+  </ul>
+</blockquote>
+<p>3) If you like our LMCButton, please place link to us: <a href="http://www.lettersmarket.com">www.lettersmarket.com</a></p>
+<h3>Download LMCButton (Copy to Clipboard)</h3>
+<p>You can download LettersMarket Clipboard Button - LMCButton here: <a href="http://www.lettersmarket.com/uploads/lettersmarket/lmcbutton/lmcbutton.zip"><strong>lmcbutton.zip</strong></a> (9 kb, 3 files: demo_lmcbutton.html, lmcbutton.js, lmcbutton.swf)</p>
+<p align="center">(c) 2012 <a href="http://www.lettersmarket.com">www.lettersmarket.com</a></p>
+</body>
+</html>
