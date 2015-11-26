@@ -11,7 +11,7 @@
 		<p>
 			<b>Where did the name "Morpheus" come from?</b>
 			<br />
-			From the movie <a href="http://en.wikipedia.org/wiki/The_Matrix">The Matrix</a>, of course. Greek mythology is a good source for names when you can't come up with anything meaningful.
+			From the movie <a href="http://en.wikipedia.org/wiki/The_Matrix">The Matrix</a>, of course.
 		</p>
 		<p>
 			<b>How can I generate mzML data for Morpheus?</b>
@@ -79,6 +79,21 @@
 			<b>Can I add/edit modifications, proteases, amino acids, etc.?</b>
 			<br />
 			Yes. Nearly everything is user-configurable via tab-separated values (TSV) files located in the same directory as the executable. They should be straightforward to edit in Excel or other spreadsheet programs.
+		</p>
+		<p>
+			<b>How can I compare the number of spectra and unique peptides matched to each protein across multiple analyses?</b>
+			<br />
+			There is an auxiliary utility program called Morpheus Protein Summarizer that does this. Download the Windows executable <a href="Morpheus Protein Summarizer.exe">here</a>. The input is protein groups TSV files from Morpheus. The output is PSMs.tsv and unique_peptides.tsv, where each column is a dataset, each row is a protein, and the values are how many PSMs and unique peptides matched to that protein, respectively. Note that protein groups must be separated into their constituent proteins as protein groups may not be identical between datasets.
+		</p>
+		<p>
+			<b>How can I compare the number of spectral counts for each unique peptide across multiple analyses?</b>
+			<br />
+			There is an auxiliary utility program called Morpheus Peptide Summarizer that does this. Download the Windows executable <a href="Morpheus Peptide Summarizer.exe">here</a>. The input is PSMs TSV files from Morpheus. The output is peptides.csv, where each column is a dataset, each row is a unique base peptide sequenc, and the values are how many spectra were matched to that peptide sequence.
+		</p>
+		<p>
+			<b>Can I use Morpheus on Linux?</b>
+			<br />
+			Yes. Morpheus was developed with the Microsoft .NET Framework, which is a Windows-only technology. However, Mono is an open-source project to provide a cross-platform implementation of .NET. There is a Linux version of Morpheus that was compiled on Ubuntu 14.04.2 64-bit. You may be able to use this binary directly. If not, you may be able to recompile it from the source code for your Linux distribution.
 		</p>
 		<p>
 			<b>Can I compile/build Morpheus from source code?</b>
