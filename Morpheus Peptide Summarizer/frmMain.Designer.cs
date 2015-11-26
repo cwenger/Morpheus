@@ -57,9 +57,9 @@
             this.label1.AutoSize = true;
             this.label1.Location = new System.Drawing.Point(12, 9);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(210, 13);
+            this.label1.Size = new System.Drawing.Size(125, 13);
             this.label1.TabIndex = 55;
-            this.label1.Text = "Morpheus PSM or unique peptide TSV files";
+            this.label1.Text = "Morpheus PSM TSV files";
             // 
             // btnClear
             // 
