@@ -8,9 +8,9 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("Morpheus Protein Summarizer")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Agilent Technologies")]
+[assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("Morpheus Protein Summarizer")]
-[assembly: AssemblyCopyright("Copyright © Agilent Technologies 2012")]
+[assembly: AssemblyCopyright("Copyright © 2012")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

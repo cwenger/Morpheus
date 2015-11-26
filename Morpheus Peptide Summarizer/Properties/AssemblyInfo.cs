@@ -8,9 +8,9 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("Morpheus Peptide Summarizer")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Agilent Technologies")]
+[assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("Morpheus Peptide Summarizer")]
-[assembly: AssemblyCopyright("Copyright © Agilent Technologies 2012")]
+[assembly: AssemblyCopyright("Copyright © 2012")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("50f304b4-3130-4888-9dbc-73bc2108627d")]
+[assembly: Guid("c0930ea3-65a2-49c5-abe3-0d3673dd03f6")]
 
 // Version information for an assembly consists of the following four values:
 //
