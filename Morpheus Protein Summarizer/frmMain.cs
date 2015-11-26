@@ -108,6 +108,8 @@ namespace Morpheus_Protein_Summarizer
                     int protein_description_index = Array.FindIndex(header_fields, s => s == "Protein Description");
                     int decoy_index = Array.FindIndex(header_fields, s => s == "Decoy?");
                     int q_value_index = Array.FindIndex(header_fields, s => s == "Q-Value (%)");
+                    int psms_index = Array.FindIndex(header_fields, s => s == "Number of Peptide-Spectrum Matches");
+                    int peptides_index = Array.FindIndex(header_fields, s => s == "Number of Unique Peptides");
 
                     while(input.Peek() != -1)
                     {
@@ -118,7 +120,7 @@ namespace Morpheus_Protein_Summarizer
                         {
                             foreach(string protein in fields[protein_description_index].Split(new string[] { ";; " }, StringSplitOptions.RemoveEmptyEntries))
                             {
-                                proteins[dataset].Add(protein, new KeyValuePair<int, int>(int.Parse(fields[4]), int.Parse(fields[5])));
+                                proteins[dataset].Add(protein, new KeyValuePair<int, int>(int.Parse(fields[psms_index]), int.Parse(fields[peptides_index])));
                                 distinct_proteins.Add(protein);
                             }
                         }
