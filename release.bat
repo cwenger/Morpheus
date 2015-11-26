@@ -1,7 +1,7 @@
 rmdir /s /q release
 for /d /r . %%d in (bin, obj) do @if exist "%%d" rmdir /s /q "%%d"
 
-for /f %%i in ('svnversion -n') do set revision=%%i
+for /f %%i in ('git rev-list --count HEAD') do set revision=%%i
 if "%revision%"=="Unversioned" set revision="undefined"
 
 mkdir release

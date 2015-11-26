@@ -1,4 +1,4 @@
-revision=$(svnversion -n)
+revision=$(git rev-list --count HEAD)
 
 rm -r release
 find . -name "bin" -type d -exec rm -r "{}" \;
