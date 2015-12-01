@@ -154,7 +154,7 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
-    <None Include="..\..\Morpheus\app.config">
+    <None Include="..\..\Morpheus\App.config">
       <SubType>Designer</SubType>
     </None>
     <None Include="Properties\Settings.settings">

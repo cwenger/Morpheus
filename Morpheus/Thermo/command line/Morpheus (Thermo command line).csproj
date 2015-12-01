@@ -119,7 +119,7 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\..\Morpheus\app.config" />
+    <None Include="..\..\Morpheus\App.config" />
   </ItemGroup>
   <ItemGroup>
     <COMReference Include="MSFileReaderLib">
