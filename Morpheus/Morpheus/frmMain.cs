@@ -4,7 +4,6 @@ using System.ComponentModel;
 using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Reflection;
 using System.Threading;
 using System.Windows.Forms;
 
@@ -12,27 +11,30 @@ namespace Morpheus
 {
     public partial class frmMain : Form
     {
-        private string EXTENSION = ".mzML;*.mzml;*.MZML";
+        private string CASE_SENSITIVE_EXTENSION = "*.mzML;*.mzml;*.MZML";
+        private string CASE_INSENSITIVE_EXTENSION = "*.mzML";
+        private const string CASE_SENSITIVE_FASTA_EXTENSIONS = "*.fa;*.FA;*.faa;*.FAA;*.fas;*.FAS;*.fasta;*.FASTA;*.fsa;*.FSA";
+        private const string CASE_INSENSITIVE_FASTA_EXTENSIONS = "*.fa;*.faa;*.fas;*.fasta;*.fsa";
         private bool DIRECTORY = false;
-        private string LABEL = "mzML data files (*.mzML)";
+        private string LABEL = "mzML data files (.mzML)";
         private string DIALOG_FILTER
         {
-            get { return LABEL + "|*" + EXTENSION; }
+            get { return LABEL + '|' + (Environment.OSVersion.Platform == PlatformID.Unix ? CASE_SENSITIVE_EXTENSION : CASE_INSENSITIVE_FASTA_EXTENSIONS); }
         }
 
         public frmMain()
         {
             if(Application.ProductName.Contains("Agilent"))
             {
-                EXTENSION = ".d";
+                CASE_INSENSITIVE_EXTENSION = "*.d";
                 DIRECTORY = true;
-                LABEL = "Agilent data directories (*.d)";
+                LABEL = "Agilent data directories (.d)";
             }
             else if(Application.ProductName.Contains("Thermo"))
             {
-                EXTENSION = ".raw";
+                CASE_INSENSITIVE_EXTENSION = "*.raw";
                 DIRECTORY = false;
-                LABEL = "Thermo data files (*.raw)";
+                LABEL = "Thermo data files (.raw)";
             }
 
             InitializeComponent();
@@ -43,6 +45,9 @@ namespace Morpheus
             Text = Program.GetProductNameAndVersion();
             label1.Text = LABEL;
             ofdData.Filter = DIALOG_FILTER;
+            ofdFasta.Filter = Environment.OSVersion.Platform == PlatformID.Unix 
+                ? "FASTA proteome database files|" + CASE_INSENSITIVE_FASTA_EXTENSIONS + "|UniProt XML proteome database files|*.xml;*.XML"
+                : "FASTA proteome database files|" + CASE_SENSITIVE_FASTA_EXTENSIONS + "|UniProt XML proteome database files|*.xml";
             if(Application.ProductName.Contains("Thermo"))
             {
                 chkDeisotope.Enabled = false;
@@ -227,8 +232,6 @@ namespace Morpheus
             numMaxThreads.Value = numMaxThreads.Maximum;
         }
 
-        private static readonly string FASTA_EXTENSIONS = ".fa;.faa;.fas;.fasta;.fsa";
-
         private void frmMain_DragEnter(object sender, DragEventArgs e)
         {
             if(e.Data.GetDataPresent(DataFormats.FileDrop))
@@ -237,9 +240,9 @@ namespace Morpheus
 
                 foreach(string filepath in filepaths)
                 {
-                    if((((!DIRECTORY && File.Exists(filepath)) || (DIRECTORY && Directory.Exists(filepath))) && Path.GetExtension(filepath).Length > 0 && EXTENSION.Contains(Path.GetExtension(filepath)) && !lstData.Items.Contains(filepath))
-                        || File.Exists(filepath) && FASTA_EXTENSIONS.Contains(Path.GetExtension(filepath).ToLower())
-                        || Path.GetExtension(filepath).Equals(".xml", StringComparison.InvariantCultureIgnoreCase)
+                    if((((!DIRECTORY && File.Exists(filepath)) || (DIRECTORY && Directory.Exists(filepath))) && Path.GetExtension(filepath).Length > 0 && CASE_INSENSITIVE_EXTENSION.IndexOf(Path.GetExtension(filepath), StringComparison.OrdinalIgnoreCase) >= 0 && !lstData.Items.Contains(filepath))
+                        || File.Exists(filepath) && CASE_INSENSITIVE_FASTA_EXTENSIONS.IndexOf(Path.GetExtension(filepath).ToLower(), StringComparison.OrdinalIgnoreCase) >= 0 
+                        || Path.GetExtension(filepath).Equals(".xml", StringComparison.OrdinalIgnoreCase)
                         || Directory.Exists(filepath))
                     {
                         e.Effect = DragDropEffects.Link;
@@ -255,13 +258,13 @@ namespace Morpheus
 
             foreach(string filepath in filepaths)
             {
-                if(((!DIRECTORY && File.Exists(filepath)) || (DIRECTORY && Directory.Exists(filepath))) && Path.GetExtension(filepath).Length > 0 && EXTENSION.Contains(Path.GetExtension(filepath)) && !lstData.Items.Contains(filepath))
+                if(((!DIRECTORY && File.Exists(filepath)) || (DIRECTORY && Directory.Exists(filepath))) && Path.GetExtension(filepath).Length > 0 && CASE_INSENSITIVE_EXTENSION.IndexOf(Path.GetExtension(filepath), StringComparison.OrdinalIgnoreCase) >= 0 && !lstData.Items.Contains(filepath))
                 {
                     lstData.Items.Add(filepath);
                     tspbProgress.Value = tspbProgress.Minimum;
                 }
-                else if(File.Exists(filepath) && FASTA_EXTENSIONS.Contains(Path.GetExtension(filepath).ToLower())
-                    || Path.GetExtension(filepath).Equals(".xml", StringComparison.InvariantCultureIgnoreCase))
+                else if(File.Exists(filepath) && CASE_INSENSITIVE_FASTA_EXTENSIONS.IndexOf(Path.GetExtension(filepath), StringComparison.OrdinalIgnoreCase) >= 0
+                    || Path.GetExtension(filepath).Equals(".xml", StringComparison.OrdinalIgnoreCase))
                 {
                     txtFastaFile.Text = filepath;
                 }
@@ -286,7 +289,7 @@ namespace Morpheus
 
             if(DIRECTORY)
             {
-                string[] directories = Directory.GetDirectories(directory, "*.*", SearchOption.AllDirectories).Where(x => Path.GetExtension(x).Length > 0 && EXTENSION.Contains(Path.GetExtension(x))).ToArray();
+                string[] directories = Directory.GetDirectories(directory, "*.*", SearchOption.AllDirectories).Where(x => Path.GetExtension(x).Length > 0 && CASE_INSENSITIVE_EXTENSION.IndexOf(Path.GetExtension(x), StringComparison.OrdinalIgnoreCase) >= 0).ToArray();
                 if(directories.Length > 0)
                 {
                     foreach(string subdirectory in directories)
@@ -302,7 +305,7 @@ namespace Morpheus
             }
             else
             {
-                string[] files = Directory.GetFiles(directory, "*.*", SearchOption.AllDirectories).Where(x => Path.GetExtension(x).Length > 0 && EXTENSION.Contains(Path.GetExtension(x))).ToArray();
+                string[] files = Directory.GetFiles(directory, "*.*", SearchOption.AllDirectories).Where(x => Path.GetExtension(x).Length > 0 && CASE_INSENSITIVE_EXTENSION.IndexOf(Path.GetExtension(x), StringComparison.OrdinalIgnoreCase) >= 0).ToArray();
                 if(files.Length > 0)
                 {
                     foreach(string file in files)
@@ -502,7 +505,7 @@ namespace Morpheus
 
         private void backgroundWorker1_DoWork(object sender, DoWorkEventArgs e)
         {
-            if(Path.GetExtension(txtFastaFile.Text).Equals(".xml", StringComparison.InvariantCultureIgnoreCase))
+            if(Path.GetExtension(txtFastaFile.Text).Equals(".xml", StringComparison.OrdinalIgnoreCase))
             {
                 e.Result = new KeyValuePair<IEnumerable<Modification>, bool>(ProteomeDatabaseReader.ReadUniProtXmlModifications(txtFastaFile.Text).Values, false);
             }

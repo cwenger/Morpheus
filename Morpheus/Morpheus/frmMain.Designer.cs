@@ -188,9 +188,9 @@
             this.label2.AutoSize = true;
             this.label2.Location = new System.Drawing.Point(9, 293);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(198, 13);
+            this.label2.Size = new System.Drawing.Size(210, 13);
             this.label2.TabIndex = 3;
-            this.label2.Text = "Proteome Database (.fasta, UniProt .xml)";
+            this.label2.Text = "Proteome Database (FASTA, UniProt XML)";
             // 
             // btnBrowseFasta
             // 
@@ -204,8 +204,6 @@
             // 
             // ofdFasta
             // 
-            this.ofdFasta.Filter = "FASTA proteome database files|*.fa;*.FA;*.faa;*.FAA;*.fas;*.FAS;*.fasta;*.FASTA;*" +
-    ".fsa;*.FSA|UniProt XML proteome database files|*.xml;*.XML";
             this.ofdFasta.Multiselect = true;
             // 
             // cboProtease
