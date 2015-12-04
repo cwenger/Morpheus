@@ -10,12 +10,9 @@
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Morpheus</RootNamespace>
-    <AssemblyName>morpheus_a64_cl</AssemblyName>
+    <AssemblyName>morpheus_agt_cl</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-  </PropertyGroup>
-  <PropertyGroup>
-    <ApplicationIcon>..\..\..\Morpheus\Morpheus.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x64' ">
     <PlatformTarget>x64</PlatformTarget>
@@ -38,132 +35,135 @@
     <WarningLevel>4</WarningLevel>
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>..\..\Morpheus\Morpheus.ico</ApplicationIcon>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="AgtFileSelectionDialog, Version=3.0.124.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\external\Agilent\64-bit\AgtFileSelectionDialog.dll</HintPath>
+      <HintPath>..\..\..\external\Agilent\AgtFileSelectionDialog.dll</HintPath>
     </Reference>
     <Reference Include="BaseCommon, Version=5.0.519.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\external\Agilent\64-bit\BaseCommon.dll</HintPath>
+      <HintPath>..\..\..\external\Agilent\BaseCommon.dll</HintPath>
     </Reference>
     <Reference Include="BaseDataAccess, Version=5.0.519.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\external\Agilent\64-bit\BaseDataAccess.dll</HintPath>
+      <HintPath>..\..\..\external\Agilent\BaseDataAccess.dll</HintPath>
     </Reference>
     <Reference Include="BaseError, Version=5.0.519.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\external\Agilent\64-bit\BaseError.dll</HintPath>
+      <HintPath>..\..\..\external\Agilent\BaseError.dll</HintPath>
     </Reference>
     <Reference Include="BaseTof, Version=1.0.4288.23157, Culture=neutral, processorArchitecture=AMD64">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\external\Agilent\64-bit\BaseTof.dll</HintPath>
+      <HintPath>..\..\..\external\Agilent\BaseTof.dll</HintPath>
     </Reference>
     <Reference Include="CoreDefinitions, Version=5.0.519.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\external\Agilent\64-bit\CoreDefinitions.dll</HintPath>
+      <HintPath>..\..\..\external\Agilent\CoreDefinitions.dll</HintPath>
     </Reference>
     <Reference Include="CoreTypes, Version=4.0.479.9, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\external\Agilent\64-bit\CoreTypes.dll</HintPath>
+      <HintPath>..\..\..\external\Agilent\CoreTypes.dll</HintPath>
     </Reference>
     <Reference Include="CoreUI, Version=5.0.519.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\external\Agilent\64-bit\CoreUI.dll</HintPath>
+      <HintPath>..\..\..\external\Agilent\CoreUI.dll</HintPath>
     </Reference>
     <Reference Include="MassSpecDataReader, Version=5.0.519.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\external\Agilent\64-bit\MassSpecDataReader.dll</HintPath>
+      <HintPath>..\..\..\external\Agilent\MassSpecDataReader.dll</HintPath>
     </Reference>
     <Reference Include="QualDefinitions, Version=5.0.519.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\external\Agilent\64-bit\QualDefinitions.dll</HintPath>
+      <HintPath>..\..\..\external\Agilent\QualDefinitions.dll</HintPath>
     </Reference>
     <Reference Include="QualUI, Version=5.0.519.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\external\Agilent\64-bit\QualUI.dll</HintPath>
+      <HintPath>..\..\..\external\Agilent\QualUI.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\..\..\Morpheus\AminoAcidMasses.cs" />
-    <Compile Include="..\..\..\Morpheus\AminoAcidPolymer.cs" />
-    <Compile Include="..\..\..\Morpheus\CleavageSpecificity.cs" />
-    <Compile Include="..\..\..\Morpheus\Constants.cs" />
-    <Compile Include="..\..\..\Morpheus\DatabaseSearcher.cs" />
-    <Compile Include="..\..\..\Morpheus\ExceptionEventArgs.cs" />
-    <Compile Include="..\..\..\Morpheus\Exporters.cs" />
-    <Compile Include="..\..\..\Morpheus\FalseDiscoveryRate.cs" />
-    <Compile Include="..\..\..\Morpheus\FilepathEventArgs.cs" />
-    <Compile Include="..\..\..\Morpheus\IdentificationWithFalseDiscoveryRate.cs" />
-    <Compile Include="..\..\..\Morpheus\InitiatorMethionineBehavior.cs" />
-    <Compile Include="..\..\..\Morpheus\ITargetDecoy.cs" />
-    <Compile Include="..\..\..\Morpheus\MassTolerance.cs" />
-    <Compile Include="..\..\..\Morpheus\MassToleranceUnits.cs" />
-    <Compile Include="..\..\..\Morpheus\MassType.cs" />
-    <Compile Include="..\..\..\Morpheus\Modification.cs" />
-    <Compile Include="..\..\..\Morpheus\ModificationDictionary.cs" />
-    <Compile Include="..\..\..\Morpheus\ModificationType.cs" />
-    <Compile Include="..\..\..\Morpheus\MSPeak.cs" />
-    <Compile Include="..\..\..\Morpheus\Peptide.cs" />
-    <Compile Include="..\..\..\Morpheus\PeptideSpectrumMatch.cs" />
-    <Compile Include="..\..\..\Morpheus\Product.cs" />
-    <Compile Include="..\..\..\Morpheus\ProductCaps.cs" />
-    <Compile Include="..\..\..\Morpheus\ProductType.cs" />
-    <Compile Include="..\..\..\Morpheus\ProductTypes.cs" />
-    <Compile Include="..\..\..\Morpheus\command line\Program.cs" />
-    <Compile Include="..\..\..\Morpheus\ProgressEventArgs.cs" />
+    <Compile Include="..\..\Morpheus\AminoAcidMasses.cs" />
+    <Compile Include="..\..\Morpheus\AminoAcidPolymer.cs" />
+    <Compile Include="..\..\Morpheus\CleavageSpecificity.cs" />
+    <Compile Include="..\..\Morpheus\Constants.cs" />
+    <Compile Include="..\..\Morpheus\DatabaseSearcher.cs" />
+    <Compile Include="..\..\Morpheus\ExceptionEventArgs.cs" />
+    <Compile Include="..\..\Morpheus\Exporters.cs" />
+    <Compile Include="..\..\Morpheus\FalseDiscoveryRate.cs" />
+    <Compile Include="..\..\Morpheus\FilepathEventArgs.cs" />
+    <Compile Include="..\..\Morpheus\IdentificationWithFalseDiscoveryRate.cs" />
+    <Compile Include="..\..\Morpheus\InitiatorMethionineBehavior.cs" />
+    <Compile Include="..\..\Morpheus\ITargetDecoy.cs" />
+    <Compile Include="..\..\Morpheus\MassTolerance.cs" />
+    <Compile Include="..\..\Morpheus\MassToleranceUnits.cs" />
+    <Compile Include="..\..\Morpheus\MassType.cs" />
+    <Compile Include="..\..\Morpheus\Modification.cs" />
+    <Compile Include="..\..\Morpheus\ModificationDictionary.cs" />
+    <Compile Include="..\..\Morpheus\ModificationType.cs" />
+    <Compile Include="..\..\Morpheus\MSPeak.cs" />
+    <Compile Include="..\..\Morpheus\Peptide.cs" />
+    <Compile Include="..\..\Morpheus\PeptideSpectrumMatch.cs" />
+    <Compile Include="..\..\Morpheus\Product.cs" />
+    <Compile Include="..\..\Morpheus\ProductCaps.cs" />
+    <Compile Include="..\..\Morpheus\ProductType.cs" />
+    <Compile Include="..\..\Morpheus\ProductTypes.cs" />
+    <Compile Include="..\..\Morpheus\command line\Program.cs" />
+    <Compile Include="..\..\Morpheus\ProgressEventArgs.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="..\..\..\Morpheus\Protease.cs" />
-    <Compile Include="..\..\..\Morpheus\ProteaseDictionary.cs" />
-    <Compile Include="..\..\..\Morpheus\Protein.cs" />
-    <Compile Include="..\..\..\Morpheus\ProteinGroup.cs" />
-    <Compile Include="..\..\..\Morpheus\ProteomeDatabaseReader.cs" />
-    <Compile Include="..\..\..\Morpheus\StatusEventArgs.cs" />
-    <Compile Include="..\..\TandemMassSpectra.Agilent.cs" />
-    <Compile Include="..\..\..\Morpheus\TandemMassSpectra.cs">
+    <Compile Include="..\..\Morpheus\Protease.cs" />
+    <Compile Include="..\..\Morpheus\ProteaseDictionary.cs" />
+    <Compile Include="..\..\Morpheus\Protein.cs" />
+    <Compile Include="..\..\Morpheus\ProteinGroup.cs" />
+    <Compile Include="..\..\Morpheus\ProteomeDatabaseReader.cs" />
+    <Compile Include="..\..\Morpheus\StatusEventArgs.cs" />
+    <Compile Include="..\TandemMassSpectra.Agilent.cs" />
+    <Compile Include="..\..\Morpheus\TandemMassSpectra.cs">
       <DependentUpon>TandemMassSpectra.Agilent.cs</DependentUpon>
     </Compile>
-    <Compile Include="..\..\..\Morpheus\TandemMassSpectrum.cs" />
-    <Compile Include="..\..\..\Morpheus\Terminus.cs" />
+    <Compile Include="..\..\Morpheus\TandemMassSpectrum.cs" />
+    <Compile Include="..\..\Morpheus\Terminus.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\..\external\CommandLine\CommandLine\CommandLine.csproj">
+    <ProjectReference Include="..\..\..\external\CommandLine\CommandLine\CommandLine.csproj">
       <Project>{E2EED323-9E53-4193-B0D6-FA3987FE9834}</Project>
       <Name>CommandLine</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="..\..\..\Morpheus\amino_acids.tsv">
+    <Content Include="..\..\Morpheus\amino_acids.tsv">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="..\..\EULA.MHDAC.txt">
+    <Content Include="..\EULA.MHDAC.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="..\..\..\Morpheus\MIT_License.Morpheus.txt">
+    <Content Include="..\..\Morpheus\MIT_License.Morpheus.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="..\..\..\Morpheus\modifications.tsv">
+    <Content Include="..\..\Morpheus\modifications.tsv">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="..\..\..\Morpheus\Morpheus.ico" />
-    <Content Include="..\..\..\Morpheus\product_caps.tsv">
+    <Content Include="..\..\Morpheus\Morpheus.ico" />
+    <Content Include="..\..\Morpheus\product_caps.tsv">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="..\..\..\Morpheus\product_types.tsv">
+    <Content Include="..\..\Morpheus\product_types.tsv">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="..\..\..\Morpheus\proteases.tsv">
+    <Content Include="..\..\Morpheus\proteases.tsv">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="..\..\..\Morpheus\ptmlist.txt">
+    <Content Include="..\..\Morpheus\ptmlist.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\..\..\Morpheus\App.config" />
+    <None Include="..\..\Morpheus\App.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

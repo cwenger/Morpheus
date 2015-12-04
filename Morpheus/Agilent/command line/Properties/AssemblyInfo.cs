@@ -9,8 +9,8 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("Morpheus (Agilent 64-bit)")]
-[assembly: AssemblyCopyright("Copyright © 2009")]
+[assembly: AssemblyProduct("Morpheus (Agilent bit command line)")]
+[assembly: AssemblyCopyright("Copyright © 2011")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("07cb3708-62a6-4ecb-9575-1ca76f4e4f00")]
+[assembly: Guid("d61d36bd-dfef-4455-bb02-4002b8a8b2e6")]
 
 // Version information for an assembly consists of the following four values:
 //

@@ -17,7 +17,7 @@ namespace Morpheus
             pset_references[0].CurrentPSet = pset_file_locations.Clone();
 
             QualFileDialogOptionsControl options = new QualFileDialogOptionsControl();
-            options.Initialize(LABEL, '*' + EXTENSION, CoreUtilities.GetDADefaultDataPath(), new[] { string.Empty });
+            options.Initialize(LABEL, CASE_INSENSITIVE_EXTENSION, CoreUtilities.GetDADefaultDataPath(), new[] { string.Empty });
             options.ParameterSets = pset_references;
 
             AgtDialog afsd = new AgtDialog();
