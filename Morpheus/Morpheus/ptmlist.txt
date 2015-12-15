@@ -9,7 +9,7 @@
 
 Description: Controlled vocabulary of posttranslational modifications (PTM)
 Name:        ptmlist.txt
-Release:     2015_11 of 11-Nov-2015
+Release:     2015_12 of 09-Dec-2015
 
 ---------------------------------------------------------------------------
 
@@ -577,6 +577,21 @@ TR   Bacteria; taxId:1423 (Bacillus subtilis).
 KW   Thioether bond.
 DR   RESID; AA0340.
 DR   PSI-MOD; 00345.
+//
+ID   2-(S-cysteinyl)-methionine (Cys-Met)
+AC   PTM-0495
+FT   CROSSLNK
+TG   Cysteine-Methionine.
+PA   Amino acid side chain-Amino acid backbone.
+PP   Anywhere-Protein core.
+CF   H-2
+MM   -2.015650
+MA   -2.02
+LC   Extracellular localisation.
+TR   Bacteria; taxId:1386 (Bacillus).
+KW   Thioether bond.
+DR   RESID; AA0559.
+DR   PSI-MOD; 01857.
 //
 ID   2-iminomethyl-5-imidazolinone (Gln-Gly)
 AC   PTM-0013
@@ -2192,6 +2207,18 @@ MA   -18.02
 LC   Extracellular and lumenal localisation.
 TR   Eukaryota; taxId:9544 (Macaca mulatta).
 //
+ID   Cyclopeptide (Cys-Ile)
+AC   PTM-0496
+FT   CROSSLNK
+TG   Cysteine-Isoleucine.
+PA   Amino acid backbone-Amino acid backbone.
+PP   N-terminal-C-terminal.
+CF   H-2 O-1
+MM   -18.010565
+MA   -18.02
+LC   Extracellular localisation.
+TR   Bacteria; taxId:1386 (Bacillus).
+//
 ID   Cyclopeptide (Cys-Arg) (interchain with R-...)
 AC   PTM-0097
 FT   CROSSLNK
@@ -2830,6 +2857,7 @@ PA   Amino acid side chain-Amino acid side chain.
 PP   C-terminal-Anywhere.
 LC   Intracellular localisation.
 TR   Bacteria; taxId:201174 (Actinobacteria).
+TR   Eukaryota; taxId:7742 (Vertebrata).
 KW   Isopeptide bond.
 DR   RESID; AA0124.
 DR   PSI-MOD; 01630.
@@ -2842,6 +2870,7 @@ PA   Amino acid side chain-Amino acid side chain.
 PP   Anywhere-C-terminal.
 LC   Intracellular localisation.
 TR   Bacteria; taxId:201174 (Actinobacteria).
+TR   Eukaryota; taxId:7742 (Vertebrata).
 KW   Isopeptide bond.
 DR   RESID; AA0124.
 DR   PSI-MOD; 01630.
@@ -5467,6 +5496,16 @@ TR   Eukaryota; taxId:2759 (Eukaryota).
 KW   Phosphoprotein.
 DR   RESID; AA0039.
 DR   PSI-MOD; 00048.
+//
+ID   PolyADP-ribosyl aspartic acid
+AC   PTM-0494
+FT   MOD_RES
+TG   Aspartate.
+PA   Amino acid side chain.
+PP   Anywhere.
+LC   Intracellular localisation.
+TR   Eukaryota; taxId:7742 (Vertebrata).
+KW   ADP-ribosylation.
 //
 ID   PolyADP-ribosyl glutamic acid
 AC   PTM-0256
