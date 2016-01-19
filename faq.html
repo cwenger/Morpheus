@@ -91,14 +91,19 @@
 			There is an auxiliary utility program called Morpheus Peptide Summarizer that does this. Download the Windows executable <a href="Morpheus Peptide Summarizer.exe">here</a>. The input is PSMs TSV files from Morpheus. The output is peptides.csv, where each column is a dataset, each row is a unique base peptide sequenc, and the values are how many spectra were matched to that peptide sequence.
 		</p>
 		<p>
-			<b>Can I use Morpheus on Linux?</b>
+			<b>Can I use Morpheus on Linux and Mac OS X?</b>
 			<br />
-			Yes. Morpheus was developed with the Microsoft .NET Framework, which is a Windows-only technology. However, Mono is an open-source project to provide a cross-platform implementation of .NET. There is a Linux version of Morpheus that was compiled on Ubuntu 14.04.2 64-bit. You may be able to use this binary directly. If not, you may be able to recompile it from the source code for your Linux distribution.
+			Yes. Morpheus was developed with the Microsoft .NET Framework, which is a Windows-only technology. However, Mono is an open-source project to provide a cross-platform implementation of .NET. There is a Linux version of Morpheus that was compiled on Ubuntu 14.04.2 64-bit with Mono. You may be able to use this binary directly on Linux and Mac OS X. If not, you may be able to recompile it from the source code.
+		</p>
+		<p>
+			<b>When I try to run Morpheus on Linux or Mac OS X, why do I get an error saying "cannot execute binary file" or "Microsoft Windows applications are not supported on OS X"?</b>
+			<br />
+			Open a terminal, and instead of running Morpheus directly, run it with mono.exe. For example, instead of running <code>./Morpheus.exe</code>, run <code>mono Morpheus.exe</code>.
 		</p>
 		<p>
 			<b>Can I compile/build Morpheus from source code?</b>
 			<br />
-			Yes. On Windows, Morpheus is available as a Microsoft Visual Studio 2015 solution. You can <a href="https://www.visualstudio.com/en-us/products/visual-studio-community-vs.aspx">download Microsoft Visual Studio Community 2015 for free</a>. On Linux, Morpheus is available as a <a href="http://www.monodevelop.com/">MonoDevelop</a>/<a href="https://xamarin.com/">Xamarin</a> solution. You can download the source code through the Git version control system using the repository URL <a href="https://github.com/cwenger/Morpheus.git">https://github.com/cwenger/Morpheus.git</a> <script type="text/javascript">ShowLMCButton('https://github.com/cwenger/Morpheus.git');</script>, or download the latest version of the code directly from <a href="https://github.com/cwenger/Morpheus/archive/master.zip">https://github.com/cwenger/Morpheus/archive/master.zip</a>. All solutions should be able to be built without any modification required.
+			Yes. On Windows, Morpheus is available as a Microsoft Visual Studio 2015 solution. You can <a href="https://www.visualstudio.com/en-us/products/visual-studio-community-vs.aspx">download Microsoft Visual Studio Community 2015 for free</a>. On Linux and Mac OS X, Morpheus is available as a <a href="http://www.monodevelop.com/">MonoDevelop</a>/<a href="https://xamarin.com/">Xamarin</a> solution. You can download the source code through the Git version control system using the repository URL <a href="https://github.com/cwenger/Morpheus.git">https://github.com/cwenger/Morpheus.git</a> <script type="text/javascript">ShowLMCButton('https://github.com/cwenger/Morpheus.git');</script>, or download the latest version of the code directly from <a href="https://github.com/cwenger/Morpheus/archive/master.zip">https://github.com/cwenger/Morpheus/archive/master.zip</a>. All solutions should be able to be built without any modification required.
 		</p>
 	</body>
 </html>
