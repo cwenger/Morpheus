@@ -9,7 +9,7 @@
 
 Description: Controlled vocabulary of posttranslational modifications (PTM)
 Name:        ptmlist.txt
-Release:     2015_12 of 09-Dec-2015
+Release:     2016_01 of 20-Jan-2016
 
 ---------------------------------------------------------------------------
 
@@ -1622,6 +1622,20 @@ TR   Eukaryota; taxId:9606 (Homo sapiens).
 KW   ADP-ribosylation.
 DR   RESID; AA0231.
 DR   PSI-MOD; 00236.
+//
+ID   ADP-ribosyl aspartic acid
+AC   PTM-0497
+FT   MOD_RES
+TG   Aspartate.
+PA   Amino acid side chain.
+PP   Anywhere.
+CF   C15 H21 N5 O13 P2
+MM   541.061109
+MA   541.30
+LC   Intracellular localisation.
+TR   Bacteria; taxId:2 (Bacteria).
+TR   Eukaryota; taxId:7742 (Vertebrata).
+KW   ADP-ribosylation.
 //
 ID   ADP-ribosylcysteine
 AC   PTM-0055
