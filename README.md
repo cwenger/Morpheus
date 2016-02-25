@@ -2,9 +2,9 @@
 mass spectrometry–based proteomics database search algorithm
 
 ## Requirements
-* [Microsoft .NET Framework](http://www.microsoft.com/net) version 4.5 or later for Windows versions
-* [Mono](http://www.mono-project.com/) 2.8 or later for Linux version
-* [Thermo MSFileReader](https://thermo.flexnetoperations.com/control/thmo/search?query=MSFileReader) for Thermo version
+* Windows: [Microsoft .NET Framework](http://www.microsoft.com/net) 4.0 Client Profile or higher (4.5 or higher recommended)
+  * [Thermo MSFileReader](https://thermo.flexnetoperations.com/control/thmo/search?query=MSFileReader) for Thermo version
+* Linux / Mac OS X: [Mono](http://www.mono-project.com/) 2.8 or later
 
 ## Notes
 * In revision 83 and later, sites inducing and preventing cleavage must be separated by commas in proteases.tsv, since multi-amino acid sites are now supported.
