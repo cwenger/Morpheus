@@ -1,0 +1,45 @@
+<html>
+	<head>
+		<title>Morpheus Command-Line Arguments</title>
+		<script type="text/javascript" src="lmcbutton.js"></script>
+	</head>
+	<body style="font-family:Tahoma; margin-left:auto; margin-right:auto; width:800px">
+		<h1>Morpheus</h1>
+		<i>hosted by <a href="https://github.com/">GitHub</a></i><br />
+		<a href="https://github.com/"><table><tr><td><img src="GitHub_Logo.png" alt="GitHub" height="64" /></td><td><img src="GitHub-Mark-64px.png" alt="GitHub" height="64" /></td></tr></table></a>
+		<h2>Command-Line Arguments</h2>
+		<code>
+			-d data filepaths (string; comma separated; required)<br />
+			-minprecz minimum assumed precursor charge state (integer; default=2)<br />
+			-maxprecz maximum assumed precursor charge state (integer; default=4)<br />
+			-at MS/MS absolute intensity threshold (double; default=-1.0)<br />
+			-rt MS/MS relative threshold (double; percent of base peak; default=-1.0)<br />
+			-mp maximum number of MS/MS peaks (integer; default=400)<br />
+			-acs assign charge states (boolean; default=true)<br />
+			-di de-isotope (boolean; default=true)<br />
+			-db FASTA or UniProt XML database filepath (string; required)<br />
+			-noup no UniProt modifications if using UniProt XML database (flag; default=[missing])<br />
+			-ad append decoys; create target-decoy database on-the-fly (boolean; default=false)<br />
+			-p protease (string; required)<br />
+			-mmc maximum number of missed cleavages allowed (integer; default=2)<br />
+			-imb initiator methionine behavior (string; cleave, retain, or variable; default=variable)<br />
+			-fm fixed modifications (string, semicolon separated; default=[none])<br />
+			-vm variable modification (string, semicolon separated; default=[none])<br />
+			-mvmi maximum variable modification isoforms per base peptide sequence (integer; default=1024)<br />
+			-precmtv precursor mass tolerance value (double; default=2.1)<br />
+			-precmtu precursor mass tolerance units (string; Da or ppm; default:Da)<br />
+			-precmt precursor mass type (string; monoisotopic or average; default:monoisotopic)<br />
+			-pmc precursor monoisotopic mass correction (boolean; default=false)<br />
+			-minpmo minimum precursor monoisotopic correction offset (integer; default=-3)<br />
+			-maxpmo maximum precursor monoisotopic correction offset (integer; default=1)<br />
+			-prodmtv product mass tolerance value (double; default=0.015)<br />
+			-prodmtu product mass tolerance units (string; Da or ppm; default:Da)<br />
+			-prodmt product mass type (string; monoisotopic or average; default:monoisotopic)<br />
+			-fdr maximum false discovery rate (double; percentage; default=1.0)<br />
+			-cmu consider modified peptides as unique (boolean; default=false)<br />
+			-mt maximum threads (integer; default=[processor count])<br />
+			-mmu minimize memory usage (boolean; default=false)<br />
+			-o output folder path (string; default=[current directory])<br />
+		</code>
+	</body>
+</html>
