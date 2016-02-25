@@ -17,4 +17,3 @@ cd "release/revision $revision"
 tar -czf "Morpheus_mzML_Mono.tar.gz" "Morpheus (mzML Mono)"
 
 rm -rf "Morpheus (mzML Mono)"
-
