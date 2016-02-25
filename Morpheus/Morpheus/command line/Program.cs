@@ -63,9 +63,14 @@ namespace Morpheus
                 HashSet<Modification> variable_mods = new HashSet<Modification>();
                 if(Path.GetExtension(database).Equals(".xml", StringComparison.InvariantCultureIgnoreCase))
                 {
-                    known_variable_modifications = ProteomeDatabaseReader.ReadUniProtXmlModifications(database);
-                    if(arguments["noup"] == null)
+                    bool no_uniprot_mods = false;
+                    if(arguments["noup"] != null)
                     {
+                        no_uniprot_mods = bool.Parse(arguments["noup"]);
+                    }
+                    if (!no_uniprot_mods)
+                    {
+                        known_variable_modifications = ProteomeDatabaseReader.ReadUniProtXmlModifications(database);
                         variable_mods.UnionWith(known_variable_modifications.Values);
                     }
                 }
