@@ -8,9 +8,9 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("ZipFolder")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Agilent Technologies")]
+[assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("ZipFolder")]
-[assembly: AssemblyCopyright("Copyright © Agilent Technologies 2013")]
+[assembly: AssemblyCopyright("Copyright © 2013")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
