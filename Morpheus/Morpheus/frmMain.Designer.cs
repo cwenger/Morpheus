@@ -105,6 +105,7 @@
             this.tsslStatus = new System.Windows.Forms.ToolStripStatusLabel();
             this.tspbProgress = new System.Windows.Forms.ToolStripProgressBar();
             this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
+            this.label21 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.numMaxMissedCleavages)).BeginInit();
             this.pnlMain.SuspendLayout();
             this.groupBox3.SuspendLayout();
@@ -490,12 +491,13 @@
             this.groupBox1.Controls.Add(this.numMinimumAssumedPrecursorChargeState);
             this.groupBox1.Controls.Add(this.label14);
             this.groupBox1.Controls.Add(this.numMaximumAssumedPrecursorChargeState);
+            this.groupBox1.Controls.Add(this.label21);
             this.groupBox1.Location = new System.Drawing.Point(12, 177);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(186, 103);
             this.groupBox1.TabIndex = 46;
             this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "Assumed Precursor Charge States (Unknowns Only)";
+            this.groupBox1.Text = "Assumed Precursor Charge States";
             // 
             // label13
             // 
@@ -986,6 +988,15 @@
             this.backgroundWorker1.DoWork += new System.ComponentModel.DoWorkEventHandler(this.backgroundWorker1_DoWork);
             this.backgroundWorker1.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.backgroundWorker1_RunWorkerCompleted);
             // 
+            // label21
+            // 
+            this.label21.AutoSize = true;
+            this.label21.Location = new System.Drawing.Point(6, 13);
+            this.label21.Name = "label21";
+            this.label21.Size = new System.Drawing.Size(88, 13);
+            this.label21.TabIndex = 50;
+            this.label21.Text = "(Unknowns Only)";
+            // 
             // frmMain
             // 
             this.AllowDrop = true;
@@ -1106,5 +1117,6 @@
         private System.Windows.Forms.NumericUpDown numMaximumAssumedPrecursorChargeState;
         private System.Windows.Forms.CheckBox chkMinimizeMemoryUsage;
         private System.ComponentModel.BackgroundWorker backgroundWorker1;
+        private System.Windows.Forms.Label label21;
     }
 }
