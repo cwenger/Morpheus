@@ -16,11 +16,10 @@ namespace Morpheus
         private const string CASE_SENSITIVE_FASTA_EXTENSIONS = "*.fa;*.FA;*.faa;*.FAA;*.fas;*.FAS;*.fasta;*.FASTA;*.fsa;*.FSA";
         private const string CASE_INSENSITIVE_FASTA_EXTENSIONS = "*.fa;*.faa;*.fas;*.fasta;*.fsa";
         private bool DIRECTORY = false;
-        private string LABEL = "mzML data files (.mzML)";
-        private string DIALOG_FILTER
-        {
-            get { return LABEL + '|' + (Environment.OSVersion.Platform == PlatformID.Unix ? CASE_SENSITIVE_EXTENSION : CASE_INSENSITIVE_FASTA_EXTENSIONS); }
-        }
+        private string BASE_LABEL = "mzML data files";
+        private string FORM_LABEL { get { return BASE_LABEL + " (" + CASE_INSENSITIVE_EXTENSION + ')'; } }
+        private string DIALOG_LABEL { get { return BASE_LABEL + (Environment.OSVersion.Platform == PlatformID.Unix || Application.ProductName.Contains("Agilent") ? " (" + CASE_INSENSITIVE_EXTENSION + ')' : null); } }
+        private string DIALOG_FILTER { get { return DIALOG_LABEL + '|' + (Environment.OSVersion.Platform == PlatformID.Unix ? CASE_SENSITIVE_EXTENSION : CASE_INSENSITIVE_EXTENSION); } }
 
         public frmMain()
         {
@@ -28,13 +27,13 @@ namespace Morpheus
             {
                 CASE_INSENSITIVE_EXTENSION = "*.d";
                 DIRECTORY = true;
-                LABEL = "Agilent data directories (.d)";
+                BASE_LABEL = "Agilent data directories";
             }
             else if(Application.ProductName.Contains("Thermo"))
             {
                 CASE_INSENSITIVE_EXTENSION = "*.raw";
                 DIRECTORY = false;
-                LABEL = "Thermo data files (.raw)";
+                BASE_LABEL = "Thermo data files";
             }
 
             InitializeComponent();
@@ -43,11 +42,11 @@ namespace Morpheus
         private void frmMain_Load(object sender, EventArgs e)
         {
             Text = Program.GetProductNameAndVersion();
-            label1.Text = LABEL;
+            label1.Text = FORM_LABEL;
             ofdData.Filter = DIALOG_FILTER;
             ofdFasta.Filter = Environment.OSVersion.Platform == PlatformID.Unix 
-                ? "FASTA proteome database files|" + CASE_INSENSITIVE_FASTA_EXTENSIONS + "|UniProt XML proteome database files|*.xml;*.XML"
-                : "FASTA proteome database files|" + CASE_SENSITIVE_FASTA_EXTENSIONS + "|UniProt XML proteome database files|*.xml";
+                ? "FASTA proteome database files (" + CASE_INSENSITIVE_FASTA_EXTENSIONS + ")|" + CASE_SENSITIVE_FASTA_EXTENSIONS + "|UniProt XML proteome database files (*.xml)|*.xml;*.XML"
+                : "FASTA proteome database files|" + CASE_INSENSITIVE_FASTA_EXTENSIONS + "|UniProt XML proteome database files|*.xml";
             if(Application.ProductName.Contains("Thermo"))
             {
                 chkDeisotope.Enabled = false;
