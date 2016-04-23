@@ -1,4 +1,5 @@
 ﻿//#define NON_MULTITHREADED
+//#define NO_EXCEPTION_HANDLING
 
 using System;
 using System.Collections.Generic;
@@ -19,7 +20,7 @@ namespace Morpheus
         private int maximumNumberOfPeaks;
         private bool assignChargeStates;
         private bool deisotope;
-		private string proteomeDatabaseFilepath;
+        private string proteomeDatabaseFilepath;
         private bool onTheFlyDecoys;
         private Protease protease;
         private int maximumMissedCleavages;
@@ -176,8 +177,10 @@ namespace Morpheus
             StreamWriter log = null;
             FileStream proteome_database = null;
 
+#if !NO_EXCEPTION_HANDLING
             try
             {
+#endif
                 DateTime overall_start = DateTime.Now;
 
                 OnUpdateStatus(new StatusEventArgs("Initializing..."));
@@ -195,7 +198,7 @@ namespace Morpheus
                 PeptideSpectrumMatch.SetPrecursorMassType(precursorMassType);
                 AminoAcidPolymer.SetProductMassType(productMassType);
 
-				proteome_database = new FileStream(proteomeDatabaseFilepath, FileMode.Open, FileAccess.Read, FileShare.Read);
+                proteome_database = new FileStream(proteomeDatabaseFilepath, FileMode.Open, FileAccess.Read, FileShare.Read);
 
                 int target_proteins;
                 int decoy_proteins;
@@ -878,6 +881,7 @@ namespace Morpheus
                 proteome_database.Close();
 
                 summary.Close();
+#if !NO_EXCEPTION_HANDLING
             }
             catch(Exception ex)
             {
@@ -893,6 +897,7 @@ namespace Morpheus
             }
             finally
             {
+#endif
                 if(overall_log != null)
                 {
                     overall_log.Close();
@@ -909,7 +914,9 @@ namespace Morpheus
                 {
                     proteome_database.Close();
                 }
+#if !NO_EXCEPTION_HANDLING
             }
+#endif
         }
 
         private static SortedList<string, HashSet<string>> DetermineSemiAggregateParentFolders(ICollection<string> dataFilepaths)
