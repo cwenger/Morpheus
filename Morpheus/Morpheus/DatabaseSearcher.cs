@@ -88,108 +88,63 @@ namespace Morpheus
 
         protected virtual void OnStarting(EventArgs e)
         {
-            EventHandler handler = Starting;
-
-            if(handler != null)
-            {
-                handler(this, e);
-            }
+            Starting?.Invoke(this, e);
         }
 
         public event EventHandler<FilepathEventArgs> StartingFile;
 
         protected virtual void OnStartingFile(FilepathEventArgs e)
         {
-            EventHandler<FilepathEventArgs> handler = StartingFile;
-
-            if(handler != null)
-            {
-                handler(this, e);
-            }
+            StartingFile?.Invoke(this, e);
         }
 
         public event EventHandler<StatusEventArgs> UpdateStatus;
 
         protected virtual void OnUpdateStatus(StatusEventArgs e)
         {
-            EventHandler<StatusEventArgs> handler = UpdateStatus;
-
-            if(handler != null)
-            {
-                handler(this, e);
-            }
+            UpdateStatus?.Invoke(this, e);
         }
 
         public event EventHandler ReportTaskWithoutProgress;
 
         protected virtual void OnReportTaskWithoutProgress(EventArgs e)
         {
-            EventHandler handler = ReportTaskWithoutProgress;
-
-            if(handler != null)
-            {
-                handler(this, e);
-            }
+            ReportTaskWithoutProgress?.Invoke(this, e);
         }
 
         public event EventHandler ReportTaskWithProgress;
 
         protected virtual void OnReportTaskWithProgress(EventArgs e)
         {
-            EventHandler handler = ReportTaskWithProgress;
-
-            if(handler != null)
-            {
-                handler(this, e);
-            }
+            ReportTaskWithProgress?.Invoke(this, e);
         }
 
         public event EventHandler<ProgressEventArgs> UpdateProgress;
 
         protected virtual void OnUpdateProgress(ProgressEventArgs e)
         {
-            EventHandler<ProgressEventArgs> handler = UpdateProgress;
-
-            if(handler != null)
-            {
-                handler(this, e);
-            }
+            UpdateProgress?.Invoke(this, e);
         }
 
         public event EventHandler<ExceptionEventArgs> ThrowException;
 
         protected virtual void OnThrowException(ExceptionEventArgs e)
         {
-            EventHandler<ExceptionEventArgs> handler = ThrowException;
-
-            if(handler != null)
-            {
-                handler(this, e);
-            }
+            ThrowException?.Invoke(this, e);
         }
 
         public event EventHandler<FilepathEventArgs> FinishedFile;
 
         protected virtual void OnFinishedFile(FilepathEventArgs e)
         {
-            EventHandler<FilepathEventArgs> handler = FinishedFile;
-
-            if(handler != null)
-            {
-                handler(this, e);
-            }
+            FinishedFile?.Invoke(this, e);
         }
 
         public event EventHandler Finished;
 
         protected virtual void OnFinished(EventArgs e)
         {
-            EventHandler handler = Finished;
-
-            if(handler != null)
-            {
-                handler(this, e);
-            }
+            Finished?.Invoke(this, e);
         }
 
         private void HandleReportTaskWithoutProgress(object sender, EventArgs e)

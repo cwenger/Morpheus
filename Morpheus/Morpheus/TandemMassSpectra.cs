@@ -11,36 +11,21 @@ namespace Morpheus
 
         protected virtual void OnReportTaskWithoutProgress(EventArgs e)
         {
-            EventHandler handler = ReportTaskWithoutProgress;
-
-            if(handler != null)
-            {
-                handler(null, e);
-            }
+            ReportTaskWithoutProgress?.Invoke(null, e);
         }
 
         public event EventHandler ReportTaskWithProgress;
 
         protected virtual void OnReportTaskWithProgress(EventArgs e)
         {
-            EventHandler handler = ReportTaskWithProgress;
-
-            if(handler != null)
-            {
-                handler(null, e);
-            }
+            ReportTaskWithProgress?.Invoke(null, e);
         }
 
         public event EventHandler<ProgressEventArgs> UpdateProgress;
 
         protected virtual void OnUpdateProgress(ProgressEventArgs e)
         {
-            EventHandler<ProgressEventArgs> handler = UpdateProgress;
-
-            if(handler != null)
-            {
-                handler(null, e);
-            }
+            UpdateProgress?.Invoke(null, e);
         }
 
         public IEnumerable<TandemMassSpectrum> GetTandemMassSpectraInMassRange(double precursorMass, MassTolerance precursorMassTolerance)
