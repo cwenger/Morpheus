@@ -5,6 +5,11 @@ namespace Morpheus
 {
     public class Protein : AminoAcidPolymer, IComparable<Protein>
     {
+        public string Accession
+        {
+            get { return Description.Substring(0, Description.IndexOf(' ')); }
+        }
+
         public string Description { get; private set; }
 
         public const string DECOY_IDENTIFIER = "DECOY_";
