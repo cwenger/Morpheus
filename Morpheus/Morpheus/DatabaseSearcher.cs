@@ -644,6 +644,21 @@ namespace Morpheus
                         maximumThreads, minimizeMemoryUsage,
                         outputFolder,
                         psms_with_fdr);
+                    Exporters.WritePsmsToMZIdentMLFile(Path.Combine(outputFolder, Path.GetFileNameWithoutExtension(data_filepath) + ".mzid"),
+                        data_filepath,
+                        minimumAssumedPrecursorChargeState, maximumAssumedPrecursorChargeState,
+                        absoluteThreshold, relativeThresholdPercent, maximumNumberOfPeaks,
+                        assignChargeStates, deisotope,
+                        proteomeDatabaseFilepath, proteome_database, onTheFlyDecoys, onTheFlyDecoys ? proteins / 2 : proteins,
+                        protease, maximumMissedCleavages, initiatorMethionineBehavior,
+                        fixedModifications, fixed_modifications, variableModifications, variable_modifications, maximumVariableModificationIsoforms,
+                        precursorMassTolerance, precursorMassType,
+                        precursorMonoisotopicPeakCorrection, minimumPrecursorMonoisotopicPeakOffset, maximumPrecursorMonoisotopicPeakOffset,
+                        productMassTolerance, productMassType,
+                        maximumFalseDiscoveryRate, considerModifiedFormsAsUniquePeptides,
+                        maximumThreads, minimizeMemoryUsage,
+                        outputFolder,
+                        psms_with_fdr);
 
                     Dictionary<string, PeptideSpectrumMatch> peptides = new Dictionary<string, PeptideSpectrumMatch>();
 
