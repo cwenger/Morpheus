@@ -490,10 +490,11 @@ namespace Morpheus
                     output.WriteStartElement("SpectrumIdentificationResult");
                     output.WriteAttributeString("id", "SIR" + psm_index.ToString());
                     output.WriteAttributeString("spectraData_ref", "SD");
-                    output.WriteAttributeString("spectrumID", Path.GetFileNameWithoutExtension(spectrum.Filename) + '.' + spectrum.SpectrumNumber.ToString() + '.' + spectrum.SpectrumNumber.ToString() + '.' + spectrum.PrecursorCharge.ToString());  // alteratively psm.Spectrum.SpectrumId?
+                    output.WriteAttributeString("spectrumID", spectrum.SpectrumId);
                     output.WriteStartElement("SpectrumIdentificationItem");
                     output.WriteAttributeString("chargeState", spectrum.PrecursorCharge.ToString());
                     output.WriteAttributeString("experimentalMassToCharge", spectrum.PrecursorMZ.ToString());
+                    output.WriteAttributeString("calculatedMassToCharge", ((precursorMassType == MassType.Average ? psm.Peptide.AverageMass : psm.Peptide.MonoisotopicMass)/spectrum.PrecursorCharge).ToString());
                     output.WriteAttributeString("id", "SII" + psm_index.ToString());
                     output.WriteAttributeString("passThreshold", (psm_with_fdr.QValue <= maximumFalseDiscoveryRate).ToString().ToLowerInvariant());
                     output.WriteAttributeString("rank", "1");
