@@ -494,7 +494,7 @@ namespace Morpheus
                     output.WriteStartElement("SpectrumIdentificationItem");
                     output.WriteAttributeString("chargeState", spectrum.PrecursorCharge.ToString());
                     output.WriteAttributeString("experimentalMassToCharge", spectrum.PrecursorMZ.ToString());
-                    output.WriteAttributeString("calculatedMassToCharge", ((precursorMassType == MassType.Average ? psm.Peptide.AverageMass : psm.Peptide.MonoisotopicMass)/spectrum.PrecursorCharge).ToString());
+                    output.WriteAttributeString("calculatedMassToCharge", MSPeak.MZFromMass(precursorMassType == MassType.Average ? psm.Peptide.AverageMass : psm.Peptide.MonoisotopicMass, spectrum.PrecursorCharge).ToString());
                     output.WriteAttributeString("id", "SII" + psm_index.ToString());
                     output.WriteAttributeString("passThreshold", (psm_with_fdr.QValue <= maximumFalseDiscoveryRate).ToString().ToLowerInvariant());
                     output.WriteAttributeString("rank", "1");
