@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Text;
+using System.Windows.Forms;
 using System.Xml;
 
 namespace Morpheus
@@ -316,20 +317,21 @@ namespace Morpheus
         }
 
         public static void WritePsmsToMZIdentMLFile(string outputFilepath,
-            string dataFilepath,
+            IEnumerable<string> dataFilepaths,
             int minimumAssumedPrecursorChargeState, int maximumAssumedPrecursorChargeState,
             double absoluteThreshold, double relativeThresholdPercent, int maximumNumberOfPeaks,
             bool assignChargeStates, bool deisotope,
             string proteomeDatabaseFilepath, FileStream proteomeDatabase, bool onTheFlyDecoys, int proteins,
             Protease protease, int maximumMissedCleavages, InitiatorMethionineBehavior initiatorMethionineBehavior,
-            IEnumerable<Modification> fixedModifications, string fixedModificationsString, IEnumerable<Modification> variableModifications, string variableModificationsString, int maximumVariableModificationIsoforms,
+            IEnumerable<Modification> fixedModifications, IEnumerable<Modification> variableModifications, int maximumVariableModificationIsoforms,
             MassTolerance precursorMassTolerance, MassType precursorMassType,
             bool precursorMonoisotopicPeakCorrection, int minimumPrecursorMonoisotopicPeakOffset, int maximumPrecursorMonoisotopicPeakOffset,
             MassTolerance productMassTolerance, MassType productMassType,
             double maximumFalseDiscoveryRate, bool considerModifiedFormsAsUniquePeptides,
             int maximumThreads, bool minimizeMemoryUsage,
             string outputFolder,
-            IEnumerable<IdentificationWithFalseDiscoveryRate<PeptideSpectrumMatch>> psms)
+            IEnumerable<IdentificationWithFalseDiscoveryRate<PeptideSpectrumMatch>> psms,
+            IEnumerable<IdentificationWithFalseDiscoveryRate<ProteinGroup>> proteinGroups)
         {
             using(XmlTextWriter output = new XmlTextWriter(outputFilepath, Encoding.UTF8))
             {
@@ -352,12 +354,29 @@ namespace Morpheus
                 output.WriteAttributeString("uri", "http://psidev.cvs.sourceforge.net/viewvc/*checkout*/psidev/psi/psi-ms/mzML/controlledVocabulary/psi-ms.obo");
                 output.WriteAttributeString("version", "2.25.0");
                 output.WriteEndElement();  // cv
+                output.WriteStartElement("cv");
+                output.WriteAttributeString("id", "UO");
+                output.WriteAttributeString("fullName", "UNIT-ONTOLOGY");
+                output.WriteAttributeString("uri", "http://obo.cvs.sourceforge.net/*checkout*/obo/obo/ontology/phenotype/unit.obo");
+                output.WriteEndElement();  // cv
+                output.WriteStartElement("cv");
+                output.WriteAttributeString("id", "UNIMOD");
+                output.WriteAttributeString("fullName", "UNIMOD");
+                output.WriteAttributeString("uri", "http://www.unimod.org/obo/unimod.obo");
+                output.WriteEndElement();  // cv
+                output.WriteStartElement("cv");
+                output.WriteAttributeString("id", "PSI-MOD");
+                output.WriteAttributeString("fullName", "PSI-MOD");
+                output.WriteAttributeString("uri", "http://psidev.cvs.sourceforge.net/viewvc/psidev/psi/mod/data/PSI-MOD.obo");
+                output.WriteEndElement();  // cv
                 output.WriteEndElement();  // cvList
 
                 output.WriteStartElement("AnalysisSoftwareList");
                 output.WriteStartElement("AnalysisSoftware");
                 output.WriteAttributeString("id", "AS_morpheus");
                 output.WriteAttributeString("name", "Morpheus");
+                output.WriteAttributeString("version", new Version(Application.ProductVersion).Revision.ToString());
+                output.WriteAttributeString("uri", "http://cwenger.github.io/Morpheus/");
                 output.WriteStartElement("SoftwareName");
                 output.WriteStartElement("userParam");
                 output.WriteAttributeString("name", "Morpheus");
@@ -374,36 +393,95 @@ namespace Morpheus
                     output.WriteAttributeString("id", "DBS_" + protein.Accession);
                     output.WriteAttributeString("accession", accession);
                     output.WriteAttributeString("searchDatabase_ref", "SDB_" + Path.GetFileNameWithoutExtension(proteomeDatabaseFilepath));
+                    output.WriteAttributeString("length", protein.Length.ToString());
                     output.WriteEndElement();  // DBSequence
                 }
-                int peptide_index = 1;
+                int index = 1;
+                Dictionary<PeptideSpectrumMatch, int> ids = new Dictionary<PeptideSpectrumMatch, int>();
                 foreach(IdentificationWithFalseDiscoveryRate<PeptideSpectrumMatch> psm_with_fdr in psms)
                 {
                     PeptideSpectrumMatch psm = psm_with_fdr.Identification;
+                    Peptide peptide = psm.Peptide;
                     output.WriteStartElement("Peptide");
-                    output.WriteAttributeString("id", "P_" + peptide_index.ToString());
+                    output.WriteAttributeString("id", "P_" + index.ToString());
                     output.WriteStartElement("PeptideSequence");
-                    output.WriteString(psm.Peptide.BaseSequence);
+                    output.WriteString(peptide.BaseSequence);
                     output.WriteEndElement();  // PeptideSequence
+                    if(peptide.FixedModifications != null)
+                    {
+                        foreach(KeyValuePair<int, List<Modification>> fixed_mods in peptide.FixedModifications)
+                        {
+                            foreach(Modification fixed_mod in fixed_mods.Value)
+                            {
+                                output.WriteStartElement("Modification");
+                                output.WriteAttributeString("location", fixed_mods.Key.ToString());
+                                if(precursorMassType == MassType.Average)
+                                {
+                                    output.WriteAttributeString("averageMassDelta", fixed_mod.AverageMassShift.ToString());
+                                }
+                                else
+                                {
+                                    output.WriteAttributeString("monoisotopicMassDelta", fixed_mod.MonoisotopicMassShift.ToString());
+                                }
+                                output.WriteStartElement("cvParam");
+                                output.WriteAttributeString("accession", fixed_mod.Database + ':' + fixed_mod.DatabaseAccessionNumber.ToString());
+                                output.WriteAttributeString("name", fixed_mod.DatabaseName);
+                                output.WriteAttributeString("cvRef", fixed_mod.Database);
+                                output.WriteEndElement();  // cvParam
+                                output.WriteEndElement();  // Modification
+                            }
+                        }
+                    }
+                    if(peptide.VariableModifications != null)
+                    {
+                        foreach(KeyValuePair<int, Modification> variable_mod_kvp in peptide.VariableModifications)
+                        {
+                            Modification variable_mod = variable_mod_kvp.Value;
+                            output.WriteStartElement("Modification");
+                            output.WriteAttributeString("location", peptide.ModificationIndexToAminoAcidPosition(variable_mod_kvp.Key).ToString());
+                            if(precursorMassType == MassType.Average)
+                            {
+                                output.WriteAttributeString("averageMassDelta", variable_mod.AverageMassShift.ToString());
+                            }
+                            else
+                            {
+                                output.WriteAttributeString("monoisotopicMassDelta", variable_mod.MonoisotopicMassShift.ToString());
+                            }
+                            output.WriteStartElement("cvParam");
+                            if(variable_mod.Database == "PSI-MOD")
+                            {
+                                output.WriteAttributeString("accession", variable_mod.Database + ':' + variable_mod.DatabaseAccessionNumber.ToString("00000"));
+                            }
+                            else
+                            {
+                                output.WriteAttributeString("accession", variable_mod.Database + ':' + variable_mod.DatabaseAccessionNumber.ToString());
+                            }
+                            output.WriteAttributeString("name", variable_mod.DatabaseName);
+                            output.WriteAttributeString("cvRef", variable_mod.Database);
+                            output.WriteEndElement();  // cvParam
+                            output.WriteEndElement();  // Modification
+                        }
+                    }
                     output.WriteEndElement();  // Peptide
-                    peptide_index++;
+                    ids.Add(psm, index);
+                    index++;
                 }
-                peptide_index = 1;
+                index = 1;
                 foreach(IdentificationWithFalseDiscoveryRate<PeptideSpectrumMatch> psm_with_fdr in psms)
                 {
                     PeptideSpectrumMatch psm = psm_with_fdr.Identification;
                     Peptide peptide = psm.Peptide;
                     output.WriteStartElement("PeptideEvidence");
-                    output.WriteAttributeString("id", "PE_" + peptide_index.ToString());
-                    output.WriteAttributeString("peptide_ref", "P_" + peptide_index.ToString());
+                    output.WriteAttributeString("id", "PE_" + index.ToString());
+                    output.WriteAttributeString("peptide_ref", "P_" + index.ToString());
                     output.WriteAttributeString("dBSequence_ref", "DBS_" + psm.Peptide.Parent.Accession);
-                    output.WriteAttributeString("isDecoy", psm.Decoy.ToString().ToLowerInvariant());
+                    output.WriteAttributeString("isDecoy", psm.Decoy.ToString().ToLower());
                     output.WriteAttributeString("start", peptide.StartResidueNumber.ToString());
                     output.WriteAttributeString("end", peptide.EndResidueNumber.ToString());
                     output.WriteAttributeString("pre", peptide.PreviousAminoAcid.ToString());
                     output.WriteAttributeString("post", peptide.NextAminoAcid.ToString());
                     output.WriteEndElement();  // PeptideEvidence
-                    peptide_index++;
+                    index++;
                 }
                 output.WriteEndElement();  // SequenceCollection
 
@@ -412,9 +490,15 @@ namespace Morpheus
                 output.WriteAttributeString("id", "SI");
                 output.WriteAttributeString("spectrumIdentificationList_ref", "SIL");
                 output.WriteAttributeString("spectrumIdentificationProtocol_ref", "SIP");
-                output.WriteStartElement("InputSpectra");
-                output.WriteAttributeString("spectraData_ref", "SD");
-                output.WriteEndElement();  // InputSpectra
+                Dictionary<string, string> spectral_data_ids = new Dictionary<string, string>();
+                foreach(string data_filepath in dataFilepaths)
+                {
+                    string spectral_data_id = "SD_" + (spectral_data_ids.Count + 1).ToString();
+                    spectral_data_ids.Add(data_filepath, spectral_data_id);
+                    output.WriteStartElement("InputSpectra");
+                    output.WriteAttributeString("spectraData_ref", spectral_data_id);
+                    output.WriteEndElement();  // InputSpectra
+                }
                 output.WriteStartElement("SearchDatabaseRef");
                 output.WriteAttributeString("searchDatabase_ref", "SDB_" + Path.GetFileNameWithoutExtension(proteomeDatabaseFilepath));
                 output.WriteEndElement();  // SearchDatabaseRef
@@ -423,8 +507,8 @@ namespace Morpheus
 
                 output.WriteStartElement("AnalysisProtocolCollection");
                 output.WriteStartElement("SpectrumIdentificationProtocol");
-                output.WriteAttributeString("analysisSoftware_ref", "AS_morpheus");
                 output.WriteAttributeString("id", "SIP");
+                output.WriteAttributeString("analysisSoftware_ref", "AS_morpheus");
                 output.WriteStartElement("SearchType");
                 output.WriteStartElement("cvParam");
                 output.WriteAttributeString("accession", "MS:1001083");
@@ -432,6 +516,223 @@ namespace Morpheus
                 output.WriteAttributeString("cvRef", "PSI-MS");
                 output.WriteEndElement();  // cvParam
                 output.WriteEndElement();  // SearchType
+                output.WriteStartElement("AdditionalSearchParams");
+                output.WriteStartElement("cvParam");
+                if(precursorMassType == MassType.Average)
+                {
+                    output.WriteAttributeString("accession", "MS:1001212");
+                    output.WriteAttributeString("name", "parent mass type average");
+                }
+                else
+                {
+                    output.WriteAttributeString("accession", "MS:1001211");
+                    output.WriteAttributeString("name", "parent mass type mono");
+                }
+                output.WriteAttributeString("cvRef", "PSI-MS");
+                output.WriteEndElement();  // cvParam
+                output.WriteStartElement("cvParam");
+                if(productMassType == MassType.Average)
+                {
+                    output.WriteAttributeString("accession", "MS:1001255");
+                    output.WriteAttributeString("name", "fragment mass type average");
+                }
+                else
+                {
+                    output.WriteAttributeString("accession", "MS:1001256");
+                    output.WriteAttributeString("name", "fragment mass type mono");
+                }
+                output.WriteAttributeString("cvRef", "PSI-MS");
+                output.WriteEndElement();  // cvParam
+                output.WriteStartElement("userParam");
+                output.WriteAttributeString("name", "Minimum Assumed Precursor Charge State");
+                output.WriteAttributeString("value", minimumAssumedPrecursorChargeState.ToString());
+                output.WriteEndElement();  // userParam
+                output.WriteStartElement("userParam");
+                output.WriteAttributeString("name", "Maximum Assumed Precursor Charge State");
+                output.WriteAttributeString("value", maximumAssumedPrecursorChargeState.ToString());
+                output.WriteEndElement();  // userParam
+                output.WriteStartElement("userParam");
+                output.WriteAttributeString("name", "Absolute MS/MS Peak Intensity Threshold");
+                output.WriteAttributeString("value", absoluteThreshold >= 0.0 ? absoluteThreshold.ToString() : "disabled");
+                output.WriteEndElement();  // userParam
+                output.WriteStartElement("userParam");
+                output.WriteAttributeString("name", "Relative MS/MS Peak Intensity Threshold");
+                output.WriteAttributeString("value", relativeThresholdPercent >= 0.0 ? relativeThresholdPercent.ToString() : "disabled");
+                if(relativeThresholdPercent >= 0.0)
+                {
+                    output.WriteAttributeString("unitAccession", "UO:0000187");
+                    output.WriteAttributeString("unitName", "percent");
+                    output.WriteAttributeString("unitCvRef", "UO");
+                }
+                output.WriteEndElement();  // userParam
+                output.WriteStartElement("userParam");
+                output.WriteAttributeString("name", "Maximum Number of MS/MS Peaks");
+                output.WriteAttributeString("value", maximumNumberOfPeaks >= 0 ? maximumNumberOfPeaks.ToString() : "disabled");
+                output.WriteEndElement();  // userParam
+                output.WriteStartElement("cvParam");
+                output.WriteAttributeString("accession", "MS:1000034");
+                output.WriteAttributeString("name", "charge deconvolution");
+                output.WriteAttributeString("value", assignChargeStates.ToString().ToLower());
+                output.WriteAttributeString("cvRef", "PSI-MS");
+                output.WriteEndElement();  // cvParam
+                output.WriteStartElement("cvParam");
+                output.WriteAttributeString("accession", "MS:1000033");
+                output.WriteAttributeString("name", "deisotoping");
+                output.WriteAttributeString("value", deisotope.ToString().ToLower());
+                output.WriteAttributeString("cvRef", "PSI-MS");
+                output.WriteEndElement();  // cvParam
+                output.WriteStartElement("userParam");
+                output.WriteAttributeString("name", "On-the-fly Decoy Protein Generation");
+                output.WriteAttributeString("value", onTheFlyDecoys.ToString().ToLower());
+                output.WriteEndElement();  // userParam
+                output.WriteStartElement("userParam");
+                output.WriteAttributeString("name", "Initiator Methionine Behavior");
+                output.WriteAttributeString("value", initiatorMethionineBehavior.ToString().ToLower());
+                output.WriteEndElement();  // userParam
+                output.WriteStartElement("userParam");
+                output.WriteAttributeString("name", "Maximum Number of Variable Modification Isoforms per Peptide");
+                output.WriteAttributeString("value", maximumVariableModificationIsoforms.ToString());
+                output.WriteEndElement();  // userParam
+                output.WriteStartElement("userParam");
+                output.WriteAttributeString("name", "Precursor Monoisotopic Peak Correction Enabled");
+                output.WriteAttributeString("value", precursorMonoisotopicPeakCorrection.ToString().ToLower());
+                output.WriteEndElement();  // userParam
+                output.WriteStartElement("userParam");
+                output.WriteAttributeString("name", "Minimum Precursor Monoisotopic Peak Correction Offset");
+                output.WriteAttributeString("value", precursorMonoisotopicPeakCorrection ? minimumPrecursorMonoisotopicPeakOffset.ToString() : "n/a");
+                output.WriteEndElement();  // userParam
+                output.WriteStartElement("userParam");
+                output.WriteAttributeString("name", "Maximum Precursor Monoisotopic Peak Correction Offset");
+                output.WriteAttributeString("value", precursorMonoisotopicPeakCorrection ? maximumPrecursorMonoisotopicPeakOffset.ToString() : "n/a");
+                output.WriteEndElement();  // userParam
+                output.WriteStartElement("userParam");
+                output.WriteAttributeString("name", "Consider Modified Forms as Unique Peptides");
+                output.WriteAttributeString("value", considerModifiedFormsAsUniquePeptides.ToString().ToLower());
+                output.WriteEndElement();  // userParam
+                output.WriteStartElement("userParam");
+                output.WriteAttributeString("name", "Maximum Threads");
+                output.WriteAttributeString("value", maximumThreads.ToString());
+                output.WriteEndElement();  // userParam
+                output.WriteStartElement("userParam");
+                output.WriteAttributeString("name", "Minimize Memory Usage");
+                output.WriteAttributeString("value", minimizeMemoryUsage.ToString().ToLower());
+                output.WriteEndElement();  // userParam
+                output.WriteEndElement();  // AdditionalSearchParams
+                output.WriteStartElement("ModificationParams");
+                foreach(Modification fixed_mod in fixedModifications)
+                {
+                    output.WriteStartElement("SearchModification");
+                    output.WriteAttributeString("fixedMod", true.ToString().ToLower());
+                    output.WriteAttributeString("massDelta", (precursorMassType == MassType.Average ? fixed_mod.AverageMassShift : fixed_mod.MonoisotopicMassShift).ToString());
+                    output.WriteAttributeString("residues", fixed_mod.AminoAcid.ToString());
+                    output.WriteStartElement("cvParam");
+                    output.WriteAttributeString("accession", fixed_mod.Database + ':' + fixed_mod.DatabaseAccessionNumber.ToString());
+                    output.WriteAttributeString("name", fixed_mod.DatabaseName);
+                    output.WriteAttributeString("cvRef", fixed_mod.Database);
+                    output.WriteEndElement();  // cvParam
+                    output.WriteEndElement();  // SearchModification
+                }
+                foreach(Modification variable_mod in variableModifications)
+                {
+                    output.WriteStartElement("SearchModification");
+                    output.WriteAttributeString("fixedMod", false.ToString().ToLower());
+                    output.WriteAttributeString("massDelta", (precursorMassType == MassType.Average ? variable_mod.AverageMassShift : variable_mod.MonoisotopicMassShift).ToString());
+                    output.WriteAttributeString("residues", variable_mod.AminoAcid.ToString());
+                    output.WriteStartElement("cvParam");
+                    if(variable_mod.Database == "PSI-MOD")
+                    {
+                        output.WriteAttributeString("accession", variable_mod.Database + ':' + variable_mod.DatabaseAccessionNumber.ToString("00000"));
+                    }
+                    else
+                    {
+                        output.WriteAttributeString("accession", variable_mod.Database + ':' + variable_mod.DatabaseAccessionNumber.ToString());
+                    }
+                    output.WriteAttributeString("name", variable_mod.DatabaseName);
+                    output.WriteAttributeString("cvRef", variable_mod.Database);
+                    output.WriteEndElement();  // cvParam
+                    output.WriteEndElement();  // SearchModification
+                }
+                output.WriteEndElement();  // ModificationParams
+                output.WriteStartElement("Enzymes");
+                output.WriteStartElement("Enzyme");
+                output.WriteAttributeString("id", "E");
+                output.WriteAttributeString("name", protease.Name);
+                output.WriteAttributeString("semiSpecific", (protease.CleavageSpecificity == CleavageSpecificity.Semi || protease.CleavageSpecificity == CleavageSpecificity.SemiN || protease.CleavageSpecificity == CleavageSpecificity.SemiC).ToString().ToLower());
+                output.WriteAttributeString("missedCleavages", maximumMissedCleavages.ToString());
+                output.WriteEndElement();  // Enzyme
+                output.WriteEndElement();  // Enzymes
+                output.WriteStartElement("FragmentTolerance");
+                output.WriteStartElement("cvParam");
+                output.WriteAttributeString("accession", "MS:1001412");
+                output.WriteAttributeString("name", "search tolerance plus value");
+                output.WriteAttributeString("value", productMassTolerance.Value.ToString());
+                output.WriteAttributeString("cvRef", "PSI-MS");
+                if(productMassTolerance.Units == MassToleranceUnits.ppm)
+                {
+                    output.WriteAttributeString("unitAccession", "UO:0000169");
+                    output.WriteAttributeString("unitName", "parts per million");
+                }
+                else
+                {
+                    output.WriteAttributeString("unitAccession", "UO:0000221");
+                    output.WriteAttributeString("unitName", "dalton");
+                }
+                output.WriteAttributeString("unitCvRef", "UO");
+                output.WriteEndElement();  // cvParam
+                output.WriteStartElement("cvParam");
+                output.WriteAttributeString("accession", "MS:1001413");
+                output.WriteAttributeString("name", "search tolerance minus value");
+                output.WriteAttributeString("value", productMassTolerance.Value.ToString());
+                output.WriteAttributeString("cvRef", "PSI-MS");
+                if(productMassTolerance.Units == MassToleranceUnits.ppm)
+                {
+                    output.WriteAttributeString("unitAccession", "UO:0000169");
+                    output.WriteAttributeString("unitName", "parts per million");
+                }
+                else
+                {
+                    output.WriteAttributeString("unitAccession", "UO:0000221");
+                    output.WriteAttributeString("unitName", "dalton");
+                }
+                output.WriteAttributeString("unitCvRef", "UO");
+                output.WriteEndElement();  // cvParam
+                output.WriteEndElement();  // FragmentTolerance
+                output.WriteStartElement("ParentTolerance");
+                output.WriteStartElement("cvParam");
+                output.WriteAttributeString("accession", "MS:1001412");
+                output.WriteAttributeString("name", "search tolerance plus value");
+                output.WriteAttributeString("value", precursorMassTolerance.Value.ToString());
+                output.WriteAttributeString("cvRef", "PSI-MS");
+                if(precursorMassTolerance.Units == MassToleranceUnits.ppm)
+                {
+                    output.WriteAttributeString("unitAccession", "UO:0000169");
+                    output.WriteAttributeString("unitName", "parts per million");
+                }
+                else
+                {
+                    output.WriteAttributeString("unitAccession", "UO:0000221");
+                    output.WriteAttributeString("unitName", "dalton");
+                }
+                output.WriteAttributeString("unitCvRef", "UO");
+                output.WriteEndElement();  // cvParam
+                output.WriteStartElement("cvParam");
+                output.WriteAttributeString("accession", "MS:1001413");
+                output.WriteAttributeString("name", "search tolerance minus value");
+                output.WriteAttributeString("value", precursorMassTolerance.Value.ToString());
+                output.WriteAttributeString("cvRef", "PSI-MS");
+                if(precursorMassTolerance.Units == MassToleranceUnits.ppm)
+                {
+                    output.WriteAttributeString("unitAccession", "UO:0000169");
+                    output.WriteAttributeString("unitName", "parts per million");
+                }
+                else
+                {
+                    output.WriteAttributeString("unitAccession", "UO:0000221");
+                    output.WriteAttributeString("unitName", "dalton");
+                }
+                output.WriteAttributeString("unitCvRef", "UO");
+                output.WriteEndElement();  // cvParam
+                output.WriteEndElement();  // ParentTolerance
                 output.WriteStartElement("Threshold");
                 output.WriteStartElement("cvParam");
                 output.WriteAttributeString("accession", "MS:1001448");
@@ -441,6 +742,18 @@ namespace Morpheus
                 output.WriteEndElement();  // cvParam
                 output.WriteEndElement();  // Threshold
                 output.WriteEndElement();  // SpectrumIdentificationProtocol
+                output.WriteStartElement("ProteinDetectionProtocol");
+                output.WriteAttributeString("id", "PDP");
+                output.WriteAttributeString("analysisSoftware_ref", "AS_morpheus");
+                output.WriteStartElement("Threshold");
+                output.WriteStartElement("cvParam");
+                output.WriteAttributeString("accession", "MS:1001447");
+                output.WriteAttributeString("name", "prot:FDR threshold");
+                output.WriteAttributeString("cvRef", "PSI-MS");
+                output.WriteAttributeString("value", maximumFalseDiscoveryRate.ToString());
+                output.WriteEndElement();  // cvParam
+                output.WriteEndElement();  // Threshold
+                output.WriteEndElement();  // ProteinDetectionProtocol
                 output.WriteEndElement();  // AnalysisProtocolCollection
 
                 output.WriteStartElement("DataCollection");
@@ -448,68 +761,149 @@ namespace Morpheus
                 output.WriteStartElement("SearchDatabase");
                 output.WriteAttributeString("id", "SDB_" + Path.GetFileNameWithoutExtension(proteomeDatabaseFilepath));
                 output.WriteAttributeString("location", new Uri(proteomeDatabaseFilepath).AbsoluteUri);
+                output.WriteAttributeString("numDatabaseSequences", proteins.ToString());
+                if(Path.GetExtension(proteomeDatabase.Name).Equals(".xml", StringComparison.InvariantCultureIgnoreCase))
+                {
+                    // todo: add UniProt XML to CV
+                }
+                else
+                {
+                    output.WriteStartElement("FileFormat");
+                    output.WriteStartElement("cvParam");
+                    output.WriteAttributeString("accession", "MS:1001348");
+                    output.WriteAttributeString("name", "FASTA format");
+                    output.WriteAttributeString("cvRef", "PSI-MS");
+                    output.WriteEndElement();  // cvParam
+                    output.WriteEndElement();  // FileFormat
+                }
                 output.WriteStartElement("DatabaseName");
                 output.WriteStartElement("userParam");
                 output.WriteAttributeString("name", proteomeDatabaseFilepath);
                 output.WriteEndElement();  // userParam
-                output.WriteEndElement();  // DatabaseName
-                output.WriteEndElement();  // SearchDatabase
-                output.WriteStartElement("SpectraData");
-                output.WriteAttributeString("id", "SD");
-                output.WriteAttributeString("location", new Uri(dataFilepath).AbsoluteUri);
-                output.WriteStartElement("SpectrumIDFormat");
+                output.WriteEndElement();  // DatabaseName              
                 output.WriteStartElement("cvParam");
-                if(Path.GetExtension(dataFilepath).ToLowerInvariant() == ".raw")
-                {
-                    output.WriteAttributeString("accession", "MS:1000768");
-                    output.WriteAttributeString("name", "Thermo nativeID format");
-                }
-                else if(Path.GetExtension(dataFilepath).ToLowerInvariant() == ".d")
-                {
-                    output.WriteAttributeString("accession", "MS:1000774");
-                    output.WriteAttributeString("name", "multiple peak list nativeID format");
-                }
-                else
-                {
-                    output.WriteAttributeString("accession", "MS:1001530");
-                    output.WriteAttributeString("name", "mzML unique identifier");
-                }
+                output.WriteAttributeString("accession", "MS:1001073");
+                output.WriteAttributeString("name", "database type amino acid");
                 output.WriteAttributeString("cvRef", "PSI-MS");
                 output.WriteEndElement();  // cvParam
-                output.WriteEndElement();  // SpectrumIDFormat
-                output.WriteEndElement();  // SpectraData
+                output.WriteEndElement();  // SearchDatabase
+                foreach(string data_filepath in dataFilepaths)
+                {
+                    output.WriteStartElement("SpectraData");
+                    output.WriteAttributeString("id", spectral_data_ids[data_filepath]);
+                    output.WriteAttributeString("location", new Uri(data_filepath).AbsoluteUri);
+                    output.WriteStartElement("SpectrumIDFormat");
+                    output.WriteStartElement("cvParam");
+                    if(Path.GetExtension(data_filepath).ToLower() == ".raw")
+                    {
+                        output.WriteAttributeString("accession", "MS:1000768");
+                        output.WriteAttributeString("name", "Thermo nativeID format");
+                    }
+                    else if(Path.GetExtension(data_filepath).ToLower() == ".d")
+                    {
+                        output.WriteAttributeString("accession", "MS:1001508");
+                        output.WriteAttributeString("name", "Agilent MassHunter nativeID format");
+                    }
+                    else
+                    {
+                        output.WriteAttributeString("accession", "MS:1001530");
+                        output.WriteAttributeString("name", "mzML unique identifier");
+                    }
+                    output.WriteAttributeString("cvRef", "PSI-MS");
+                    output.WriteEndElement();  // cvParam
+                    output.WriteEndElement();  // SpectrumIDFormat
+                    output.WriteEndElement();  // SpectraData
+                }
                 output.WriteEndElement();  // Inputs
                 output.WriteStartElement("AnalysisData");
                 output.WriteStartElement("SpectrumIdentificationList");
                 output.WriteAttributeString("id", "SIL");
-                int psm_index = 1;
+                index = 1;
                 foreach(IdentificationWithFalseDiscoveryRate<PeptideSpectrumMatch> psm_with_fdr in psms)
                 {
                     PeptideSpectrumMatch psm = psm_with_fdr.Identification;
                     TandemMassSpectrum spectrum = psm.Spectrum;
                     output.WriteStartElement("SpectrumIdentificationResult");
-                    output.WriteAttributeString("id", "SIR" + psm_index.ToString());
-                    output.WriteAttributeString("spectraData_ref", "SD");
+                    output.WriteAttributeString("id", "SIR_" + index.ToString());
+                    output.WriteAttributeString("spectraData_ref", spectral_data_ids[spectrum.Filename]);
                     output.WriteAttributeString("spectrumID", spectrum.SpectrumId);
                     output.WriteStartElement("SpectrumIdentificationItem");
+                    output.WriteAttributeString("id", "SII_" + index.ToString());
                     output.WriteAttributeString("chargeState", spectrum.PrecursorCharge.ToString());
                     output.WriteAttributeString("experimentalMassToCharge", spectrum.PrecursorMZ.ToString());
                     output.WriteAttributeString("calculatedMassToCharge", MSPeak.MZFromMass(precursorMassType == MassType.Average ? psm.Peptide.AverageMass : psm.Peptide.MonoisotopicMass, spectrum.PrecursorCharge).ToString());
-                    output.WriteAttributeString("id", "SII" + psm_index.ToString());
-                    output.WriteAttributeString("passThreshold", (psm_with_fdr.QValue <= maximumFalseDiscoveryRate).ToString().ToLowerInvariant());
+                    output.WriteAttributeString("passThreshold", (psm_with_fdr.QValue <= maximumFalseDiscoveryRate).ToString().ToLower());
                     output.WriteAttributeString("rank", "1");
                     output.WriteStartElement("PeptideEvidenceRef");
-                    output.WriteAttributeString("peptideEvidence_ref", "PE_" + psm_index.ToString());
+                    output.WriteAttributeString("peptideEvidence_ref", "PE_" + index.ToString());
                     output.WriteEndElement();  // PeptideEvidenceRef
                     output.WriteStartElement("userParam");
                     output.WriteAttributeString("name", "Morpheus score");
                     output.WriteAttributeString("value", psm.MorpheusScore.ToString());
                     output.WriteEndElement();  // userParam
+                    output.WriteStartElement("cvParam");
+                    output.WriteAttributeString("accession", "MS:1002354");
+                    output.WriteAttributeString("name", "PSM-level q-value");
+                    output.WriteAttributeString("cvRef", "PSI-MS");
+                    output.WriteAttributeString("value", psm_with_fdr.QValue.ToString());
+                    output.WriteEndElement();  // cvParam
                     output.WriteEndElement();  // SpectrumIdentificationItem
                     output.WriteEndElement();  // SpectrumIdentificationResult
-                    psm_index++;
+                    index++;
                 }
                 output.WriteEndElement();  // SpectrumIdentificationList
+                output.WriteStartElement("ProteinDetectionList");
+                output.WriteAttributeString("id", "PDL");
+                index = 1;
+                foreach(IdentificationWithFalseDiscoveryRate<ProteinGroup> protein_group_with_fdr in proteinGroups)
+                {
+                    ProteinGroup protein_group = protein_group_with_fdr.Identification;
+                    output.WriteStartElement("ProteinAmbiguityGroup");
+                    output.WriteAttributeString("id", "PAG_" + index.ToString());
+                    foreach(Protein protein in protein_group)
+                    {
+                        output.WriteStartElement("ProteinDetectionHypothesis");
+                        output.WriteAttributeString("id", "PDH_" + protein.Accession);
+                        output.WriteAttributeString("dBSequence_ref", "DBS_" + protein.Accession);
+                        output.WriteAttributeString("passThreshold", (protein_group_with_fdr.QValue <= maximumFalseDiscoveryRate).ToString().ToLower());
+                        foreach(PeptideSpectrumMatch psm in protein_group.PeptideSpectrumMatches)
+                        {
+                            int id = ids[psm];
+                            output.WriteStartElement("PeptideHypothesis");
+                            output.WriteAttributeString("peptideEvidence_ref", "PE_" + id.ToString());
+                            output.WriteStartElement("SpectrumIdentificationItemRef");
+                            output.WriteAttributeString("spectrumIdentificationItem_ref", "SII_" + id.ToString());
+                            output.WriteEndElement();  // SpectrumIdentificationItemRef
+                            output.WriteEndElement();  // PeptideHypothesis
+                        }
+                        output.WriteStartElement("userParam");
+                        output.WriteAttributeString("name", "summed Morpheus score");
+                        output.WriteAttributeString("value", protein_group.SummedMorpheusScore.ToString());
+                        output.WriteEndElement();  // userParam
+                        output.WriteStartElement("cvParam");
+                        output.WriteAttributeString("accession", "MS:1002373");
+                        output.WriteAttributeString("name", "protein group-level q-value");
+                        output.WriteAttributeString("cvRef", "PSI-MS");
+                        output.WriteAttributeString("value", protein_group_with_fdr.QValue.ToString());
+                        output.WriteEndElement();  // cvParam
+                        output.WriteStartElement("cvParam");
+                        output.WriteAttributeString("accession", "MS:1001093");
+                        output.WriteAttributeString("name", "sequence coverage");
+                        output.WriteAttributeString("cvRef", "PSI-MS");
+                        output.WriteAttributeString("value", (protein.CalculateSequenceCoverage() * 100).ToString());
+                        output.WriteEndElement();  // cvParam
+                        output.WriteStartElement("cvParam");
+                        output.WriteAttributeString("accession", "MS:1001097");
+                        output.WriteAttributeString("name", "distinct peptide sequences");
+                        output.WriteAttributeString("cvRef", "PSI-MS");
+                        output.WriteAttributeString("value", protein_group.UniquePeptides.Count.ToString());
+                        output.WriteEndElement();  // cvParam
+                        output.WriteEndElement();  // ProteinDetectionHypothesis
+                    }
+                    output.WriteEndElement();  // ProteinAmbiguityGroup
+                    index++;
+                }
+                output.WriteEndElement();  // ProteinDetectionList
                 output.WriteEndElement();  // AnalysisData
                 output.WriteEndElement();  // DataCollection
 

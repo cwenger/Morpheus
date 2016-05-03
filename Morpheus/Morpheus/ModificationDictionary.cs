@@ -56,7 +56,9 @@ namespace Morpheus
                     string default_mod = fields[7];
                     bool default_fixed = default_mod.Equals("fixed", StringComparison.OrdinalIgnoreCase);
                     bool default_variable = default_mod.Equals("variable", StringComparison.OrdinalIgnoreCase);
-                    Modification modification = new Modification(description, modification_type, amino_acid, monoisotopic_mass_shift, average_mass_shift, monoisotopic_neutral_loss_mass, average_neutral_loss_mass, default_fixed, default_variable, false);
+                    int unimod_accession_number = int.Parse(fields[8]);
+                    string unimod_name = fields[9];
+                    Modification modification = new Modification(description, modification_type, amino_acid, monoisotopic_mass_shift, average_mass_shift, monoisotopic_neutral_loss_mass, average_neutral_loss_mass, default_fixed, default_variable, "UNIMOD", unimod_accession_number, unimod_name, false);
                     Add(modification);
                 }
             }
