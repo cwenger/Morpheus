@@ -423,6 +423,22 @@ namespace Morpheus
             initializeProductArrays = true;
         }
 
+        public int ModificationIndexToAminoAcidPosition(int modificationIndex)
+        {
+            if(modificationIndex <= 1)
+            {
+                return 1;
+            }
+            else if(modificationIndex >= baseSequence.Length + 2)
+            {
+                return baseSequence.Length;
+            }
+            else
+            {
+                return modificationIndex - 1;
+            }
+        }
+
         private double[] cumulativeNTerminalMass;
         private double[] cumulativeCTerminalMass;
 

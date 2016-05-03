@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Net;
+using System.Text.RegularExpressions;
 using System.Xml;
+using System.Xml.XPath;
 
 namespace Morpheus
 {
@@ -66,6 +68,7 @@ namespace Morpheus
         }
 
         private const bool ONLY_CONSIDER_MODIFICATIONS_WITH_EVIDENCE = false;
+        private static readonly Regex PSI_MOD_ACCESSION_NUMBER_REGEX = new Regex(@"(.+); (\d+)\.");
 
         public static Dictionary<string, Modification> ReadUniProtXmlModifications(string uniProtXmlProteomeDatabaseFilepath)
         {
@@ -75,7 +78,7 @@ namespace Morpheus
             }
 
             HashSet<string> modifications_in_database = new HashSet<string>();
-            using(XmlReader xml = XmlTextReader.Create(uniProtXmlProteomeDatabaseFilepath))
+            using(XmlReader xml = XmlReader.Create(uniProtXmlProteomeDatabaseFilepath))
             {
                 while(xml.ReadToFollowing("feature"))
                 {
@@ -120,6 +123,10 @@ namespace Morpheus
 
             }
 
+            XmlDocument psi_mod_temp = new XmlDocument();
+            psi_mod_temp.Load(Path.Combine(Path.GetDirectoryName(Environment.GetCommandLineArgs()[0]), "PSI-MOD.obo.xml"));
+            XPathNavigator psi_mod = psi_mod_temp.CreateNavigator();
+
             Dictionary<string, Modification> modifications = new Dictionary<string, Modification>();
             using(StreamReader uniprot_mods = new StreamReader(old_ptmlist_filepath))
             {
@@ -129,6 +136,9 @@ namespace Morpheus
                 char amino_acid_residue = '\0';
                 double monoisotopic_mass_shift = double.NaN;
                 double average_mass_shift = double.NaN;
+                string database = null;
+                int database_accession_number = -1;
+                string database_name = null;
                 while(uniprot_mods.Peek() != -1)
                 {
                     string line = uniprot_mods.ReadLine();
@@ -161,10 +171,23 @@ namespace Morpheus
                             case "MA":
                                 average_mass_shift = double.Parse(line.Substring(5));
                                 break;
+                            case "DR":
+                                if(line.Contains("PSI-MOD"))
+                                {
+                                    Match match = PSI_MOD_ACCESSION_NUMBER_REGEX.Match(line.Substring(5));
+                                    if(match.Success)
+                                    {
+                                        database = match.Groups[1].Value;
+                                        database_accession_number = int.Parse(match.Groups[2].Value);
+                                        XPathNavigator term = psi_mod.SelectSingleNode(@"/obo/term[id='MOD:" + database_accession_number.ToString("00000") + "']");
+                                        database_name = term.SelectSingleNode("name").Value;
+                                    }
+                                }
+                                break;
                             case "//":
                                 if(feature_type == "MOD_RES" && modifications_in_database.Contains(description) && (!double.IsNaN(monoisotopic_mass_shift) || !double.IsNaN(average_mass_shift)))
                                 {
-                                    Modification modification = new Modification("UniProt: " + description, ModificationType.AminoAcidResidue, amino_acid_residue, monoisotopic_mass_shift, average_mass_shift, 0.0, 0.0, false, true, true);
+                                    Modification modification = new Modification("UniProt: " + description, ModificationType.AminoAcidResidue, amino_acid_residue, monoisotopic_mass_shift, average_mass_shift, 0.0, 0.0, false, true, database, database_accession_number, database_name, true);
                                     modifications.Add(modification.Description, modification);
                                 }
                                 description = null;

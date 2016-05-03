@@ -634,22 +634,7 @@ namespace Morpheus
                         minimumAssumedPrecursorChargeState, maximumAssumedPrecursorChargeState,
                         absoluteThreshold, relativeThresholdPercent, maximumNumberOfPeaks,
                         assignChargeStates, deisotope,
-                        proteomeDatabaseFilepath, onTheFlyDecoys, onTheFlyDecoys ? proteins / 2 : proteins,
-                        protease, maximumMissedCleavages, initiatorMethionineBehavior,
-                        fixedModifications, fixed_modifications, variableModifications, variable_modifications, maximumVariableModificationIsoforms,
-                        precursorMassTolerance, precursorMassType,
-                        precursorMonoisotopicPeakCorrection, minimumPrecursorMonoisotopicPeakOffset, maximumPrecursorMonoisotopicPeakOffset,
-                        productMassTolerance, productMassType,
-                        maximumFalseDiscoveryRate, considerModifiedFormsAsUniquePeptides,
-                        maximumThreads, minimizeMemoryUsage,
-                        outputFolder,
-                        psms_with_fdr);
-                    Exporters.WritePsmsToMZIdentMLFile(Path.Combine(outputFolder, Path.GetFileNameWithoutExtension(data_filepath) + ".mzid"),
-                        data_filepath,
-                        minimumAssumedPrecursorChargeState, maximumAssumedPrecursorChargeState,
-                        absoluteThreshold, relativeThresholdPercent, maximumNumberOfPeaks,
-                        assignChargeStates, deisotope,
-                        proteomeDatabaseFilepath, proteome_database, onTheFlyDecoys, onTheFlyDecoys ? proteins / 2 : proteins,
+                        proteomeDatabaseFilepath, onTheFlyDecoys, target_proteins,
                         protease, maximumMissedCleavages, initiatorMethionineBehavior,
                         fixedModifications, fixed_modifications, variableModifications, variable_modifications, maximumVariableModificationIsoforms,
                         precursorMassTolerance, precursorMassType,
@@ -707,6 +692,23 @@ namespace Morpheus
                         log.WriteLine(target_protein_groups.ToString("N0") + " target (" + decoy_protein_groups.ToString("N0") + " decoy) protein groups at " + protein_group_fdr.ToString("0.000%") + " protein group FDR (" + protein_group_score_threshold.ToString("0.000") + " summed Morpheus score threshold)");
                     }
 
+                    Exporters.WritePsmsToMZIdentMLFile(Path.Combine(outputFolder, Path.GetFileNameWithoutExtension(data_filepath) + ".mzid"),
+                        new string[] { data_filepath },
+                        minimumAssumedPrecursorChargeState, maximumAssumedPrecursorChargeState,
+                        absoluteThreshold, relativeThresholdPercent, maximumNumberOfPeaks,
+                        assignChargeStates, deisotope,
+                        proteomeDatabaseFilepath, proteome_database, onTheFlyDecoys, target_proteins,
+                        protease, maximumMissedCleavages, initiatorMethionineBehavior,
+                        fixedModifications, variableModifications, maximumVariableModificationIsoforms,
+                        precursorMassTolerance, precursorMassType,
+                        precursorMonoisotopicPeakCorrection, minimumPrecursorMonoisotopicPeakOffset, maximumPrecursorMonoisotopicPeakOffset,
+                        productMassTolerance, productMassType,
+                        maximumFalseDiscoveryRate, considerModifiedFormsAsUniquePeptides,
+                        maximumThreads, minimizeMemoryUsage,
+                        outputFolder,
+                        psms_with_fdr,
+                        protein_groups_with_fdr);
+
                     DateTime stop = DateTime.Now;
                     log.WriteLine((stop - start).TotalMinutes.ToString("0.00") + " minutes to analyze");
 
@@ -741,6 +743,7 @@ namespace Morpheus
                     overall_log.WriteLine((num_target_peptides + num_decoy_peptides).ToString("N0") + " total (" + num_target_peptides.ToString("N0") + " target + " + num_decoy_peptides.ToString("N0") + " decoy) non-unique peptides");
 
                     HashSet<string> prefixes = new HashSet<string>();
+                    prefixes.Add("aggregate");
                     foreach(KeyValuePair<string, HashSet<string>> kvp in parents)
                     {
                         DirectoryInfo directory_info = new DirectoryInfo(kvp.Key.Replace("*", null));
@@ -748,8 +751,8 @@ namespace Morpheus
                         int id = 1;
                         while(prefixes.Contains(prefix))
                         {
-                            id++;
                             prefix = directory_info.Name + '#' + id.ToString();
+                            id++;
                         }
 
                         int semi_aggregate_spectra = 0;
@@ -806,6 +809,23 @@ namespace Morpheus
                         FalseDiscoveryRate.DetermineMaximumIdentifications(semi_aggregate_protein_groups_with_fdr, false, maximumFalseDiscoveryRate, out semi_aggregate_protein_group_score_threshold, out semi_aggregate_target_protein_groups, out semi_aggregate_decoy_protein_groups, out semi_aggregate_protein_group_fdr);
                         overall_log.WriteLine(semi_aggregate_target_protein_groups.ToString("N0") + " target (" + semi_aggregate_decoy_protein_groups.ToString("N0") + " decoy) protein groups at " + semi_aggregate_protein_group_fdr.ToString("0.000%") + " protein group FDR (" + semi_aggregate_protein_group_score_threshold.ToString("0.000") + " summed Morpheus score threshold) in " + kvp.Key);
 
+                        Exporters.WritePsmsToMZIdentMLFile(Path.Combine(outputFolder, prefix + ".mzid"),
+                            kvp.Value,
+                            minimumAssumedPrecursorChargeState, maximumAssumedPrecursorChargeState,
+                            absoluteThreshold, relativeThresholdPercent, maximumNumberOfPeaks,
+                            assignChargeStates, deisotope,
+                            proteomeDatabaseFilepath, proteome_database, onTheFlyDecoys, target_proteins,
+                            protease, maximumMissedCleavages, initiatorMethionineBehavior,
+                            fixedModifications, variableModifications, maximumVariableModificationIsoforms,
+                            precursorMassTolerance, precursorMassType,
+                            precursorMonoisotopicPeakCorrection, minimumPrecursorMonoisotopicPeakOffset, maximumPrecursorMonoisotopicPeakOffset,
+                            productMassTolerance, productMassType,
+                            maximumFalseDiscoveryRate, considerModifiedFormsAsUniquePeptides,
+                            maximumThreads, minimizeMemoryUsage,
+                            outputFolder,
+                            semi_aggregate_psms_with_fdr,
+                            semi_aggregate_protein_groups_with_fdr);
+
                         summary.Write(kvp.Key + '\t');
                         summary.Write(total_proteins.ToString() + '\t');
                         summary.Write(semi_aggregate_spectra.ToString() + '\t');
@@ -829,7 +849,7 @@ namespace Morpheus
                     aggregate_psms.Sort(PeptideSpectrumMatch.DescendingMorpheusScoreComparison);
 
                     IEnumerable<IdentificationWithFalseDiscoveryRate<PeptideSpectrumMatch>> aggregate_psms_with_fdr = FalseDiscoveryRate.DoFalseDiscoveryRateAnalysis(aggregate_psms, decoys_over_targets_peptide_ratio);
-                    Exporters.WriteToTabDelimitedTextFile(aggregate_psms_with_fdr, Path.Combine(outputFolder, "PSMs.tsv"));
+                    Exporters.WriteToTabDelimitedTextFile(aggregate_psms_with_fdr, Path.Combine(outputFolder, "aggregate.PSMs.tsv"));
                     double aggregate_psm_score_threshold;
                     int aggregate_target_psms;
                     int aggregate_decoy_psms;
@@ -851,7 +871,7 @@ namespace Morpheus
                     aggregate_sorted_peptides.Sort(PeptideSpectrumMatch.DescendingMorpheusScoreComparison);
 
                     IEnumerable<IdentificationWithFalseDiscoveryRate<PeptideSpectrumMatch>> aggregate_peptides_with_fdr = FalseDiscoveryRate.DoFalseDiscoveryRateAnalysis(aggregate_sorted_peptides, decoys_over_targets_peptide_ratio);
-                    Exporters.WriteToTabDelimitedTextFile(aggregate_peptides_with_fdr, Path.Combine(outputFolder, "unique_peptides.tsv"));
+                    Exporters.WriteToTabDelimitedTextFile(aggregate_peptides_with_fdr, Path.Combine(outputFolder, "aggregate.unique_peptides.tsv"));
                     double aggregate_peptide_score_threshold;
                     int aggregate_target_peptides;
                     int aggregate_decoy_peptides;
@@ -862,13 +882,30 @@ namespace Morpheus
                     List<ProteinGroup> aggregate_protein_groups = ProteinGroup.ApplyProteinParsimony(aggregate_psms, aggregate_peptide_score_threshold, proteome_database, onTheFlyDecoys, known_variable_modifications, protease, maximumMissedCleavages, initiatorMethionineBehavior, maximumThreads);
 
                     IEnumerable<IdentificationWithFalseDiscoveryRate<ProteinGroup>> aggregate_protein_groups_with_fdr = FalseDiscoveryRate.DoFalseDiscoveryRateAnalysis(aggregate_protein_groups, decoys_over_targets_protein_ratio);
-                    Exporters.WriteToTabDelimitedTextFile(aggregate_protein_groups_with_fdr, Path.Combine(outputFolder, "protein_groups.tsv"));
+                    Exporters.WriteToTabDelimitedTextFile(aggregate_protein_groups_with_fdr, Path.Combine(outputFolder, "aggregate.protein_groups.tsv"));
                     double aggregate_protein_group_score_threshold;
                     int aggregate_target_protein_groups;
                     int aggregate_decoy_protein_groups;
                     double aggregate_protein_group_fdr;
                     FalseDiscoveryRate.DetermineMaximumIdentifications(aggregate_protein_groups_with_fdr, false, maximumFalseDiscoveryRate, out aggregate_protein_group_score_threshold, out aggregate_target_protein_groups, out aggregate_decoy_protein_groups, out aggregate_protein_group_fdr);
                     overall_log.WriteLine(aggregate_target_protein_groups.ToString("N0") + " target (" + aggregate_decoy_protein_groups.ToString("N0") + " decoy) aggregate protein groups at " + aggregate_protein_group_fdr.ToString("0.000%") + " protein group FDR (" + aggregate_protein_group_score_threshold.ToString("0.000") + " summed Morpheus score threshold)");
+
+                    Exporters.WritePsmsToMZIdentMLFile(Path.Combine(outputFolder, "aggregate.mzid"),
+                        dataFilepaths,
+                        minimumAssumedPrecursorChargeState, maximumAssumedPrecursorChargeState,
+                        absoluteThreshold, relativeThresholdPercent, maximumNumberOfPeaks,
+                        assignChargeStates, deisotope,
+                        proteomeDatabaseFilepath, proteome_database, onTheFlyDecoys, target_proteins,
+                        protease, maximumMissedCleavages, initiatorMethionineBehavior,
+                        fixedModifications, variableModifications, maximumVariableModificationIsoforms,
+                        precursorMassTolerance, precursorMassType,
+                        precursorMonoisotopicPeakCorrection, minimumPrecursorMonoisotopicPeakOffset, maximumPrecursorMonoisotopicPeakOffset,
+                        productMassTolerance, productMassType,
+                        maximumFalseDiscoveryRate, considerModifiedFormsAsUniquePeptides,
+                        maximumThreads, minimizeMemoryUsage,
+                        outputFolder,
+                        aggregate_psms_with_fdr,
+                        aggregate_protein_groups_with_fdr);
 
                     DateTime overall_stop = DateTime.Now;
                     overall_log.WriteLine((overall_stop - overall_start).TotalMinutes.ToString("0.00") + " minutes to analyze");

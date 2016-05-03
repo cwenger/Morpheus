@@ -20,10 +20,16 @@
 
         public bool DefaultVariable { get; private set; }
 
+        public string Database { get; private set; }
+
+        public int DatabaseAccessionNumber { get; private set; }
+
+        public string DatabaseName { get; private set; }
+
         public bool Known { get; private set; }
 
         public Modification(string description, ModificationType type, char aminoAcid, double monoisotopicMassShift,
-            double averageMassShift, double monoisotopicNeutralLossMass, double averageNeutralLossMass, bool defaultFixed, bool defaultVariable, bool known)
+            double averageMassShift, double monoisotopicNeutralLossMass, double averageNeutralLossMass, bool defaultFixed, bool defaultVariable, string database, int databaseAccessionNumber, string databaseName, bool known)
         {
             Description = description;
             Type = type;
@@ -34,6 +40,9 @@
             AverageNeutralLossMass = averageNeutralLossMass;
             DefaultFixed = defaultFixed;
             DefaultVariable = defaultVariable;
+            Database = database;
+            DatabaseAccessionNumber = databaseAccessionNumber;
+            DatabaseName = databaseName;
             Known = known;
         }
 
