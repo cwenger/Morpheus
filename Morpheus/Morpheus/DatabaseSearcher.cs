@@ -496,83 +496,82 @@ namespace Morpheus
                     ParallelOptions parallel_options = new ParallelOptions();
                     parallel_options.MaxDegreeOfParallelism = maximumThreads;
                     Parallel.ForEach(ProteomeDatabaseReader.ReadProteins(proteome_database, onTheFlyDecoys, known_variable_modifications), parallel_options, protein =>
+                    {
+                        foreach(Peptide peptide in protein.Digest(protease, maximumMissedCleavages, initiatorMethionineBehavior, null, null))
                         {
-                            foreach(Peptide peptide in protein.Digest(protease, maximumMissedCleavages, initiatorMethionineBehavior, null, null))
+                            if(peptide.Target)
                             {
-                                if(peptide.Target)
-                                {
-                                    Interlocked.Increment(ref num_target_peptides);
-                                }
-                                else
-                                {
-                                    Interlocked.Increment(ref num_decoy_peptides);
-                                }
+                                Interlocked.Increment(ref num_target_peptides);
+                            }
+                            else
+                            {
+                                Interlocked.Increment(ref num_decoy_peptides);
+                            }
 
-                                if(!minimizeMemoryUsage)
+                            if(!minimizeMemoryUsage)
+                            {
+                                // This block of code is to ensure that (1) we don't re-search the same base leucine peptide sequence more than we need to, 
+                                // and (2) that we are maximally conservative by calling PSMs decoy whenever possible.
+                                // If we haven't already seen this base leucine peptide sequence, add it to the dictionary with a value indicating whether it was decoy or not.
+                                // Then perform the search as usual.
+                                // If we have already seen it and it was decoy or this time it is target, we don't need to search it again, skip the peptide.
+                                // Otherwise, update the dictionary to reflect that we have now seen it as a decoy and perform the search.
+                                lock(peptides_observed)
                                 {
-                                    // This block of code is to ensure that (1) we don't re-search the same base leucine peptide sequence more than we need to, 
-                                    // and (2) that we are maximally conservative by calling PSMs decoy whenever possible.
-                                    // If we haven't already seen this base leucine peptide sequence, add it to the dictionary with a value indicating whether it was decoy or not.
-                                    // Then perform the search as usual.
-                                    // If we have already seen it and it was decoy or this time it is target, we don't need to search it again, skip the peptide.
-                                    // Otherwise, update the dictionary to reflect that we have now seen it as a decoy and perform the search.
-                                    lock(peptides_observed)
+                                    bool observed_as_decoy = false;
+                                    if(!peptides_observed.TryGetValue(peptide.BaseLeucineSequence, out observed_as_decoy))
                                     {
-                                        bool observed_as_decoy = false;
-                                        if(!peptides_observed.TryGetValue(peptide.BaseLeucineSequence, out observed_as_decoy))
+                                        peptides_observed.Add(peptide.BaseLeucineSequence, peptide.Decoy);
+                                    }
+                                    else
+                                    {
+                                        if(observed_as_decoy || peptide.Target)
                                         {
-                                            peptides_observed.Add(peptide.BaseLeucineSequence, peptide.Decoy);
+                                            // if the peptide has no known mods we have already searched all its isoforms, skip it
+                                            if(peptide.KnownModifications == null || peptide.KnownModifications.Count == 0)
+                                            {
+                                                continue;
+                                            }
                                         }
                                         else
                                         {
-                                            if(observed_as_decoy || peptide.Target)
-                                            {
-                                                // if the peptide has no known mods we have already searched all its isoforms, skip it
-                                                if(peptide.KnownModifications == null || peptide.KnownModifications.Count == 0)
-                                                {
-                                                    continue;
-                                                }
-                                            }
-                                            else
-                                            {
-                                                peptides_observed[peptide.BaseLeucineSequence] = true;
-                                            }
-                                        }
-                                    }
-                                }
-
-                                peptide.SetFixedModifications(fixedModifications);
-                                foreach(Peptide modified_peptide in peptide.GetVariablyModifiedPeptides(unknown_variable_modifications, maximumVariableModificationIsoforms))
-                                {
-                                    foreach(TandemMassSpectrum spectrum in precursorMonoisotopicPeakCorrection ?
-                                        spectra.GetTandemMassSpectraInMassRange(precursorMassType == MassType.Average ? modified_peptide.AverageMass : modified_peptide.MonoisotopicMass, precursorMassTolerance, minimumPrecursorMonoisotopicPeakOffset, maximumPrecursorMonoisotopicPeakOffset) :
-                                        spectra.GetTandemMassSpectraInMassRange(precursorMassType == MassType.Average ? modified_peptide.AverageMass : modified_peptide.MonoisotopicMass, precursorMassTolerance))
-                                    {
-                                        PeptideSpectrumMatch psm = new PeptideSpectrumMatch(spectrum, modified_peptide, productMassTolerance);
-                                        lock(psms)
-                                        {
-                                            PeptideSpectrumMatch current_best_psm = psms[spectrum.SpectrumNumber - 1];
-                                            if(current_best_psm == null || PeptideSpectrumMatch.DescendingMorpheusScoreComparison(psm, current_best_psm) < 0)
-                                            {
-                                                psms[spectrum.SpectrumNumber - 1] = psm;
-                                            }
+                                            peptides_observed[peptide.BaseLeucineSequence] = true;
                                         }
                                     }
                                 }
                             }
 
-                            lock(progress_lock)
+                            peptide.SetFixedModifications(fixedModifications);
+                            foreach(Peptide modified_peptide in peptide.GetVariablyModifiedPeptides(unknown_variable_modifications, maximumVariableModificationIsoforms))
                             {
-                                proteins++;
-                                int new_progress = (int)((double)proteins / total_proteins * 100);
-                                if(new_progress > old_progress)
+                                foreach(TandemMassSpectrum spectrum in precursorMonoisotopicPeakCorrection ?
+                                    spectra.GetTandemMassSpectraInMassRange(precursorMassType == MassType.Average ? modified_peptide.AverageMass : modified_peptide.MonoisotopicMass, precursorMassTolerance, minimumPrecursorMonoisotopicPeakOffset, maximumPrecursorMonoisotopicPeakOffset) :
+                                    spectra.GetTandemMassSpectraInMassRange(precursorMassType == MassType.Average ? modified_peptide.AverageMass : modified_peptide.MonoisotopicMass, precursorMassTolerance))
                                 {
-                                    OnUpdateProgress(new ProgressEventArgs(new_progress));
-                                    old_progress = new_progress;
+                                    PeptideSpectrumMatch psm = new PeptideSpectrumMatch(spectrum, modified_peptide, productMassTolerance);
+                                    lock(psms)
+                                    {
+                                        PeptideSpectrumMatch current_best_psm = psms[spectrum.SpectrumNumber - 1];
+                                        if(current_best_psm == null || PeptideSpectrumMatch.DescendingMorpheusScoreComparison(psm, current_best_psm) < 0)
+                                        {
+                                            psms[spectrum.SpectrumNumber - 1] = psm;
+                                        }
+                                    }
                                 }
                             }
                         }
-                    );
+
+                        lock(progress_lock)
+                        {
+                            proteins++;
+                            int new_progress = (int)((double)proteins / total_proteins * 100);
+                            if(new_progress > old_progress)
+                            {
+                                OnUpdateProgress(new ProgressEventArgs(new_progress));
+                                old_progress = new_progress;
+                            }
+                        }
+                    });
 #endif
 
                     OnUpdateStatus(new StatusEventArgs("Performing post-search analyses..."));

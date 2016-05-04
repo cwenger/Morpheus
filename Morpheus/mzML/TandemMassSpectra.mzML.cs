@@ -48,43 +48,43 @@ namespace Morpheus
 #else
                 Parallel.ForEach(mzML.Select("//mzML:mzML/mzML:run/mzML:spectrumList/mzML:spectrum", xnm).Cast<XPathNavigator>(), parallel_options, spectrum_navigator =>
 #endif
-                    {
-                        string scan_id = spectrum_navigator.GetAttribute("id", string.Empty);
-                        int ms_level = -1;
+                {
+                    string scan_id = spectrum_navigator.GetAttribute("id", string.Empty);
+                    int ms_level = -1;
 
-                        foreach(XPathNavigator spectrum_child_navigator in spectrum_navigator.SelectChildren(XPathNodeType.All))
+                    foreach(XPathNavigator spectrum_child_navigator in spectrum_navigator.SelectChildren(XPathNodeType.All))
+                    {
+                        if(spectrum_child_navigator.Name.Equals("cvParam", StringComparison.OrdinalIgnoreCase))
                         {
-                            if(spectrum_child_navigator.Name.Equals("cvParam", StringComparison.OrdinalIgnoreCase))
+                            if(spectrum_child_navigator.GetAttribute("name", string.Empty).Equals("ms level", StringComparison.OrdinalIgnoreCase))
                             {
-                                if(spectrum_child_navigator.GetAttribute("name", string.Empty).Equals("ms level", StringComparison.OrdinalIgnoreCase))
-                                {
-                                    ms_level = int.Parse(spectrum_child_navigator.GetAttribute("value", string.Empty));
-                                }
+                                ms_level = int.Parse(spectrum_child_navigator.GetAttribute("value", string.Empty));
                             }
-                            else if(spectrum_child_navigator.Name.Equals("referenceableParamGroupRef", StringComparison.OrdinalIgnoreCase))
+                        }
+                        else if(spectrum_child_navigator.Name.Equals("referenceableParamGroupRef", StringComparison.OrdinalIgnoreCase))
+                        {
+                            foreach(XPathNavigator navigator in referenceable_param_groups[spectrum_child_navigator.GetAttribute("ref", string.Empty)])
                             {
-                                foreach(XPathNavigator navigator in referenceable_param_groups[spectrum_child_navigator.GetAttribute("ref", string.Empty)])
+                                if(navigator.Name.Equals("cvParam", StringComparison.OrdinalIgnoreCase))
                                 {
-                                    if(navigator.Name.Equals("cvParam", StringComparison.OrdinalIgnoreCase))
+                                    if(navigator.GetAttribute("name", string.Empty).Equals("ms level", StringComparison.OrdinalIgnoreCase))
                                     {
-                                        if(navigator.GetAttribute("name", string.Empty).Equals("ms level", StringComparison.OrdinalIgnoreCase))
-                                        {
-                                            ms_level = int.Parse(navigator.GetAttribute("value", string.Empty));
-                                            break;
-                                        }
+                                        ms_level = int.Parse(navigator.GetAttribute("value", string.Empty));
+                                        break;
                                     }
                                 }
                             }
                         }
+                    }
 
-                        if(ms_level == 1)
+                    if(ms_level == 1)
+                    {
+                        lock(ms1s)
                         {
-                            lock(ms1s)
-                            {
-                                ms1s.Add(scan_id, new SpectrumNavigator(spectrum_navigator, xnm));
-                            }
+                            ms1s.Add(scan_id, new SpectrumNavigator(spectrum_navigator, xnm));
                         }
                     }
+                }
 #if !NON_MULTITHREADED
                 );
 #endif
@@ -102,188 +102,188 @@ namespace Morpheus
 #else
             Parallel.ForEach(mzML.Select("//mzML:mzML/mzML:run/mzML:spectrumList/mzML:spectrum", xnm).Cast<XPathNavigator>(), parallel_options, spectrum_navigator =>
 #endif
+            {
+                int spectrum_index = int.Parse(spectrum_navigator.GetAttribute("index", string.Empty));
+                int spectrum_number = spectrum_index + 1;
+                string spectrum_id = spectrum_navigator.GetAttribute("id", string.Empty);
+                string spectrum_title = null;
+                int ms_level = -1;
+                int polarity = 0;
+                double retention_time_minutes = double.NaN;
+                string precursor_scan_id = null;
+                double precursor_mz = double.NaN;
+                int charge = 0;
+                double precursor_intensity = double.NaN;
+                string fragmentation_method = "collision-induced dissociation";
+                double[] mz = null;
+                double[] intensity = null;
+
+                foreach(XPathNavigator spectrum_child_navigator in spectrum_navigator.SelectChildren(XPathNodeType.All))
                 {
-                    int spectrum_index = int.Parse(spectrum_navigator.GetAttribute("index", string.Empty));
-                    int spectrum_number = spectrum_index + 1;
-                    string spectrum_id = spectrum_navigator.GetAttribute("id", string.Empty);
-                    string spectrum_title = null;
-                    int ms_level = -1;
-                    int polarity = 0;
-                    double retention_time_minutes = double.NaN;
-                    string precursor_scan_id = null;
-                    double precursor_mz = double.NaN;
-                    int charge = 0;
-                    double precursor_intensity = double.NaN;
-                    string fragmentation_method = "collision-induced dissociation";
-                    double[] mz = null;
-                    double[] intensity = null;
-
-                    foreach(XPathNavigator spectrum_child_navigator in spectrum_navigator.SelectChildren(XPathNodeType.All))
+                    if(spectrum_child_navigator.Name.Equals("cvParam", StringComparison.OrdinalIgnoreCase))
                     {
-                        if(spectrum_child_navigator.Name.Equals("cvParam", StringComparison.OrdinalIgnoreCase))
+                        if(spectrum_child_navigator.GetAttribute("name", string.Empty).Equals("ms level", StringComparison.OrdinalIgnoreCase))
                         {
-                            if(spectrum_child_navigator.GetAttribute("name", string.Empty).Equals("ms level", StringComparison.OrdinalIgnoreCase))
-                            {
-                                ms_level = int.Parse(spectrum_child_navigator.GetAttribute("value", string.Empty));
-                            }
-                            else if(spectrum_child_navigator.GetAttribute("name", string.Empty).Equals("positive scan", StringComparison.OrdinalIgnoreCase))
-                            {
-                                polarity = 1;
-                            }
-                            else if(spectrum_child_navigator.GetAttribute("name", string.Empty).Equals("negative scan", StringComparison.OrdinalIgnoreCase))
-                            {
-                                polarity = -1;
-                            }
-                            else if(spectrum_child_navigator.GetAttribute("name", string.Empty).Equals("spectrum title", StringComparison.OrdinalIgnoreCase))
-                            {
-                                spectrum_title = spectrum_child_navigator.GetAttribute("value", string.Empty);
-                            }
+                            ms_level = int.Parse(spectrum_child_navigator.GetAttribute("value", string.Empty));
                         }
-                        else if(spectrum_child_navigator.Name.Equals("referenceableParamGroupRef", StringComparison.OrdinalIgnoreCase))
+                        else if(spectrum_child_navigator.GetAttribute("name", string.Empty).Equals("positive scan", StringComparison.OrdinalIgnoreCase))
                         {
-                            foreach(XPathNavigator navigator in referenceable_param_groups[spectrum_child_navigator.GetAttribute("ref", string.Empty)])
-                            {
-                                if(navigator.Name.Equals("cvParam", StringComparison.OrdinalIgnoreCase))
-                                {
-                                    if(navigator.GetAttribute("name", string.Empty).Equals("ms level", StringComparison.OrdinalIgnoreCase))
-                                    {
-                                        ms_level = int.Parse(navigator.GetAttribute("value", string.Empty));
-                                    }
-                                    else if(navigator.GetAttribute("name", string.Empty).Equals("positive scan", StringComparison.OrdinalIgnoreCase))
-                                    {
-                                        polarity = 1;
-                                    }
-                                    else if(navigator.GetAttribute("name", string.Empty).Equals("negative scan", StringComparison.OrdinalIgnoreCase))
-                                    {
-                                        polarity = -1;
-                                    }
-                                }
-                            }
+                            polarity = 1;
                         }
-                        else if(spectrum_child_navigator.Name.Equals("scanList", StringComparison.OrdinalIgnoreCase))
+                        else if(spectrum_child_navigator.GetAttribute("name", string.Empty).Equals("negative scan", StringComparison.OrdinalIgnoreCase))
                         {
-                            foreach(XPathNavigator navigator in spectrum_child_navigator.Select("mzML:scan/mzML:cvParam", xnm))
-                            {
-                                if(navigator.GetAttribute("name", string.Empty).Equals("scan start time", StringComparison.OrdinalIgnoreCase))
-                                {
-                                    retention_time_minutes = double.Parse(navigator.GetAttribute("value", string.Empty), CultureInfo.InvariantCulture);
-                                    if(navigator.GetAttribute("unitName", string.Empty).StartsWith("s", StringComparison.OrdinalIgnoreCase))
-                                    {
-                                        retention_time_minutes = TimeSpan.FromSeconds(retention_time_minutes).TotalMinutes;
-                                    }
-                                }
-                            }
+                            polarity = -1;
                         }
-                        else if(spectrum_child_navigator.Name.Equals("precursorList", StringComparison.OrdinalIgnoreCase))
+                        else if(spectrum_child_navigator.GetAttribute("name", string.Empty).Equals("spectrum title", StringComparison.OrdinalIgnoreCase))
                         {
-                            XPathNavigator precursor_node = spectrum_child_navigator.SelectSingleNode("mzML:precursor", xnm);
-                            precursor_scan_id = precursor_node.GetAttribute("spectrumRef", string.Empty);
-                            foreach(XPathNavigator navigator in precursor_node.Select("mzML:selectedIonList/mzML:selectedIon/mzML:cvParam", xnm))
-                            {
-                                if(navigator.GetAttribute("name", string.Empty).Equals("selected ion m/z", StringComparison.OrdinalIgnoreCase))
-                                {
-                                    precursor_mz = double.Parse(navigator.GetAttribute("value", string.Empty), CultureInfo.InvariantCulture);
-                                }
-                                else if(navigator.GetAttribute("name", string.Empty).Equals("charge state", StringComparison.OrdinalIgnoreCase))
-                                {
-                                    charge = int.Parse(navigator.GetAttribute("value", string.Empty));
-                                    if(polarity < 0)
-                                    {
-                                        charge = -charge;
-                                    }
-                                }
-                                else if(navigator.GetAttribute("name", string.Empty).Equals("peak intensity", StringComparison.OrdinalIgnoreCase))
-                                {
-                                    precursor_intensity = double.Parse(navigator.GetAttribute("value", string.Empty), CultureInfo.InvariantCulture);
-                                }
-                            }
-                            XPathNavigator navigator2 = spectrum_child_navigator.SelectSingleNode("mzML:precursor/mzML:activation/mzML:cvParam", xnm);
-                            if(navigator2 != null)
-                            {
-                                fragmentation_method = navigator2.GetAttribute("name", string.Empty);
-                            }
-                        }
-                        else if(spectrum_child_navigator.Name.Equals("binaryDataArrayList", StringComparison.OrdinalIgnoreCase))
-                        {
-                            ReadDataFromSpectrumNavigator(spectrum_child_navigator.Select("mzML:binaryDataArray/*", xnm), out mz, out intensity);
-                        }
-                        if(ms_level == 1)
-                        {
-                            break;
+                            spectrum_title = spectrum_child_navigator.GetAttribute("value", string.Empty);
                         }
                     }
-
-                    if(ms_level >= 2)
+                    else if(spectrum_child_navigator.Name.Equals("referenceableParamGroupRef", StringComparison.OrdinalIgnoreCase))
                     {
-                        if(GET_PRECURSOR_MZ_AND_INTENSITY_FROM_MS1 && precursor_scan_id != null)
+                        foreach(XPathNavigator navigator in referenceable_param_groups[spectrum_child_navigator.GetAttribute("ref", string.Empty)])
                         {
-                            SpectrumNavigator ms1;
-                            if(ms1s.TryGetValue(precursor_scan_id, out ms1))
+                            if(navigator.Name.Equals("cvParam", StringComparison.OrdinalIgnoreCase))
                             {
-                                double[] ms1_mz;
-                                double[] ms1_intensity;
-                                ms1.GetSpectrum(out ms1_mz, out ms1_intensity);
-                                int index = -1;
-                                for(int i = ms1_mz.GetLowerBound(0); i <= ms1_mz.GetUpperBound(0); i++)
+                                if(navigator.GetAttribute("name", string.Empty).Equals("ms level", StringComparison.OrdinalIgnoreCase))
                                 {
-                                    if(index < 0 || Math.Abs(ms1_mz[i] - precursor_mz) < Math.Abs(ms1_mz[index] - precursor_mz))
-                                    {
-                                        index = i;
-                                    }
+                                    ms_level = int.Parse(navigator.GetAttribute("value", string.Empty));
                                 }
-                                precursor_mz = ms1_mz[index];
-                                precursor_intensity = ms1_intensity[index];
-                            }
-                        }
-
-                        if(mz != null && intensity != null && mz.Length > 0 && intensity.Length > 0)
-                        {
-                            List<MSPeak> peaks = new List<MSPeak>(mz.Length);
-                            for(int i = 0; i < mz.Length; i++)
-                            {
-                                peaks.Add(new MSPeak(mz[i], intensity[i], 0, polarity));
-                            }
-
-                            peaks = FilterPeaks(peaks, absoluteThreshold, relativeThresholdPercent, maximumNumberOfPeaks);
-                            if(peaks.Count > 0)
-                            {
-                                peaks.Sort(MSPeak.AscendingMZComparison);
-                                for(int c = (ALWAYS_USE_PRECURSOR_CHARGE_STATE_RANGE || charge == 0 ? minimumAssumedPrecursorChargeState : charge);
-                                    c <= (ALWAYS_USE_PRECURSOR_CHARGE_STATE_RANGE || charge == 0 ? maximumAssumedPrecursorChargeState : charge); c++)
+                                else if(navigator.GetAttribute("name", string.Empty).Equals("positive scan", StringComparison.OrdinalIgnoreCase))
                                 {
-                                    List<MSPeak> new_peaks = peaks;
-                                    if(assignChargeStates)
-                                    {
-                                        new_peaks = AssignChargeStates(new_peaks, c, polarity, isotopicMZTolerance);
-                                        if(deisotope)
-                                        {
-                                            new_peaks = Deisotope(new_peaks, c, polarity, isotopicMZTolerance);
-                                        }
-                                    }
-
-                                    double precursor_mass = MSPeak.MassFromMZ(precursor_mz, c);
-
-                                    TandemMassSpectrum spectrum = new TandemMassSpectrum(mzmlFilepath, spectrum_number, spectrum_id, spectrum_title, retention_time_minutes, fragmentation_method, precursor_mz, precursor_intensity, c, precursor_mass, new_peaks);
-                                    lock(this)
-                                    {
-                                        Add(spectrum);
-                                    }
+                                    polarity = 1;
+                                }
+                                else if(navigator.GetAttribute("name", string.Empty).Equals("negative scan", StringComparison.OrdinalIgnoreCase))
+                                {
+                                    polarity = -1;
                                 }
                             }
                         }
                     }
-
-                    lock(progress_lock)
+                    else if(spectrum_child_navigator.Name.Equals("scanList", StringComparison.OrdinalIgnoreCase))
                     {
-                        spectra_processed++;
-                        int new_progress = (int)((double)spectra_processed / num_spectra * 100);
-                        if(new_progress > old_progress)
+                        foreach(XPathNavigator navigator in spectrum_child_navigator.Select("mzML:scan/mzML:cvParam", xnm))
                         {
-                            OnUpdateProgress(new ProgressEventArgs(new_progress));
-                            old_progress = new_progress;
+                            if(navigator.GetAttribute("name", string.Empty).Equals("scan start time", StringComparison.OrdinalIgnoreCase))
+                            {
+                                retention_time_minutes = double.Parse(navigator.GetAttribute("value", string.Empty), CultureInfo.InvariantCulture);
+                                if(navigator.GetAttribute("unitName", string.Empty).StartsWith("s", StringComparison.OrdinalIgnoreCase))
+                                {
+                                    retention_time_minutes = TimeSpan.FromSeconds(retention_time_minutes).TotalMinutes;
+                                }
+                            }
+                        }
+                    }
+                    else if(spectrum_child_navigator.Name.Equals("precursorList", StringComparison.OrdinalIgnoreCase))
+                    {
+                        XPathNavigator precursor_node = spectrum_child_navigator.SelectSingleNode("mzML:precursor", xnm);
+                        precursor_scan_id = precursor_node.GetAttribute("spectrumRef", string.Empty);
+                        foreach(XPathNavigator navigator in precursor_node.Select("mzML:selectedIonList/mzML:selectedIon/mzML:cvParam", xnm))
+                        {
+                            if(navigator.GetAttribute("name", string.Empty).Equals("selected ion m/z", StringComparison.OrdinalIgnoreCase))
+                            {
+                                precursor_mz = double.Parse(navigator.GetAttribute("value", string.Empty), CultureInfo.InvariantCulture);
+                            }
+                            else if(navigator.GetAttribute("name", string.Empty).Equals("charge state", StringComparison.OrdinalIgnoreCase))
+                            {
+                                charge = int.Parse(navigator.GetAttribute("value", string.Empty));
+                                if(polarity < 0)
+                                {
+                                    charge = -charge;
+                                }
+                            }
+                            else if(navigator.GetAttribute("name", string.Empty).Equals("peak intensity", StringComparison.OrdinalIgnoreCase))
+                            {
+                                precursor_intensity = double.Parse(navigator.GetAttribute("value", string.Empty), CultureInfo.InvariantCulture);
+                            }
+                        }
+                        XPathNavigator navigator2 = spectrum_child_navigator.SelectSingleNode("mzML:precursor/mzML:activation/mzML:cvParam", xnm);
+                        if(navigator2 != null)
+                        {
+                            fragmentation_method = navigator2.GetAttribute("name", string.Empty);
+                        }
+                    }
+                    else if(spectrum_child_navigator.Name.Equals("binaryDataArrayList", StringComparison.OrdinalIgnoreCase))
+                    {
+                        ReadDataFromSpectrumNavigator(spectrum_child_navigator.Select("mzML:binaryDataArray/*", xnm), out mz, out intensity);
+                    }
+                    if(ms_level == 1)
+                    {
+                        break;
+                    }
+                }
+
+                if(ms_level >= 2)
+                {
+                    if(GET_PRECURSOR_MZ_AND_INTENSITY_FROM_MS1 && precursor_scan_id != null)
+                    {
+                        SpectrumNavigator ms1;
+                        if(ms1s.TryGetValue(precursor_scan_id, out ms1))
+                        {
+                            double[] ms1_mz;
+                            double[] ms1_intensity;
+                            ms1.GetSpectrum(out ms1_mz, out ms1_intensity);
+                            int index = -1;
+                            for(int i = ms1_mz.GetLowerBound(0); i <= ms1_mz.GetUpperBound(0); i++)
+                            {
+                                if(index < 0 || Math.Abs(ms1_mz[i] - precursor_mz) < Math.Abs(ms1_mz[index] - precursor_mz))
+                                {
+                                    index = i;
+                                }
+                            }
+                            precursor_mz = ms1_mz[index];
+                            precursor_intensity = ms1_intensity[index];
+                        }
+                    }
+
+                    if(mz != null && intensity != null && mz.Length > 0 && intensity.Length > 0)
+                    {
+                        List<MSPeak> peaks = new List<MSPeak>(mz.Length);
+                        for(int i = 0; i < mz.Length; i++)
+                        {
+                            peaks.Add(new MSPeak(mz[i], intensity[i], 0, polarity));
+                        }
+
+                        peaks = FilterPeaks(peaks, absoluteThreshold, relativeThresholdPercent, maximumNumberOfPeaks);
+                        if(peaks.Count > 0)
+                        {
+                            peaks.Sort(MSPeak.AscendingMZComparison);
+                            for(int c = (ALWAYS_USE_PRECURSOR_CHARGE_STATE_RANGE || charge == 0 ? minimumAssumedPrecursorChargeState : charge);
+                                c <= (ALWAYS_USE_PRECURSOR_CHARGE_STATE_RANGE || charge == 0 ? maximumAssumedPrecursorChargeState : charge); c++)
+                            {
+                                List<MSPeak> new_peaks = peaks;
+                                if(assignChargeStates)
+                                {
+                                    new_peaks = AssignChargeStates(new_peaks, c, polarity, isotopicMZTolerance);
+                                    if(deisotope)
+                                    {
+                                        new_peaks = Deisotope(new_peaks, c, polarity, isotopicMZTolerance);
+                                    }
+                                }
+
+                                double precursor_mass = MSPeak.MassFromMZ(precursor_mz, c);
+
+                                TandemMassSpectrum spectrum = new TandemMassSpectrum(mzmlFilepath, spectrum_number, spectrum_id, spectrum_title, retention_time_minutes, fragmentation_method, precursor_mz, precursor_intensity, c, precursor_mass, new_peaks);
+                                lock(this)
+                                {
+                                    Add(spectrum);
+                                }
+                            }
                         }
                     }
                 }
+
+                lock(progress_lock)
+                {
+                    spectra_processed++;
+                    int new_progress = (int)((double)spectra_processed / num_spectra * 100);
+                    if(new_progress > old_progress)
+                    {
+                        OnUpdateProgress(new ProgressEventArgs(new_progress));
+                        old_progress = new_progress;
+                    }
+                }
+            }
 #if !NON_MULTITHREADED
             );
 #endif
