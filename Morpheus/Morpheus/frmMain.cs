@@ -255,6 +255,7 @@ namespace Morpheus
         {
             string[] filepaths = (string[])e.Data.GetData(DataFormats.FileDrop);
 
+            string outputFolder = null;
             foreach(string filepath in filepaths)
             {
                 if(((!DIRECTORY && File.Exists(filepath)) || (DIRECTORY && Directory.Exists(filepath))) && Path.GetExtension(filepath).Length > 0 && CASE_INSENSITIVE_EXTENSION.IndexOf(Path.GetExtension(filepath), StringComparison.OrdinalIgnoreCase) >= 0 && !lstData.Items.Contains(filepath))
@@ -271,7 +272,7 @@ namespace Morpheus
                 {
                     if(!AddDataFromDirectory(filepath) && !lstData.Items.Contains(filepath))
                     {
-                        txtOutputFolder.Text = filepath;
+                        outputFolder = filepath;
                     }
                 }
             }
@@ -279,6 +280,10 @@ namespace Morpheus
             if(lstData.Items.Count > 0)
             {
                 btnClear.Enabled = true;
+                if (outputFolder != null)
+                    txtOutputFolder.Text = outputFolder;
+                else if (txtOutputFolder.Text=="")
+                    txtOutputFolder.Text = new FileInfo(lstData.Items[0].ToString()).Directory.FullName;
             }
         }
 
@@ -364,6 +369,8 @@ namespace Morpheus
             if(lstData.Items.Count > 0)
             {
                 btnClear.Enabled = true;
+                if (txtOutputFolder.Text == "")
+                    txtOutputFolder.Text = new FileInfo(lstData.Items[0].ToString()).Directory.FullName;
             }
         }
 
@@ -378,6 +385,7 @@ namespace Morpheus
             if(lstData.Items.Count == 0)
             {
                 btnClear.Enabled = false;
+                txtOutputFolder.Text = "";
             }
         }
 
@@ -386,6 +394,7 @@ namespace Morpheus
             lstData.Items.Clear();
             btnRemove.Enabled = false;
             btnClear.Enabled = false;
+            txtOutputFolder.Text = "";
             tspbProgress.Value = tspbProgress.Minimum;
         }
 
