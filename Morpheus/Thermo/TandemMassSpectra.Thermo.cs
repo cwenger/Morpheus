@@ -166,8 +166,7 @@ namespace Morpheus
             }
             else if (PRECURSOR_MASS_TYPE == PrecursorMassType.Monoisotopic)
             {
-                mz = -1;
-                raw.GetPrecursorMassForScanNum(scanNumber, 2, ref mz);
+                mz = GetMonoisotopicMZ(raw, scanNumber, scanFilter);
             }
             if (REFINE_PRECURSOR_MZ_AND_GET_INTENSITY_FROM_MS1)
             {
@@ -319,6 +318,33 @@ namespace Morpheus
             double isolation_mz = double.Parse(temp_scan_filter.Substring(temp_scan_filter.LastIndexOf(' ') + 1), CultureInfo.InvariantCulture);
 
             return isolation_mz;
+        }
+
+        private static double GetMonoisotopicMZ(IXRawfile2 raw, int scanNumber, string scanFilter)
+        {
+            object labels_obj = null;
+            object values_obj = null;
+            int array_size = -1;
+            raw.GetTrailerExtraForScanNum(scanNumber, ref labels_obj, ref values_obj, ref array_size);
+           string[] labels = (string[])labels_obj;
+            string[] values = (string[])values_obj;
+            for(int i = labels.GetLowerBound(0); i <= labels.GetUpperBound(0); i++)
+            {
+                if(labels[i].StartsWith("Monoisotopic M/Z"))
+                {
+                    double monoisotopic_mz = double.Parse(values[i], CultureInfo.InvariantCulture);
+                    if(monoisotopic_mz > 0.0)
+                    {
+                        return monoisotopic_mz;
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
+            }
+
+            return GetIsolationMZ(scanFilter);
         }
 
     }
