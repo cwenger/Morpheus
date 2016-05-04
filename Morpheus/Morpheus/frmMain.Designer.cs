@@ -47,6 +47,7 @@
             this.label9 = new System.Windows.Forms.Label();
             this.fbdOutput = new System.Windows.Forms.FolderBrowserDialog();
             this.pnlMain = new System.Windows.Forms.Panel();
+            this.OutputFolderCheckbox = new System.Windows.Forms.CheckBox();
             this.chkMinimizeMemoryUsage = new System.Windows.Forms.CheckBox();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.chkDeisotope = new System.Windows.Forms.CheckBox();
@@ -64,6 +65,7 @@
             this.numMinimumAssumedPrecursorChargeState = new System.Windows.Forms.NumericUpDown();
             this.label14 = new System.Windows.Forms.Label();
             this.numMaximumAssumedPrecursorChargeState = new System.Windows.Forms.NumericUpDown();
+            this.label21 = new System.Windows.Forms.Label();
             this.numMaxThreads = new System.Windows.Forms.NumericUpDown();
             this.label19 = new System.Windows.Forms.Label();
             this.chkPrecursorMonoisotopicPeakCorrection = new System.Windows.Forms.CheckBox();
@@ -105,7 +107,6 @@
             this.tsslStatus = new System.Windows.Forms.ToolStripStatusLabel();
             this.tspbProgress = new System.Windows.Forms.ToolStripProgressBar();
             this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
-            this.label21 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.numMaxMissedCleavages)).BeginInit();
             this.pnlMain.SuspendLayout();
             this.groupBox3.SuspendLayout();
@@ -279,6 +280,7 @@
             // 
             // pnlMain
             // 
+            this.pnlMain.Controls.Add(this.OutputFolderCheckbox);
             this.pnlMain.Controls.Add(this.chkMinimizeMemoryUsage);
             this.pnlMain.Controls.Add(this.groupBox3);
             this.pnlMain.Controls.Add(this.groupBox2);
@@ -332,6 +334,18 @@
             this.pnlMain.Name = "pnlMain";
             this.pnlMain.Size = new System.Drawing.Size(712, 723);
             this.pnlMain.TabIndex = 2;
+            // 
+            // OutputFolderCheckbox
+            // 
+            this.OutputFolderCheckbox.AutoSize = true;
+            this.OutputFolderCheckbox.Enabled = false;
+            this.OutputFolderCheckbox.Location = new System.Drawing.Point(12, 673);
+            this.OutputFolderCheckbox.Name = "OutputFolderCheckbox";
+            this.OutputFolderCheckbox.Size = new System.Drawing.Size(94, 17);
+            this.OutputFolderCheckbox.TabIndex = 50;
+            this.OutputFolderCheckbox.Text = "Same as Input";
+            this.OutputFolderCheckbox.UseVisualStyleBackColor = true;
+            this.OutputFolderCheckbox.CheckedChanged += new System.EventHandler(this.OutputFolderCheckbox_CheckedChanged);
             // 
             // chkMinimizeMemoryUsage
             // 
@@ -562,6 +576,15 @@
             0,
             0});
             this.numMaximumAssumedPrecursorChargeState.ValueChanged += new System.EventHandler(this.ResetProgressBar);
+            // 
+            // label21
+            // 
+            this.label21.AutoSize = true;
+            this.label21.Location = new System.Drawing.Point(6, 13);
+            this.label21.Name = "label21";
+            this.label21.Size = new System.Drawing.Size(88, 13);
+            this.label21.TabIndex = 50;
+            this.label21.Text = "(Unknowns Only)";
             // 
             // numMaxThreads
             // 
@@ -907,9 +930,9 @@
             // 
             // txtOutputFolder
             // 
-            this.txtOutputFolder.Location = new System.Drawing.Point(12, 671);
+            this.txtOutputFolder.Location = new System.Drawing.Point(108, 671);
             this.txtOutputFolder.Name = "txtOutputFolder";
-            this.txtOutputFolder.Size = new System.Drawing.Size(607, 20);
+            this.txtOutputFolder.Size = new System.Drawing.Size(511, 20);
             this.txtOutputFolder.TabIndex = 40;
             this.txtOutputFolder.TextChanged += new System.EventHandler(this.ResetProgressBar);
             // 
@@ -987,15 +1010,6 @@
             // 
             this.backgroundWorker1.DoWork += new System.ComponentModel.DoWorkEventHandler(this.backgroundWorker1_DoWork);
             this.backgroundWorker1.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.backgroundWorker1_RunWorkerCompleted);
-            // 
-            // label21
-            // 
-            this.label21.AutoSize = true;
-            this.label21.Location = new System.Drawing.Point(6, 13);
-            this.label21.Name = "label21";
-            this.label21.Size = new System.Drawing.Size(88, 13);
-            this.label21.TabIndex = 50;
-            this.label21.Text = "(Unknowns Only)";
             // 
             // frmMain
             // 
@@ -1118,5 +1132,6 @@
         private System.Windows.Forms.CheckBox chkMinimizeMemoryUsage;
         private System.ComponentModel.BackgroundWorker backgroundWorker1;
         private System.Windows.Forms.Label label21;
+        private System.Windows.Forms.CheckBox OutputFolderCheckbox;
     }
 }
