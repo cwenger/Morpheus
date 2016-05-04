@@ -279,6 +279,7 @@ namespace Morpheus
             if(lstData.Items.Count > 0)
             {
                 btnClear.Enabled = true;
+                OutputFolderCheckbox.Enabled = true;
             }
         }
 
@@ -364,6 +365,7 @@ namespace Morpheus
             if(lstData.Items.Count > 0)
             {
                 btnClear.Enabled = true;
+                OutputFolderCheckbox.Enabled = true;
             }
         }
 
@@ -378,6 +380,8 @@ namespace Morpheus
             if(lstData.Items.Count == 0)
             {
                 btnClear.Enabled = false;
+                OutputFolderCheckbox.Enabled = false;
+                OutputFolderCheckbox.Checked = false;
             }
         }
 
@@ -386,6 +390,8 @@ namespace Morpheus
             lstData.Items.Clear();
             btnRemove.Enabled = false;
             btnClear.Enabled = false;
+            OutputFolderCheckbox.Enabled = false;
+            OutputFolderCheckbox.Checked = false;
             tspbProgress.Value = tspbProgress.Minimum;
         }
 
@@ -910,6 +916,17 @@ namespace Morpheus
                 settings.WriteLine("Maximum Threads" + '\t' + ((int)numMaxThreads.Value).ToString());
                 settings.WriteLine("Minimize Memory Usage" + '\t' + chkMinimizeMemoryUsage.Checked.ToString().ToLower());
             }
+        }
+
+        private void OutputFolderCheckbox_CheckedChanged(object sender, EventArgs e)
+        {
+            if (OutputFolderCheckbox.Checked)
+            {
+                var path = new FileInfo(lstData.Items[0].ToString()).Directory.FullName;
+                txtOutputFolder.Text = path;
+            }
+            else
+                txtOutputFolder.Text = "";
         }
     }
 }
