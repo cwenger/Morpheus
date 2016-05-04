@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Threading.Tasks;
@@ -27,13 +27,13 @@ namespace Morpheus
         {
             OnReportTaskWithoutProgress(new EventArgs());
 
-            IXRawfile5 raw = (IXRawfile5)new MSFileReader_XRawfile();
+            IXRawfile4 raw = (IXRawfile4)new MSFileReader_XRawfile();
 
             raw.Open(rawFilepath);
             raw.SetCurrentController(0, 1);
 
             Dictionary<int, double[,]> ms1s;
-            if (REFINE_PRECURSOR_MZ_AND_GET_INTENSITY_FROM_MS1)
+            if(REFINE_PRECURSOR_MZ_AND_GET_INTENSITY_FROM_MS1)
             {
                 ms1s = new Dictionary<int, double[,]>();
             }
@@ -52,18 +52,17 @@ namespace Morpheus
             parallel_options.MaxDegreeOfParallelism = maximumThreads;
             Parallel.For(first_scan_number, last_scan_number + 1, scan_number =>
             {
-                // ref parameter initializations
-                string scan_filter = null;
-                int MSOrder = -1;
-
-                raw.GetFilterForScanNum(scan_number, ref scan_filter);
-                raw.GetMSOrderForScanNum(scan_number, ref MSOrder);
-                if (MSOrder > 1)
+                int ms_order = -1;
+                raw.GetMSOrderForScanNum(scan_number, ref ms_order);
+                if(ms_order > 1)
                 {
                     string spectrum_id = "controllerType=0 controllerNumber=1 scan=" + scan_number.ToString();
 
                     double retention_time_minutes = double.NaN;
                     raw.RTFromScanNum(scan_number, ref retention_time_minutes);
+
+                    string scan_filter = null;
+                    raw.GetFilterForScanNum(scan_number, ref scan_filter);
 
                     int polarity = DeterminePolarity(scan_filter);
 
@@ -74,14 +73,14 @@ namespace Morpheus
                     GetPrecursor(ms1s, raw, scan_number, scan_filter, first_scan_number, out precursor_mz, out precursor_intensity);
 
                     int charge = DeterminePrecursorCharge(raw, scan_number);
-                    if (polarity < 0)
+                    if(polarity < 0)
                     {
                         charge = -charge;
                     }
 
                     double[,] label_data = GetFragmentationData(raw, scan_number, scan_filter);
                     List<MSPeak> peaks = new List<MSPeak>(label_data.GetLength(1));
-                    for (int peak_index = label_data.GetLowerBound(1); peak_index <= label_data.GetUpperBound(1); peak_index++)
+                    for(int peak_index = label_data.GetLowerBound(1); peak_index <= label_data.GetUpperBound(1); peak_index++)
                     {
                         peaks.Add(new MSPeak(label_data[(int)RawLabelDataColumn.MZ, peak_index],
                             label_data[(int)RawLabelDataColumn.Intensity, peak_index],
@@ -89,15 +88,15 @@ namespace Morpheus
                     }
 
                     peaks = FilterPeaks(peaks, absoluteThreshold, relativeThresholdPercent, maximumNumberOfPeaks);
-                    if (peaks.Count > 0)
+                    if(peaks.Count > 0)
                     {
-                        for (int c = (ALWAYS_USE_PRECURSOR_CHARGE_STATE_RANGE || charge == 0 ? minimumAssumedPrecursorChargeState : charge);
+                        for(int c = (ALWAYS_USE_PRECURSOR_CHARGE_STATE_RANGE || charge == 0 ? minimumAssumedPrecursorChargeState : charge);
                             c <= (ALWAYS_USE_PRECURSOR_CHARGE_STATE_RANGE || charge == 0 ? maximumAssumedPrecursorChargeState : charge); c++)
                         {
                             double precursor_mass = MSPeak.MassFromMZ(precursor_mz, c);
 
                             TandemMassSpectrum spectrum = new TandemMassSpectrum(rawFilepath, scan_number, spectrum_id, null, retention_time_minutes, fragmentation_method, precursor_mz, precursor_intensity, c, precursor_mass, peaks);
-                            lock (this)
+                            lock(this)
                             {
                                 Add(spectrum);
                             }
@@ -105,11 +104,11 @@ namespace Morpheus
                     }
                 }
 
-                lock (progress_lock)
+                lock(progress_lock)
                 {
                     spectra_processed++;
                     int new_progress = (int)((double)spectra_processed / (last_scan_number - first_scan_number + 1) * 100);
-                    if (new_progress > old_progress)
+                    if(new_progress > old_progress)
                     {
                         OnUpdateProgress(new ProgressEventArgs(new_progress));
                         old_progress = new_progress;
@@ -123,15 +122,15 @@ namespace Morpheus
 
         private static string GetFragmentationMethod(string scanFilter)
         {
-            if (scanFilter.Contains("cid"))
+            if(scanFilter.Contains("cid"))
             {
                 return "collision-induced dissociation";
             }
-            else if (scanFilter.Contains("mpd"))
+            else if(scanFilter.Contains("mpd"))
             {
                 return "infrared multiphoton dissociation";
             }
-            else if (scanFilter.Contains("pqd"))
+            else if(scanFilter.Contains("pqd"))
             {
                 return "pulsed q dissociation";
             }
@@ -140,15 +139,15 @@ namespace Morpheus
             //{
             //    return "negative electron transfer dissociation";
             //}
-            else if (scanFilter.Contains("hcd"))
+            else if(scanFilter.Contains("hcd"))
             {
                 return "high-energy collision-induced dissociation";
             }
-            else if (scanFilter.Contains("ecd"))
+            else if(scanFilter.Contains("ecd"))
             {
                 return "electron capture dissociation";
             }
-            else if (scanFilter.Contains("etd"))
+            else if(scanFilter.Contains("etd"))
             {
                 return "electron transfer dissociation";
             }
@@ -158,19 +157,19 @@ namespace Morpheus
             }
         }
 
-        private static void GetPrecursor(IDictionary<int, double[,]> ms1s, IXRawfile5 raw, int scanNumber, string scanFilter, int firstScanNumber, out double mz, out double intensity)
+        private static void GetPrecursor(IDictionary<int, double[,]> ms1s, IXRawfile4 raw, int scanNumber, string scanFilter, int firstScanNumber, out double mz, out double intensity)
         {
-            if (PRECURSOR_MASS_TYPE == PrecursorMassType.Isolation)
+            if(PRECURSOR_MASS_TYPE == PrecursorMassType.Isolation)
             {
                 mz = GetIsolationMZ(scanFilter);
             }
-            else if (PRECURSOR_MASS_TYPE == PrecursorMassType.Monoisotopic)
+            else if(PRECURSOR_MASS_TYPE == PrecursorMassType.Monoisotopic)
             {
-                mz = GetMonoisotopicMZ(raw, scanNumber, scanFilter);
+                 mz = GetMonoisotopicMZ(raw, scanNumber, scanFilter);
             }
-            if (REFINE_PRECURSOR_MZ_AND_GET_INTENSITY_FROM_MS1)
+            if(REFINE_PRECURSOR_MZ_AND_GET_INTENSITY_FROM_MS1)
             {
-                RefineMZestimateAndGetIntensity(ms1s, raw, scanNumber, firstScanNumber, ref mz, out intensity);
+                RefinePrecursorMzAndGetIntensity(ms1s, raw, scanNumber, firstScanNumber, ref mz, out intensity);
             }
             else
             {
@@ -181,25 +180,23 @@ namespace Morpheus
         // For a given MSn scan, determines the precursor mz and intensity by looking at the scans backwards until an MS1 scan is found
         // In the found MS1 scan, look for peak with similar mass/charge to the input parameter mz
         // Return that peak in variables mz and intensity
-        private static bool RefineMZestimateAndGetIntensity(IDictionary<int, double[,]> ms1s, IXRawfile5 raw, int scanNumber, int firstScanNumber, ref double mz, out double intensity)
+        private static bool RefinePrecursorMzAndGetIntensity(IDictionary<int, double[,]> ms1s, IXRawfile4 raw, int scanNumber, int firstScanNumber, ref double mz, out double intensity)
         {
             scanNumber--;
-            while (scanNumber >= firstScanNumber)
+            while(scanNumber >= firstScanNumber)
             {
-                // ref parameter initializations
-                string scan_filter = null;
-                int MSOrder = -1;
-
-                raw.GetFilterForScanNum(scanNumber, ref scan_filter);
-                raw.GetMSOrderForScanNum(scanNumber, ref MSOrder);
-                if (MSOrder == 1)
+                int ms_order = -1;
+                raw.GetMSOrderForScanNum(scanNumber, ref ms_order);
+                if(ms_order == 1)
                 {
                     double[,] ms1;
-                    lock (ms1s)
+                    lock(ms1s)
                     {
-                        if (!ms1s.TryGetValue(scanNumber, out ms1))
+                        if(!ms1s.TryGetValue(scanNumber, out ms1))
                         {
-                            if (scan_filter.Contains("FTMS"))
+                            string scan_filter = null;
+                            raw.GetFilterForScanNum(scanNumber, ref scan_filter);
+                            if(scan_filter.Contains("FTMS"))
                             {
                                 object labels_obj = null;
                                 object flags_obj = null;
@@ -225,14 +222,14 @@ namespace Morpheus
 
                     int index = -1;
                     // In the MS1 scan, look at every peak. Find index of the one that is closest in mz value to the input parameter mz
-                    for (int i = ms1.GetLowerBound(1); i <= ms1.GetUpperBound(1); i++)
+                    for(int i = ms1.GetLowerBound(1); i <= ms1.GetUpperBound(1); i++)
                     {
-                        if (index < 0 || Math.Abs(ms1[0, i] - mz) < Math.Abs(ms1[0, index] - mz))
+                        if(index < 0 || Math.Abs(ms1[0, i] - mz) < Math.Abs(ms1[0, index] - mz))
                         {
                             index = i;
                         }
                     }
-                    if (index >= 0)
+                    if(index >= 0)
                     {
                         mz = ms1[0, index];
                         intensity = ms1[1, index];
@@ -256,7 +253,7 @@ namespace Morpheus
         private static double[,] GetFragmentationData(IXRawfile2 raw, int scanNumber, string scanFilter)
         {
             double[,] data;
-            if (scanFilter.Contains("FTMS"))
+            if(scanFilter.Contains("FTMS"))
             {
                 object labels_obj = null;
                 object flags_obj = null;
@@ -278,11 +275,11 @@ namespace Morpheus
 
         private static int DeterminePolarity(string scanFilter)
         {
-            if (scanFilter.Contains(" + "))
+            if(scanFilter.Contains(" + "))
             {
                 return 1;
             }
-            else if (scanFilter.Contains(" - "))
+            else if(scanFilter.Contains(" - "))
             {
                 return -1;
             }
@@ -302,9 +299,9 @@ namespace Morpheus
             string[] trailer_values = (string[])trailer_values_obj;
 
             int charge = -1;
-            for (int trailer_index = trailer_labels.GetLowerBound(0); trailer_index <= trailer_labels.GetUpperBound(0); trailer_index++)
+            for(int trailer_index = trailer_labels.GetLowerBound(0); trailer_index <= trailer_labels.GetUpperBound(0); trailer_index++)
             {
-                if (trailer_labels[trailer_index].StartsWith("Charge"))
+                if(trailer_labels[trailer_index].StartsWith("Charge"))
                 {
                     charge = int.Parse(trailer_values[trailer_index]);
                 }
@@ -319,21 +316,21 @@ namespace Morpheus
 
             return isolation_mz;
         }
-
+        
         private static double GetMonoisotopicMZ(IXRawfile2 raw, int scanNumber, string scanFilter)
         {
             object labels_obj = null;
             object values_obj = null;
             int array_size = -1;
             raw.GetTrailerExtraForScanNum(scanNumber, ref labels_obj, ref values_obj, ref array_size);
-           string[] labels = (string[])labels_obj;
+            string[] labels = (string[])labels_obj;
             string[] values = (string[])values_obj;
-            for(int i = labels.GetLowerBound(0); i <= labels.GetUpperBound(0); i++)
+            for (int i = labels.GetLowerBound(0); i <= labels.GetUpperBound(0); i++)
             {
-                if(labels[i].StartsWith("Monoisotopic M/Z"))
+                if (labels[i].StartsWith("Monoisotopic M/Z"))
                 {
                     double monoisotopic_mz = double.Parse(values[i], CultureInfo.InvariantCulture);
-                    if(monoisotopic_mz > 0.0)
+                    if (monoisotopic_mz > 0.0)
                     {
                         return monoisotopic_mz;
                     }
@@ -346,7 +343,6 @@ namespace Morpheus
 
             return GetIsolationMZ(scanFilter);
         }
-
     }
 
     internal enum PrecursorMassType
