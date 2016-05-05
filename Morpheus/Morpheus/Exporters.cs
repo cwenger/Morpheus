@@ -390,7 +390,7 @@ namespace Morpheus
                 {
                     output.WriteStartElement("DBSequence");
                     string accession = protein.Accession;
-                    output.WriteAttributeString("id", "DBS_" + protein.Accession);
+                    output.WriteAttributeString("id", "DBS_" + accession);
                     output.WriteAttributeString("accession", accession);
                     output.WriteAttributeString("searchDatabase_ref", "SDB_" + Path.GetFileNameWithoutExtension(proteomeDatabaseFilepath));
                     output.WriteAttributeString("length", protein.Length.ToString());
