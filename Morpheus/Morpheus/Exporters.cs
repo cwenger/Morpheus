@@ -414,7 +414,7 @@ namespace Morpheus
                             foreach(Modification fixed_mod in fixed_mods.Value)
                             {
                                 output.WriteStartElement("Modification");
-                                output.WriteAttributeString("location", fixed_mods.Key.ToString());
+                                output.WriteAttributeString("location", peptide.ModificationIndexToAminoAcidPosition(fixed_mods.Key).ToString());
                                 if(precursorMassType == MassType.Average)
                                 {
                                     output.WriteAttributeString("averageMassDelta", fixed_mod.AverageMassShift.ToString());
