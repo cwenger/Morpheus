@@ -340,7 +340,7 @@ namespace Morpheus
                 output.WriteStartDocument();
 
                 output.WriteStartElement("MzIdentML");
-                output.WriteAttributeString("xmlns", null, null, "http://psidev.info/psi/pi/mzIdentML/1.1.1");
+                output.WriteAttributeString("xmlns", string.Empty, null, "http://psidev.info/psi/pi/mzIdentML/1.1.1");
                 output.WriteAttributeString("xmlns", "xsi", null, "http://www.w3.org/2001/XMLSchema-instance");
                 output.WriteAttributeString("xsi", "schemaLocation", "http://www.w3.org/2001/XMLSchema-instance", "http://psidev.info/psi/pi/mzIdentML/1.1.1 https://raw.githubusercontent.com/HUPO-PSI/mzIdentML/master/schema/mzIdentML1.1.1.xsd");
                 output.WriteAttributeString("creationDate", DateTime.Now.ToString("s"));
