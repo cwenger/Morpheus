@@ -378,9 +378,11 @@ namespace Morpheus
                 output.WriteAttributeString("version", new Version(Application.ProductVersion).Revision.ToString());
                 output.WriteAttributeString("uri", "http://cwenger.github.io/Morpheus/");
                 output.WriteStartElement("SoftwareName");
-                output.WriteStartElement("userParam");
+                output.WriteStartElement("cvParam");
+                output.WriteAttributeString("accession", "MS:1002661");
                 output.WriteAttributeString("name", "Morpheus");
-                output.WriteEndElement();  // userParam
+                output.WriteAttributeString("cvRef", "PSI-MS");
+                output.WriteEndElement();  // cvParam
                 output.WriteEndElement();  // SoftwareName
                 output.WriteEndElement();  // AnalysisSoftware
                 output.WriteEndElement();  // AnalysisSoftwareList
@@ -762,20 +764,21 @@ namespace Morpheus
                 output.WriteAttributeString("id", "SDB_" + Path.GetFileNameWithoutExtension(proteomeDatabaseFilepath));
                 output.WriteAttributeString("location", new Uri(proteomeDatabaseFilepath).AbsoluteUri);
                 output.WriteAttributeString("numDatabaseSequences", proteins.ToString());
+                output.WriteStartElement("FileFormat");
+                output.WriteStartElement("cvParam");
                 if(Path.GetExtension(proteomeDatabase.Name).Equals(".xml", StringComparison.InvariantCultureIgnoreCase))
                 {
-                    // todo: add UniProt XML to CV
+                    output.WriteAttributeString("accession", "MS:1002660");
+                    output.WriteAttributeString("name", "UniProtKB XML sequence format");
                 }
                 else
                 {
-                    output.WriteStartElement("FileFormat");
-                    output.WriteStartElement("cvParam");
                     output.WriteAttributeString("accession", "MS:1001348");
                     output.WriteAttributeString("name", "FASTA format");
-                    output.WriteAttributeString("cvRef", "PSI-MS");
-                    output.WriteEndElement();  // cvParam
-                    output.WriteEndElement();  // FileFormat
                 }
+                output.WriteAttributeString("cvRef", "PSI-MS");
+                output.WriteEndElement();  // cvParam
+                output.WriteEndElement();  // FileFormat
                 output.WriteStartElement("DatabaseName");
                 output.WriteStartElement("userParam");
                 output.WriteAttributeString("name", proteomeDatabaseFilepath);
@@ -837,10 +840,12 @@ namespace Morpheus
                     output.WriteStartElement("PeptideEvidenceRef");
                     output.WriteAttributeString("peptideEvidence_ref", "PE_" + index.ToString());
                     output.WriteEndElement();  // PeptideEvidenceRef
-                    output.WriteStartElement("userParam");
-                    output.WriteAttributeString("name", "Morpheus score");
+                    output.WriteStartElement("cvParam");
+                    output.WriteAttributeString("accession", "MS:1002662");
+                    output.WriteAttributeString("name", "Morpheus:Morpheus score");
+                    output.WriteAttributeString("cvRef", "PSI-MS");
                     output.WriteAttributeString("value", psm.MorpheusScore.ToString());
-                    output.WriteEndElement();  // userParam
+                    output.WriteEndElement();  // cvParam
                     output.WriteStartElement("cvParam");
                     output.WriteAttributeString("accession", "MS:1002354");
                     output.WriteAttributeString("name", "PSM-level q-value");
@@ -876,10 +881,12 @@ namespace Morpheus
                             output.WriteEndElement();  // SpectrumIdentificationItemRef
                             output.WriteEndElement();  // PeptideHypothesis
                         }
-                        output.WriteStartElement("userParam");
-                        output.WriteAttributeString("name", "summed Morpheus score");
+                        output.WriteStartElement("cvParam");
+                        output.WriteAttributeString("accession", "MS:1002663");
+                        output.WriteAttributeString("name", "Morpheus:summed Morpheus score");
+                        output.WriteAttributeString("cvRef", "PSI-MS");
                         output.WriteAttributeString("value", protein_group.SummedMorpheusScore.ToString());
-                        output.WriteEndElement();  // userParam
+                        output.WriteEndElement();  // cvParam
                         output.WriteStartElement("cvParam");
                         output.WriteAttributeString("accession", "MS:1002373");
                         output.WriteAttributeString("name", "protein group-level q-value");
