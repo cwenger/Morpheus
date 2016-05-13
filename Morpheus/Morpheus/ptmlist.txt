@@ -9,7 +9,7 @@
 
 Description: Controlled vocabulary of posttranslational modifications (PTM)
 Name:        ptmlist.txt
-Release:     2016_04 of 13-Apr-2016
+Release:     2016_05 of 11-May-2016
 
 ---------------------------------------------------------------------------
 
@@ -1255,10 +1255,13 @@ TG   Glutamate.
 PA   Amino acid side chain.
 PP   C-terminal.
 CF   C5 H7 N1 O3
+MM   129.042593
 MA   129.12
 LC   Intracellular localisation.
 TR   Archaea; taxId:2267 (Thermoproteaceae).
+TR   Eukaryota; taxId:2759 (Eukaryota).
 KW   Isopeptide bond.
+DR   RESID; AA0612.
 DR   PSI-MOD; 01970.
 //
 ID   5-glutamyl N2-lysine
@@ -1296,6 +1299,7 @@ PA   Amino acid side chain.
 PP   Anywhere.
 LC   Intracellular localisation.
 TR   Eukaryota; taxId:2759 (Eukaryota).
+KW   Isopeptide bond.
 DR   RESID; AA0202.
 DR   PSI-MOD; 00207.
 //
