@@ -795,6 +795,26 @@ namespace Morpheus
                     output.WriteStartElement("SpectraData");
                     output.WriteAttributeString("id", spectral_data_ids[data_filepath]);
                     output.WriteAttributeString("location", new Uri(data_filepath).AbsoluteUri);
+                    output.WriteStartElement("FileFormat");
+                    output.WriteStartElement("cvParam");
+                    if(Path.GetExtension(data_filepath).ToLower() == ".raw")
+                    {
+                        output.WriteAttributeString("accession", "MS:1000563");
+                        output.WriteAttributeString("name", "Thermo RAW format");
+                    }
+                    else if(Path.GetExtension(data_filepath).ToLower() == ".d")
+                    {
+                        output.WriteAttributeString("accession", "MS:1001509");
+                        output.WriteAttributeString("name", "Agilent MassHunter format");
+                    }
+                    else
+                    {
+                        output.WriteAttributeString("accession", "MS:1000584");
+                        output.WriteAttributeString("name", "mzML format");
+                    }
+                    output.WriteAttributeString("cvRef", "PSI-MS");
+                    output.WriteEndElement();  // cvParam
+                    output.WriteEndElement();  // FileFormat
                     output.WriteStartElement("SpectrumIDFormat");
                     output.WriteStartElement("cvParam");
                     if(Path.GetExtension(data_filepath).ToLower() == ".raw")
