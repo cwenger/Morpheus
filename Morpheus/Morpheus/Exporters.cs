@@ -416,7 +416,9 @@ namespace Morpheus
                             foreach(Modification fixed_mod in fixed_mods.Value)
                             {
                                 output.WriteStartElement("Modification");
-                                int location = ModificationIndexToLocation(peptide, fixed_mods.Key);
+                                int location;
+                                int residue_index;
+                                ConvertModificationIndex(peptide, fixed_mods.Key, out location, out residue_index);
                                 output.WriteAttributeString("location", location.ToString());
                                 if(precursorMassType == MassType.Average)
                                 {
@@ -426,7 +428,7 @@ namespace Morpheus
                                 {
                                     output.WriteAttributeString("monoisotopicMassDelta", fixed_mod.MonoisotopicMassShift.ToString());
                                 }
-                                output.WriteAttributeString("residues", peptide.BaseSequence[location - 1].ToString());
+                                output.WriteAttributeString("residues", peptide.BaseSequence[residue_index].ToString());
                                 output.WriteStartElement("cvParam");
                                 output.WriteAttributeString("accession", fixed_mod.Database + ':' + fixed_mod.DatabaseAccessionNumber.ToString());
                                 output.WriteAttributeString("name", fixed_mod.DatabaseName);
@@ -442,7 +444,9 @@ namespace Morpheus
                         {
                             Modification variable_mod = variable_mod_kvp.Value;
                             output.WriteStartElement("Modification");
-                            int location = ModificationIndexToLocation(peptide, variable_mod_kvp.Key);
+                            int location;
+                            int residue_index;
+                            ConvertModificationIndex(peptide, variable_mod_kvp.Key, out location, out residue_index);
                             output.WriteAttributeString("location", location.ToString());
                             if(precursorMassType == MassType.Average)
                             {
@@ -452,7 +456,7 @@ namespace Morpheus
                             {
                                 output.WriteAttributeString("monoisotopicMassDelta", variable_mod.MonoisotopicMassShift.ToString());
                             }
-                            output.WriteAttributeString("residues", peptide.BaseSequence[location - 1].ToString());
+                            output.WriteAttributeString("residues", peptide.BaseSequence[residue_index].ToString());
                             output.WriteStartElement("cvParam");
                             if(variable_mod.Database == "PSI-MOD")
                             {
@@ -944,19 +948,22 @@ namespace Morpheus
             }
         }
 
-        private static int ModificationIndexToLocation(Peptide peptide, int modificationIndex)
+        private static void ConvertModificationIndex(Peptide peptide, int modificationIndex, out int location, out int residueIndex)
         {
             if(modificationIndex <= 1)
             {
-                return 1;
+                location = 0;
+                residueIndex = 0;
             }
             else if(modificationIndex >= peptide.Length + 2)
             {
-                return peptide.Length + 1;
+                location = peptide.Length + 1;
+                residueIndex = peptide.Length - 1;
             }
             else
             {
-                return modificationIndex - 1;
+                location = modificationIndex - 1;
+                residueIndex = modificationIndex - 2;
             }
         }
     }
