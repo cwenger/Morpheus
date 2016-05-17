@@ -416,7 +416,8 @@ namespace Morpheus
                             foreach(Modification fixed_mod in fixed_mods.Value)
                             {
                                 output.WriteStartElement("Modification");
-                                output.WriteAttributeString("location", peptide.ModificationIndexToAminoAcidPosition(fixed_mods.Key).ToString());
+                                int location = ModificationIndexToLocation(peptide, fixed_mods.Key);
+                                output.WriteAttributeString("location", location.ToString());
                                 if(precursorMassType == MassType.Average)
                                 {
                                     output.WriteAttributeString("averageMassDelta", fixed_mod.AverageMassShift.ToString());
@@ -425,6 +426,7 @@ namespace Morpheus
                                 {
                                     output.WriteAttributeString("monoisotopicMassDelta", fixed_mod.MonoisotopicMassShift.ToString());
                                 }
+                                output.WriteAttributeString("residues", peptide.BaseSequence[location - 1].ToString());
                                 output.WriteStartElement("cvParam");
                                 output.WriteAttributeString("accession", fixed_mod.Database + ':' + fixed_mod.DatabaseAccessionNumber.ToString());
                                 output.WriteAttributeString("name", fixed_mod.DatabaseName);
@@ -440,7 +442,8 @@ namespace Morpheus
                         {
                             Modification variable_mod = variable_mod_kvp.Value;
                             output.WriteStartElement("Modification");
-                            output.WriteAttributeString("location", peptide.ModificationIndexToAminoAcidPosition(variable_mod_kvp.Key).ToString());
+                            int location = ModificationIndexToLocation(peptide, variable_mod_kvp.Key);
+                            output.WriteAttributeString("location", location.ToString());
                             if(precursorMassType == MassType.Average)
                             {
                                 output.WriteAttributeString("averageMassDelta", variable_mod.AverageMassShift.ToString());
@@ -449,6 +452,7 @@ namespace Morpheus
                             {
                                 output.WriteAttributeString("monoisotopicMassDelta", variable_mod.MonoisotopicMassShift.ToString());
                             }
+                            output.WriteAttributeString("residues", peptide.BaseSequence[location - 1].ToString());
                             output.WriteStartElement("cvParam");
                             if(variable_mod.Database == "PSI-MOD")
                             {
@@ -626,7 +630,7 @@ namespace Morpheus
                     output.WriteStartElement("SearchModification");
                     output.WriteAttributeString("fixedMod", true.ToString().ToLower());
                     output.WriteAttributeString("massDelta", (precursorMassType == MassType.Average ? fixed_mod.AverageMassShift : fixed_mod.MonoisotopicMassShift).ToString());
-                    output.WriteAttributeString("residues", fixed_mod.AminoAcid.ToString());
+                    output.WriteAttributeString("residues", fixed_mod.AminoAcid == char.MinValue ? "." : fixed_mod.AminoAcid.ToString());
                     output.WriteStartElement("cvParam");
                     output.WriteAttributeString("accession", fixed_mod.Database + ':' + fixed_mod.DatabaseAccessionNumber.ToString());
                     output.WriteAttributeString("name", fixed_mod.DatabaseName);
@@ -639,7 +643,7 @@ namespace Morpheus
                     output.WriteStartElement("SearchModification");
                     output.WriteAttributeString("fixedMod", false.ToString().ToLower());
                     output.WriteAttributeString("massDelta", (precursorMassType == MassType.Average ? variable_mod.AverageMassShift : variable_mod.MonoisotopicMassShift).ToString());
-                    output.WriteAttributeString("residues", variable_mod.AminoAcid.ToString());
+                    output.WriteAttributeString("residues", variable_mod.AminoAcid == char.MinValue ? "." : variable_mod.AminoAcid.ToString());
                     output.WriteStartElement("cvParam");
                     if(variable_mod.Database == "PSI-MOD")
                     {
@@ -795,6 +799,26 @@ namespace Morpheus
                     output.WriteStartElement("SpectraData");
                     output.WriteAttributeString("id", spectral_data_ids[data_filepath]);
                     output.WriteAttributeString("location", new Uri(data_filepath).AbsoluteUri);
+                    output.WriteStartElement("FileFormat");
+                    output.WriteStartElement("cvParam");
+                    if(Path.GetExtension(data_filepath).ToLower() == ".raw")
+                    {
+                        output.WriteAttributeString("accession", "MS:1000563");
+                        output.WriteAttributeString("name", "Thermo RAW format");
+                    }
+                    else if(Path.GetExtension(data_filepath).ToLower() == ".d")
+                    {
+                        output.WriteAttributeString("accession", "MS:1001509");
+                        output.WriteAttributeString("name", "Agilent MassHunter format");
+                    }
+                    else
+                    {
+                        output.WriteAttributeString("accession", "MS:1000584");
+                        output.WriteAttributeString("name", "mzML format");
+                    }
+                    output.WriteAttributeString("cvRef", "PSI-MS");
+                    output.WriteEndElement();  // cvParam
+                    output.WriteEndElement();  // FileFormat
                     output.WriteStartElement("SpectrumIDFormat");
                     output.WriteStartElement("cvParam");
                     if(Path.GetExtension(data_filepath).ToLower() == ".raw")
@@ -917,6 +941,22 @@ namespace Morpheus
                 output.WriteEndElement();  // MzIdentML
 
                 output.WriteEndDocument();
+            }
+        }
+
+        private static int ModificationIndexToLocation(Peptide peptide, int modificationIndex)
+        {
+            if(modificationIndex <= 1)
+            {
+                return 1;
+            }
+            else if(modificationIndex >= peptide.Length + 2)
+            {
+                return peptide.Length + 1;
+            }
+            else
+            {
+                return modificationIndex - 1;
             }
         }
     }
