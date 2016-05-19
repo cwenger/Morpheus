@@ -316,7 +316,7 @@ namespace Morpheus
             }
         }
 
-        public static void WritePsmsToMZIdentMLFile(string outputFilepath,
+        public static void WriteMZIdentMLFile(string outputFilepath,
             IEnumerable<string> dataFilepaths,
             int minimumAssumedPrecursorChargeState, int maximumAssumedPrecursorChargeState,
             double absoluteThreshold, double relativeThresholdPercent, int maximumNumberOfPeaks,
@@ -484,7 +484,7 @@ namespace Morpheus
                     output.WriteStartElement("PeptideEvidence");
                     output.WriteAttributeString("id", "PE_" + index.ToString());
                     output.WriteAttributeString("peptide_ref", "P_" + index.ToString());
-                    output.WriteAttributeString("dBSequence_ref", "DBS_" + psm.Peptide.Parent.Accession);
+                    output.WriteAttributeString("dBSequence_ref", "DBS_" + peptide.Parent.Accession);
                     output.WriteAttributeString("isDecoy", psm.Decoy.ToString().ToLower());
                     output.WriteAttributeString("start", peptide.StartResidueNumber.ToString());
                     output.WriteAttributeString("end", peptide.EndResidueNumber.ToString());
@@ -501,13 +501,15 @@ namespace Morpheus
                 output.WriteAttributeString("spectrumIdentificationList_ref", "SIL");
                 output.WriteAttributeString("spectrumIdentificationProtocol_ref", "SIP");
                 Dictionary<string, string> spectral_data_ids = new Dictionary<string, string>();
+                index = 1;
                 foreach(string data_filepath in dataFilepaths)
                 {
-                    string spectral_data_id = "SD_" + (spectral_data_ids.Count + 1).ToString();
+                    string spectral_data_id = "SD_" + index.ToString();
                     spectral_data_ids.Add(data_filepath, spectral_data_id);
                     output.WriteStartElement("InputSpectra");
                     output.WriteAttributeString("spectraData_ref", spectral_data_id);
                     output.WriteEndElement();  // InputSpectra
+                    index++;
                 }
                 output.WriteStartElement("SearchDatabaseRef");
                 output.WriteAttributeString("searchDatabase_ref", "SDB_" + Path.GetFileNameWithoutExtension(proteomeDatabaseFilepath));
