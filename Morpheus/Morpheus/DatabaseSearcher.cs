@@ -691,7 +691,7 @@ namespace Morpheus
                         log.WriteLine(target_protein_groups.ToString("N0") + " target (" + decoy_protein_groups.ToString("N0") + " decoy) protein groups at " + protein_group_fdr.ToString("0.000%") + " protein group FDR (" + protein_group_score_threshold.ToString("0.000") + " summed Morpheus score threshold)");
                     }
 
-                    Exporters.WritePsmsToMZIdentMLFile(Path.Combine(outputFolder, Path.GetFileNameWithoutExtension(data_filepath) + ".mzid"),
+                    Exporters.WriteMZIdentMLFile(Path.Combine(outputFolder, Path.GetFileNameWithoutExtension(data_filepath) + ".mzid"),
                         new string[] { data_filepath },
                         minimumAssumedPrecursorChargeState, maximumAssumedPrecursorChargeState,
                         absoluteThreshold, relativeThresholdPercent, maximumNumberOfPeaks,
@@ -808,7 +808,7 @@ namespace Morpheus
                         FalseDiscoveryRate.DetermineMaximumIdentifications(semi_aggregate_protein_groups_with_fdr, false, maximumFalseDiscoveryRate, out semi_aggregate_protein_group_score_threshold, out semi_aggregate_target_protein_groups, out semi_aggregate_decoy_protein_groups, out semi_aggregate_protein_group_fdr);
                         overall_log.WriteLine(semi_aggregate_target_protein_groups.ToString("N0") + " target (" + semi_aggregate_decoy_protein_groups.ToString("N0") + " decoy) protein groups at " + semi_aggregate_protein_group_fdr.ToString("0.000%") + " protein group FDR (" + semi_aggregate_protein_group_score_threshold.ToString("0.000") + " summed Morpheus score threshold) in " + kvp.Key);
 
-                        Exporters.WritePsmsToMZIdentMLFile(Path.Combine(outputFolder, prefix + ".mzid"),
+                        Exporters.WriteMZIdentMLFile(Path.Combine(outputFolder, prefix + ".mzid"),
                             kvp.Value,
                             minimumAssumedPrecursorChargeState, maximumAssumedPrecursorChargeState,
                             absoluteThreshold, relativeThresholdPercent, maximumNumberOfPeaks,
@@ -889,7 +889,7 @@ namespace Morpheus
                     FalseDiscoveryRate.DetermineMaximumIdentifications(aggregate_protein_groups_with_fdr, false, maximumFalseDiscoveryRate, out aggregate_protein_group_score_threshold, out aggregate_target_protein_groups, out aggregate_decoy_protein_groups, out aggregate_protein_group_fdr);
                     overall_log.WriteLine(aggregate_target_protein_groups.ToString("N0") + " target (" + aggregate_decoy_protein_groups.ToString("N0") + " decoy) aggregate protein groups at " + aggregate_protein_group_fdr.ToString("0.000%") + " protein group FDR (" + aggregate_protein_group_score_threshold.ToString("0.000") + " summed Morpheus score threshold)");
 
-                    Exporters.WritePsmsToMZIdentMLFile(Path.Combine(outputFolder, "aggregate.mzid"),
+                    Exporters.WriteMZIdentMLFile(Path.Combine(outputFolder, "aggregate.mzid"),
                         dataFilepaths,
                         minimumAssumedPrecursorChargeState, maximumAssumedPrecursorChargeState,
                         absoluteThreshold, relativeThresholdPercent, maximumNumberOfPeaks,
