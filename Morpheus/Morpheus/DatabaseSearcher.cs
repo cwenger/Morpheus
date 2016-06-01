@@ -40,6 +40,7 @@ namespace Morpheus
         private int maximumThreads;
         private bool minimizeMemoryUsage;
         private string outputFolder;
+        private List<double> massErrors;
 
         public DatabaseSearcher(IList<string> dataFilepaths,
             int minimumAssumedPrecursorChargeState, int maximumAssumedPrecursorChargeState,
@@ -53,7 +54,7 @@ namespace Morpheus
             MassTolerance productMassTolerance, MassType productMassType,
             double maximumFalseDiscoveryRate, bool considerModifiedFormsAsUniquePeptides,
             int maximumThreads, bool minimizeMemoryUsage,
-            string outputFolder)
+            string outputFolder, List<double> massErrors)
         {
             this.dataFilepaths = dataFilepaths;
             this.assignChargeStates = assignChargeStates;
@@ -83,6 +84,7 @@ namespace Morpheus
             this.maximumThreads = maximumThreads;
             this.minimizeMemoryUsage = minimizeMemoryUsage;
             this.outputFolder = outputFolder;
+            this.massErrors = massErrors;
         }
 
         public event EventHandler Starting;
@@ -541,14 +543,16 @@ namespace Morpheus
                                 }
                             }
 
-
-                            // OLD
                             peptide.SetFixedModifications(fixedModifications);
                             foreach(Peptide modified_peptide in peptide.GetVariablyModifiedPeptides(unknown_variable_modifications, maximumVariableModificationIsoforms))
                             {
-                                foreach(TandemMassSpectrum spectrum in precursorMonoisotopicPeakCorrection ?
-                                    spectra.GetTandemMassSpectraInMassRange(precursorMassType == MassType.Average ? modified_peptide.AverageMass : modified_peptide.MonoisotopicMass, precursorMassTolerance, minimumPrecursorMonoisotopicPeakOffset, maximumPrecursorMonoisotopicPeakOffset) :
-                                    spectra.GetTandemMassSpectraInMassRange(precursorMassType == MassType.Average ? modified_peptide.AverageMass : modified_peptide.MonoisotopicMass, precursorMassTolerance))
+                                var massToConsider = precursorMassType == MassType.Average ? modified_peptide.AverageMass : modified_peptide.MonoisotopicMass;
+                                List<double> massesToConsider = new List<double>();
+                                foreach (double massError in massErrors)
+                                    massesToConsider.Add(massToConsider + massError);
+                                foreach (TandemMassSpectrum spectrum in precursorMonoisotopicPeakCorrection ?
+                                    spectra.GetTandemMassSpectraInIntervals(massesToConsider, precursorMassTolerance, minimumPrecursorMonoisotopicPeakOffset, maximumPrecursorMonoisotopicPeakOffset) :
+                                    spectra.GetTandemMassSpectraInIntervals(massesToConsider, precursorMassTolerance))
                                 {
                                     PeptideSpectrumMatch psm = new PeptideSpectrumMatch(spectrum, modified_peptide, productMassTolerance);
                                     lock(psms)
@@ -560,28 +564,6 @@ namespace Morpheus
                                         }
                                     }
                                 }
-                            }
-
-                            // NEW
-                            peptide.SetFixedModifications(fixedModifications);
-                            foreach (Peptide modified_peptide in peptide.GetVariablyModifiedPeptides(unknown_variable_modifications, maximumVariableModificationIsoforms))
-                            {
-                                List<Tuple<double, double>> relativeIntervals = new List<Tuple<double, double>>();
-                                relativeIntervals.Add(new Tuple<double, double>(15.9, 16.1));
-                                foreach (TandemMassSpectrum spectrum in spectra.GetTandemMassSpectraInIntervals(precursorMassType == MassType.Average ? modified_peptide.AverageMass : modified_peptide.MonoisotopicMass, relativeIntervals))
-                                {
-                                    PeptideSpectrumMatch psm = new PeptideSpectrumMatch(spectrum, modified_peptide, productMassTolerance);
-                                    lock (psms)
-                                    {
-                                        PeptideSpectrumMatch current_best_psm = psms[spectrum.SpectrumNumber - 1];
-                                        if (current_best_psm == null || PeptideSpectrumMatch.DescendingMorpheusScoreComparison(psm, current_best_psm) < 0)
-                                        {
-                                            psms[spectrum.SpectrumNumber - 1] = psm;
-                                        }
-                                    }
-                                }
-
-
                             }
                         }
 

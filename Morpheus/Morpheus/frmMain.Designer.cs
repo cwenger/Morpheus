@@ -47,6 +47,8 @@
             this.label9 = new System.Windows.Forms.Label();
             this.fbdOutput = new System.Windows.Forms.FolderBrowserDialog();
             this.pnlMain = new System.Windows.Forms.Panel();
+            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.label22 = new System.Windows.Forms.Label();
             this.chkMinimizeMemoryUsage = new System.Windows.Forms.CheckBox();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.chkDeisotope = new System.Windows.Forms.CheckBox();
@@ -106,8 +108,6 @@
             this.tsslStatus = new System.Windows.Forms.ToolStripStatusLabel();
             this.tspbProgress = new System.Windows.Forms.ToolStripProgressBar();
             this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
-            this.textBox1 = new System.Windows.Forms.TextBox();
-            this.label22 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.numMaxMissedCleavages)).BeginInit();
             this.pnlMain.SuspendLayout();
             this.groupBox3.SuspendLayout();
@@ -336,6 +336,23 @@
             this.pnlMain.Name = "pnlMain";
             this.pnlMain.Size = new System.Drawing.Size(712, 723);
             this.pnlMain.TabIndex = 2;
+            // 
+            // textBox1
+            // 
+            this.textBox1.Location = new System.Drawing.Point(441, 539);
+            this.textBox1.Name = "textBox1";
+            this.textBox1.Size = new System.Drawing.Size(261, 20);
+            this.textBox1.TabIndex = 53;
+            this.textBox1.Text = "0";
+            // 
+            // label22
+            // 
+            this.label22.AutoSize = true;
+            this.label22.Location = new System.Drawing.Point(438, 523);
+            this.label22.Name = "label22";
+            this.label22.Size = new System.Drawing.Size(112, 13);
+            this.label22.TabIndex = 52;
+            this.label22.Text = "Mass errors to accept:";
             // 
             // chkMinimizeMemoryUsage
             // 
@@ -1000,23 +1017,6 @@
             // 
             this.backgroundWorker1.DoWork += new System.ComponentModel.DoWorkEventHandler(this.backgroundWorker1_DoWork);
             this.backgroundWorker1.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.backgroundWorker1_RunWorkerCompleted);
-            // 
-            // textBox1
-            // 
-            this.textBox1.Location = new System.Drawing.Point(443, 537);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(261, 20);
-            this.textBox1.TabIndex = 53;
-            this.textBox1.Text = "0,";
-            // 
-            // label22
-            // 
-            this.label22.AutoSize = true;
-            this.label22.Location = new System.Drawing.Point(440, 521);
-            this.label22.Name = "label22";
-            this.label22.Size = new System.Drawing.Size(112, 13);
-            this.label22.TabIndex = 52;
-            this.label22.Text = "Mass errors to accept:";
             // 
             // frmMain
             // 

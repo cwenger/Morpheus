@@ -693,7 +693,12 @@ namespace Morpheus
             int max_threads = (int)numMaxThreads.Value;
             bool minimize_memory_usage = chkMinimizeMemoryUsage.Checked;
             string output_folder = txtOutputFolder.Text;
-            if(!Directory.Exists(output_folder))
+            var aa = textBox1.Text;
+            var bb = aa.Split(',');
+            var cc = bb.Select(double.Parse);
+            var dd = cc.ToList();
+            List<double> massErrors = dd;
+            if (!Directory.Exists(output_folder))
             {
                 try
                 {
@@ -726,7 +731,7 @@ namespace Morpheus
                 product_mass_tolerance, product_mass_type,
                 max_false_discovery_rate, consider_modified_unique,
                 max_threads, minimize_memory_usage,
-                output_folder);
+                output_folder, massErrors);
 
             database_searcher.Starting += HandleStarting;
             database_searcher.StartingFile += HandleStartingFile;

@@ -198,6 +198,9 @@ namespace Morpheus
                     output_folder = arguments["o"];
                 }
 
+                List<double> massErrors = new List<double>();
+                massErrors.Add(0);
+
                 DatabaseSearcher database_searcher = new DatabaseSearcher(data,
                     min_assumed_precursor_charge_state, max_assumed_precursor_charge_state,
                     abs_threshold, rel_threshold_percent, max_peaks,
@@ -210,7 +213,7 @@ namespace Morpheus
                     product_mass_tolerance, product_mass_type,
                     max_fdr, consider_mods_unique,
                     max_threads, minimize_memory_usage,
-                    output_folder);
+                    output_folder, massErrors);
 
                 database_searcher.Starting += HandleStarting;
                 database_searcher.StartingFile += HandleStartingFile;
