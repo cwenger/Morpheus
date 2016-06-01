@@ -541,6 +541,8 @@ namespace Morpheus
                                 }
                             }
 
+
+                            // OLD
                             peptide.SetFixedModifications(fixedModifications);
                             foreach(Peptide modified_peptide in peptide.GetVariablyModifiedPeptides(unknown_variable_modifications, maximumVariableModificationIsoforms))
                             {
@@ -558,6 +560,28 @@ namespace Morpheus
                                         }
                                     }
                                 }
+                            }
+
+                            // NEW
+                            peptide.SetFixedModifications(fixedModifications);
+                            foreach (Peptide modified_peptide in peptide.GetVariablyModifiedPeptides(unknown_variable_modifications, maximumVariableModificationIsoforms))
+                            {
+                                List<Tuple<double, double>> relativeIntervals = new List<Tuple<double, double>>();
+                                relativeIntervals.Add(new Tuple<double, double>(15.9, 16.1));
+                                foreach (TandemMassSpectrum spectrum in spectra.GetTandemMassSpectraInIntervals(precursorMassType == MassType.Average ? modified_peptide.AverageMass : modified_peptide.MonoisotopicMass, relativeIntervals))
+                                {
+                                    PeptideSpectrumMatch psm = new PeptideSpectrumMatch(spectrum, modified_peptide, productMassTolerance);
+                                    lock (psms)
+                                    {
+                                        PeptideSpectrumMatch current_best_psm = psms[spectrum.SpectrumNumber - 1];
+                                        if (current_best_psm == null || PeptideSpectrumMatch.DescendingMorpheusScoreComparison(psm, current_best_psm) < 0)
+                                        {
+                                            psms[spectrum.SpectrumNumber - 1] = psm;
+                                        }
+                                    }
+                                }
+
+
                             }
                         }
 
