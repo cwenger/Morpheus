@@ -694,7 +694,7 @@ namespace Morpheus
             bool minimize_memory_usage = chkMinimizeMemoryUsage.Checked;
             string output_folder = txtOutputFolder.Text;
             List<double> massErrors = textBox1.Text.Split(',').Select(double.Parse).ToList();
-            if (!Directory.Exists(output_folder))
+            if(!Directory.Exists(output_folder))
             {
                 try
                 {
