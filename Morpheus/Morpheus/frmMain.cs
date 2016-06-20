@@ -693,11 +693,7 @@ namespace Morpheus
             int max_threads = (int)numMaxThreads.Value;
             bool minimize_memory_usage = chkMinimizeMemoryUsage.Checked;
             string output_folder = txtOutputFolder.Text;
-            var aa = textBox1.Text;
-            var bb = aa.Split(',');
-            var cc = bb.Select(double.Parse);
-            var dd = cc.ToList();
-            List<double> massErrors = dd;
+            List<double> massErrors = textBox1.Text.Split(',').Select(double.Parse).ToList();
             if (!Directory.Exists(output_folder))
             {
                 try
