@@ -6,11 +6,19 @@ namespace Morpheus
 {
     public static class AminoAcidMasses
     {
-        private static readonly double[] MONOISOTOPIC_AMINO_ACID_MASSES = new double['Z' - 'A' + 1];
-        private static readonly double[] AVERAGE_AMINO_ACID_MASSES = new double['Z' - 'A' + 1];
+        private static readonly double[] MONOISOTOPIC_AMINO_ACID_MASSES;
+        private static readonly double[] AVERAGE_AMINO_ACID_MASSES;
 
         static AminoAcidMasses()
         {
+            MONOISOTOPIC_AMINO_ACID_MASSES = new double['Z' - 'A' + 1];
+            AVERAGE_AMINO_ACID_MASSES = new double['Z' - 'A' + 1];
+            for(int i = 0; i < MONOISOTOPIC_AMINO_ACID_MASSES.Length; i++)
+            {
+                MONOISOTOPIC_AMINO_ACID_MASSES[i] = double.NaN;
+                AVERAGE_AMINO_ACID_MASSES[i] = double.NaN;
+            }
+
             using(StreamReader amino_acids = new StreamReader(Path.Combine(Path.GetDirectoryName(Environment.GetCommandLineArgs()[0]), "amino_acids.tsv")))
             {
                 amino_acids.ReadLine();

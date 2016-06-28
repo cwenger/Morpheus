@@ -232,63 +232,15 @@ namespace Morpheus
             get { return Sequence.Replace('I', 'L'); }
         }
 
-        private static readonly Regex INVALID_AMINO_ACIDS;
-
-        static AminoAcidPolymer()
+        protected AminoAcidPolymer(string baseSequence)
         {
-            StringBuilder invalid_amino_acids = new StringBuilder("[^");
-            for(char amino_acid = 'A'; amino_acid <= 'Z'; amino_acid++)
-            {
-                if(AminoAcidMasses.GetMonoisotopicMass(amino_acid) != 0.0)
-                {
-                    invalid_amino_acids.Append(amino_acid);
-                }
-            }
-            invalid_amino_acids.Append(']');
-            INVALID_AMINO_ACIDS = new Regex(invalid_amino_acids.ToString(), RegexOptions.Compiled);
+            BaseSequence = baseSequence;
         }
 
-        protected AminoAcidPolymer(string baseSequence, bool prevalidated)
+        protected AminoAcidPolymer(string baseSequence, Dictionary<int, List<Modification>> knownModifications)
+            : this(baseSequence)
         {
-            if(prevalidated)
-            {
-                BaseSequence = baseSequence;
-            }
-            else
-            {
-                BaseSequence = INVALID_AMINO_ACIDS.Replace(baseSequence, string.Empty);
-            }
-        }
-
-        protected AminoAcidPolymer(string baseSequence, bool prevalidated, Dictionary<int, List<Modification>> knownModifications)
-            : this(baseSequence, prevalidated)
-        {
-            if(BaseSequence.Length != baseSequence.Length && knownModifications != null && knownModifications.Count > 0)
-            {
-                // adjust known modification indices for invalid amino acids (i.e. protein sequence contains B, X, or Z, e.g. http://www.uniprot.org/uniprot/Q8NDA2, http://www.uniprot.org/uniprot/P01744, http://www.uniprot.org/uniprot/P01763)
-                int[] offset = new int[baseSequence.Length + 4];
-                for(int i = 0; i < baseSequence.Length; i++)
-                {
-                    int previous_offset = offset[i + 2 - 1];
-                    if(INVALID_AMINO_ACIDS.IsMatch(baseSequence[i].ToString()))
-                    {
-                        offset[i + 2] = previous_offset - 1;
-                    }
-                    else
-                    {
-                        offset[i + 2] = previous_offset;
-                    }
-                }
-                KnownModifications = new Dictionary<int, List<Modification>>(knownModifications.Count);
-                foreach(KeyValuePair<int, List<Modification>> kvp in knownModifications)
-                {
-                    KnownModifications.Add(kvp.Key + offset[kvp.Key], kvp.Value);
-                }
-            }
-            else
-            {
-                KnownModifications = knownModifications;
-            }
+            KnownModifications = knownModifications;
         }
 
         public override string ToString()
