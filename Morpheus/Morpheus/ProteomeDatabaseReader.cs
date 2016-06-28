@@ -77,7 +77,7 @@ namespace Morpheus
                 InitializeDictionaries();
             }
 
-            HashSet<string> modifications_in_database = new HashSet<string>();
+            List<string> modifications_in_database = new List<string>();
             using(XmlReader xml = XmlReader.Create(uniProtXmlProteomeDatabaseFilepath))
             {
                 while(xml.ReadToFollowing("feature"))
@@ -98,105 +98,126 @@ namespace Morpheus
                 }
             }
 
-            string old_ptmlist_filepath = Path.Combine(Path.GetDirectoryName(Environment.GetCommandLineArgs()[0]), "ptmlist.txt");
-            try
+            Dictionary<string, Modification> modifications = new Dictionary<string, Modification>();
+
+            ModificationDictionary user_modifications = ModificationDictionary.Instance;
+            int i = 0;
+            while(i < modifications_in_database.Count)
             {
-                string new_ptmlist_filepath = Path.Combine(Path.GetDirectoryName(Environment.GetCommandLineArgs()[0]), "ptmlist.new.txt");
-                using(WebClient client = new WebClient())
+                string modification_name = modifications_in_database[i];
+                Modification modification;
+                if(user_modifications.TryGetValue(modification_name, out modification))
                 {
-                    client.DownloadFile("http://www.uniprot.org/docs/ptmlist.txt", new_ptmlist_filepath);
-                }
-                string old_ptmlist = File.ReadAllText(old_ptmlist_filepath);
-                string new_ptmlist = File.ReadAllText(new_ptmlist_filepath);
-                if(string.Equals(old_ptmlist, new_ptmlist))
-                {
-                    File.Delete(new_ptmlist_filepath);
+                    modifications.Add("UniProt: " + modification_name, new Modification("UniProt: " + modification_name, modification.Type, modification.AminoAcid, modification.MonoisotopicMassShift, modification.AverageMassShift, modification.MonoisotopicNeutralLossMass, modification.AverageNeutralLossMass, false, true, modification.Database, modification.DatabaseAccessionNumber, modification.DatabaseName, true));
+                    modifications_in_database.RemoveAt(i);
                 }
                 else
                 {
-                    File.Delete(old_ptmlist_filepath);
-                    File.Move(new_ptmlist_filepath, old_ptmlist_filepath);
+                    i++;
                 }
             }
-            catch
+
+            if(modifications_in_database.Count > 0)
             {
-
-            }
-
-            XmlDocument psi_mod_temp = new XmlDocument();
-            psi_mod_temp.Load(Path.Combine(Path.GetDirectoryName(Environment.GetCommandLineArgs()[0]), "PSI-MOD.obo.xml"));
-            XPathNavigator psi_mod = psi_mod_temp.CreateNavigator();
-
-            Dictionary<string, Modification> modifications = new Dictionary<string, Modification>();
-            using(StreamReader uniprot_mods = new StreamReader(old_ptmlist_filepath))
-            {
-                string description = null;
-                string feature_type = null;
-                ModificationType modification_type = ModificationType.AminoAcidResidue;
-                char amino_acid_residue = '\0';
-                double monoisotopic_mass_shift = double.NaN;
-                double average_mass_shift = double.NaN;
-                string database = null;
-                int database_accession_number = -1;
-                string database_name = null;
-                while(uniprot_mods.Peek() != -1)
+                string old_ptmlist_filepath = Path.Combine(Path.GetDirectoryName(Environment.GetCommandLineArgs()[0]), "ptmlist.txt");
+                try
                 {
-                    string line = uniprot_mods.ReadLine();
-                    if(line.Length >= 2)
+                    string new_ptmlist_filepath = Path.Combine(Path.GetDirectoryName(Environment.GetCommandLineArgs()[0]), "ptmlist.new.txt");
+                    using(WebClient client = new WebClient())
                     {
-                        switch(line.Substring(0, 2))
+                        client.DownloadFile("http://www.uniprot.org/docs/ptmlist.txt", new_ptmlist_filepath);
+                    }
+                    string old_ptmlist = File.ReadAllText(old_ptmlist_filepath);
+                    string new_ptmlist = File.ReadAllText(new_ptmlist_filepath);
+                    if(string.Equals(old_ptmlist, new_ptmlist))
+                    {
+                        File.Delete(new_ptmlist_filepath);
+                    }
+                    else
+                    {
+                        File.Delete(old_ptmlist_filepath);
+                        File.Move(new_ptmlist_filepath, old_ptmlist_filepath);
+                    }
+                }
+                catch
+                {
+
+                }
+
+                XmlDocument psi_mod_temp = new XmlDocument();
+                psi_mod_temp.Load(Path.Combine(Path.GetDirectoryName(Environment.GetCommandLineArgs()[0]), "PSI-MOD.obo.xml"));
+                XPathNavigator psi_mod = psi_mod_temp.CreateNavigator();
+
+                using(StreamReader uniprot_mods = new StreamReader(old_ptmlist_filepath))
+                {
+                    string description = null;
+                    string feature_type = null;
+                    ModificationType modification_type = ModificationType.AminoAcidResidue;
+                    char amino_acid_residue = '\0';
+                    double monoisotopic_mass_shift = double.NaN;
+                    double average_mass_shift = double.NaN;
+                    string database = null;
+                    int database_accession_number = -1;
+                    string database_name = null;
+                    while(uniprot_mods.Peek() != -1)
+                    {
+                        string line = uniprot_mods.ReadLine();
+                        if(line.Length >= 2)
                         {
-                            case "ID":
-                                description = line.Substring(5);
-                                break;
-                            case "FT":
-                                feature_type = line.Substring(5);
-                                break;
-                            case "TG":
-                                if(feature_type == "MOD_RES")
-                                {
-                                    string amino_acid = line.Substring(5);
-                                    aminoAcidCodes.TryGetValue(char.ToUpperInvariant(amino_acid[0]) + amino_acid.Substring(1).TrimEnd('.'), out amino_acid_residue);
-                                }
-                                break;
-                            case "PP":
-                                if(feature_type == "MOD_RES")
-                                {
-                                    modificationTypeCodes.TryGetValue(line.Substring(5), out modification_type);
-                                }
-                                break;
-                            case "MM":
-                                monoisotopic_mass_shift = double.Parse(line.Substring(5));
-                                break;
-                            case "MA":
-                                average_mass_shift = double.Parse(line.Substring(5));
-                                break;
-                            case "DR":
-                                if(line.Contains("PSI-MOD"))
-                                {
-                                    Match match = PSI_MOD_ACCESSION_NUMBER_REGEX.Match(line.Substring(5));
-                                    if(match.Success)
+                            switch(line.Substring(0, 2))
+                            {
+                                case "ID":
+                                    description = line.Substring(5);
+                                    break;
+                                case "FT":
+                                    feature_type = line.Substring(5);
+                                    break;
+                                case "TG":
+                                    if(feature_type == "MOD_RES")
                                     {
-                                        database = match.Groups[1].Value;
-                                        database_accession_number = int.Parse(match.Groups[2].Value);
-                                        XPathNavigator term = psi_mod.SelectSingleNode(@"/obo/term[id='MOD:" + database_accession_number.ToString("00000") + "']");
-                                        database_name = term.SelectSingleNode("name").Value;
+                                        string amino_acid = line.Substring(5);
+                                        aminoAcidCodes.TryGetValue(char.ToUpperInvariant(amino_acid[0]) + amino_acid.Substring(1).TrimEnd('.'), out amino_acid_residue);
                                     }
-                                }
-                                break;
-                            case "//":
-                                if(feature_type == "MOD_RES" && modifications_in_database.Contains(description) && (!double.IsNaN(monoisotopic_mass_shift) || !double.IsNaN(average_mass_shift)))
-                                {
-                                    Modification modification = new Modification("UniProt: " + description, ModificationType.AminoAcidResidue, amino_acid_residue, monoisotopic_mass_shift, average_mass_shift, 0.0, 0.0, false, true, database, database_accession_number, database_name, true);
-                                    modifications.Add(modification.Description, modification);
-                                }
-                                description = null;
-                                feature_type = null;
-                                modification_type = ModificationType.AminoAcidResidue;
-                                amino_acid_residue = '\0';
-                                monoisotopic_mass_shift = double.NaN;
-                                average_mass_shift = double.NaN;
-                                break;
+                                    break;
+                                case "PP":
+                                    if(feature_type == "MOD_RES")
+                                    {
+                                        modificationTypeCodes.TryGetValue(line.Substring(5), out modification_type);
+                                    }
+                                    break;
+                                case "MM":
+                                    monoisotopic_mass_shift = double.Parse(line.Substring(5));
+                                    break;
+                                case "MA":
+                                    average_mass_shift = double.Parse(line.Substring(5));
+                                    break;
+                                case "DR":
+                                    if(line.Contains("PSI-MOD"))
+                                    {
+                                        Match match = PSI_MOD_ACCESSION_NUMBER_REGEX.Match(line.Substring(5));
+                                        if(match.Success)
+                                        {
+                                            database = match.Groups[1].Value;
+                                            database_accession_number = int.Parse(match.Groups[2].Value);
+                                            XPathNavigator term = psi_mod.SelectSingleNode(@"/obo/term[id='MOD:" + database_accession_number.ToString("00000") + "']");
+                                            database_name = term.SelectSingleNode("name").Value;
+                                        }
+                                    }
+                                    break;
+                                case "//":
+                                    if(feature_type == "MOD_RES" && modifications_in_database.Contains(description) && (!double.IsNaN(monoisotopic_mass_shift) || !double.IsNaN(average_mass_shift)))
+                                    {
+                                        Modification modification = new Modification("UniProt: " + description, ModificationType.AminoAcidResidue, amino_acid_residue, monoisotopic_mass_shift, average_mass_shift, 0.0, 0.0, false, true, database, database_accession_number, database_name, true);
+                                        modifications.Add(modification.Description, modification);
+                                    }
+                                    description = null;
+                                    feature_type = null;
+                                    modification_type = ModificationType.AminoAcidResidue;
+                                    amino_acid_residue = '\0';
+                                    monoisotopic_mass_shift = double.NaN;
+                                    average_mass_shift = double.NaN;
+                                    break;
+                            }
                         }
                     }
                 }
