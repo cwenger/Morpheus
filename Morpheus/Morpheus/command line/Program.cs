@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Windows.Forms;
 
 namespace Morpheus
@@ -141,20 +142,10 @@ namespace Morpheus
                 {
                     precursor_mass_type = (MassType)Enum.Parse(typeof(MassType), arguments["precmt"], true);
                 }
-                bool prec_mono_correction = false;
-                if(arguments["pmc"] != null)
+                List<double> massErrors = new List<double>() { 0 };
+                if (arguments["masserrors"] != null)
                 {
-                    prec_mono_correction = bool.Parse(arguments["pmc"]);
-                }
-                int min_prec_mono_offset = -3;
-                if(arguments["minpmo"] != null)
-                {
-                    min_prec_mono_offset = int.Parse(arguments["minpmo"]);
-                }
-                int max_prec_mono_offset = 1;
-                if(arguments["maxpmo"] != null)
-                {
-                    max_prec_mono_offset = int.Parse(arguments["maxpmo"]);
+                    massErrors = arguments["masserrors"].Split(',').Select(double.Parse).ToList();
                 }
                 double product_mass_tolerance_value = 0.015;
                 if(arguments["prodmtv"] != null)
@@ -206,7 +197,7 @@ namespace Morpheus
                     protease, max_missed_cleavages, initiator_methionine_behavior,
                     fixed_mods, variable_mods, max_variable_mod_isoforms_per_peptide,
                     precursor_mass_tolerance, precursor_mass_type,
-                    prec_mono_correction, min_prec_mono_offset, max_prec_mono_offset,
+                    massErrors,
                     product_mass_tolerance, product_mass_type,
                     max_fdr, consider_mods_unique,
                     max_threads, minimize_memory_usage,

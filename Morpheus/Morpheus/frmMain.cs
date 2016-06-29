@@ -171,17 +171,8 @@ namespace Morpheus
                                 case "Precursor Mass Type":
                                     cboPrecursorMassType.SelectedIndex = (int)Enum.Parse(typeof(MassType), value, true);
                                     break;
-                                case "Precursor Monoisotopic Peak Correction":
-                                    if(cboPrecursorMassType.SelectedIndex == (int)MassType.Monoisotopic)
-                                    {
-                                        chkPrecursorMonoisotopicPeakCorrection.Checked = bool.Parse(value);
-                                    }
-                                    break;
-                                case "Minimum Precursor Offset":
-                                    numMinPrecursorMonoPeakOffset.Value = int.Parse(value);
-                                    break;
-                                case "Maximum Precursor Offset":
-                                    numMaxPrecursorMonoPeakOffset.Value = int.Parse(value);
+                                case "Mass errors accepted":
+                                    massErrorsTextBox.Text = value;
                                     break;
                                 case "Product Mass Tolerance":
                                     numProductMassTolerance.Value = decimal.Parse(value, CultureInfo.InvariantCulture);
@@ -563,41 +554,6 @@ namespace Morpheus
 
         private void cboPrecursorMassType_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if((MassType)cboPrecursorMassType.SelectedIndex == MassType.Monoisotopic)
-            {
-                chkPrecursorMonoisotopicPeakCorrection.Enabled = true;
-                if(chkPrecursorMonoisotopicPeakCorrection.Checked)
-                {
-                    numMinPrecursorMonoPeakOffset.Enabled = true;
-                    label20.Enabled = true;
-                    numMaxPrecursorMonoPeakOffset.Enabled = true;
-                }
-            }
-            else
-            {
-                chkPrecursorMonoisotopicPeakCorrection.Enabled = false;
-                chkPrecursorMonoisotopicPeakCorrection.Checked = false;
-                numMinPrecursorMonoPeakOffset.Enabled = false;
-                label20.Enabled = false;
-                numMaxPrecursorMonoPeakOffset.Enabled = false;
-            }
-            tspbProgress.Value = tspbProgress.Minimum;
-        }
-
-        private void chkMonoisotopicPeakCorrection_CheckedChanged(object sender, EventArgs e)
-        {
-            if(chkPrecursorMonoisotopicPeakCorrection.Checked)
-            {
-                numMinPrecursorMonoPeakOffset.Enabled = true;
-                label20.Enabled = true;
-                numMaxPrecursorMonoPeakOffset.Enabled = true;
-            }
-            else
-            {
-                numMinPrecursorMonoPeakOffset.Enabled = false;
-                label20.Enabled = false;
-                numMaxPrecursorMonoPeakOffset.Enabled = false;
-            }
             tspbProgress.Value = tspbProgress.Minimum;
         }
 
@@ -683,9 +639,7 @@ namespace Morpheus
             }
             MassTolerance precursor_mass_tolerance = new MassTolerance((double)numPrecursorMassTolerance.Value, (MassToleranceUnits)cboPrecursorMassToleranceUnits.SelectedIndex);
             MassType precursor_mass_type = (MassType)cboPrecursorMassType.SelectedIndex;
-            bool precursor_mono_peak_correction = chkPrecursorMonoisotopicPeakCorrection.Checked;
-            int min_peak_offset = (int)numMinPrecursorMonoPeakOffset.Value;
-            int max_peak_offset = (int)numMaxPrecursorMonoPeakOffset.Value;
+            List<double> massErrors = massErrorsTextBox.Text.Split(',').Select(double.Parse).ToList();
             MassTolerance product_mass_tolerance = new MassTolerance((double)numProductMassTolerance.Value, (MassToleranceUnits)cboProductMassToleranceUnits.SelectedIndex);
             MassType product_mass_type = (MassType)cboProductMassType.SelectedIndex;
             double max_false_discovery_rate = (double)numMaximumFalseDiscoveryRatePercent.Value / 100.0;
@@ -722,7 +676,7 @@ namespace Morpheus
                 protease, max_missed_cleavages, initiator_methionine_behavior,
                 fixed_modifications, variable_modifications, max_variable_mod_isoforms,
                 precursor_mass_tolerance, precursor_mass_type,
-                precursor_mono_peak_correction, min_peak_offset, max_peak_offset,
+                massErrors,
                 product_mass_tolerance, product_mass_type,
                 max_false_discovery_rate, consider_modified_unique,
                 max_threads, minimize_memory_usage,
@@ -909,9 +863,7 @@ namespace Morpheus
                 settings.WriteLine("Precursor Mass Tolerance" + '\t' + numPrecursorMassTolerance.Value.ToString(CultureInfo.InvariantCulture));
                 settings.WriteLine("Precursor Mass Tolerance Units" + '\t' + cboPrecursorMassToleranceUnits.Text);
                 settings.WriteLine("Precursor Mass Type" + '\t' + cboPrecursorMassType.Text);
-                settings.WriteLine("Precursor Monoisotopic Peak Correction" + '\t' + chkPrecursorMonoisotopicPeakCorrection.Checked.ToString().ToLower());
-                settings.WriteLine("Minimum Precursor Offset" + '\t' + ((int)numMinPrecursorMonoPeakOffset.Value).ToString());
-                settings.WriteLine("Maximum Precursor Offset" + '\t' + ((int)numMaxPrecursorMonoPeakOffset.Value).ToString());
+                settings.WriteLine("Mass errors accepted " + massErrorsTextBox.Text);
                 settings.WriteLine("Product Mass Tolerance" + '\t' + numProductMassTolerance.Value.ToString(CultureInfo.InvariantCulture));
                 settings.WriteLine("Product Mass Tolerance Units" + '\t' + cboProductMassToleranceUnits.Text);
                 settings.WriteLine("Product Mass Type" + '\t' + cboProductMassType.Text);

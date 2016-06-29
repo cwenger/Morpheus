@@ -47,6 +47,8 @@
             this.label9 = new System.Windows.Forms.Label();
             this.fbdOutput = new System.Windows.Forms.FolderBrowserDialog();
             this.pnlMain = new System.Windows.Forms.Panel();
+            this.massErrorsTextBox = new System.Windows.Forms.TextBox();
+            this.massErrorsLabel = new System.Windows.Forms.Label();
             this.chkMinimizeMemoryUsage = new System.Windows.Forms.CheckBox();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.chkDeisotope = new System.Windows.Forms.CheckBox();
@@ -66,10 +68,6 @@
             this.numMaximumAssumedPrecursorChargeState = new System.Windows.Forms.NumericUpDown();
             this.numMaxThreads = new System.Windows.Forms.NumericUpDown();
             this.label19 = new System.Windows.Forms.Label();
-            this.chkPrecursorMonoisotopicPeakCorrection = new System.Windows.Forms.CheckBox();
-            this.label20 = new System.Windows.Forms.Label();
-            this.numMaxPrecursorMonoPeakOffset = new System.Windows.Forms.NumericUpDown();
-            this.numMinPrecursorMonoPeakOffset = new System.Windows.Forms.NumericUpDown();
             this.chkOnTheFlyDecoys = new System.Windows.Forms.CheckBox();
             this.chkConsiderModifiedUnique = new System.Windows.Forms.CheckBox();
             this.numMaxVariableModIsoforms = new System.Windows.Forms.NumericUpDown();
@@ -115,8 +113,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.numMinimumAssumedPrecursorChargeState)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numMaximumAssumedPrecursorChargeState)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numMaxThreads)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numMaxPrecursorMonoPeakOffset)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numMinPrecursorMonoPeakOffset)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numMaxVariableModIsoforms)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numProductMassTolerance)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numPrecursorMassTolerance)).BeginInit();
@@ -279,6 +275,8 @@
             // 
             // pnlMain
             // 
+            this.pnlMain.Controls.Add(this.massErrorsTextBox);
+            this.pnlMain.Controls.Add(this.massErrorsLabel);
             this.pnlMain.Controls.Add(this.chkMinimizeMemoryUsage);
             this.pnlMain.Controls.Add(this.groupBox3);
             this.pnlMain.Controls.Add(this.groupBox2);
@@ -287,10 +285,6 @@
             this.pnlMain.Controls.Add(this.groupBox1);
             this.pnlMain.Controls.Add(this.numMaxThreads);
             this.pnlMain.Controls.Add(this.label19);
-            this.pnlMain.Controls.Add(this.chkPrecursorMonoisotopicPeakCorrection);
-            this.pnlMain.Controls.Add(this.label20);
-            this.pnlMain.Controls.Add(this.numMaxPrecursorMonoPeakOffset);
-            this.pnlMain.Controls.Add(this.numMinPrecursorMonoPeakOffset);
             this.pnlMain.Controls.Add(this.chkOnTheFlyDecoys);
             this.pnlMain.Controls.Add(this.chkConsiderModifiedUnique);
             this.pnlMain.Controls.Add(this.numMaxVariableModIsoforms);
@@ -332,6 +326,24 @@
             this.pnlMain.Name = "pnlMain";
             this.pnlMain.Size = new System.Drawing.Size(712, 723);
             this.pnlMain.TabIndex = 2;
+            // 
+            // massErrorsTextBox
+            // 
+            this.massErrorsTextBox.Location = new System.Drawing.Point(443, 487);
+            this.massErrorsTextBox.Name = "massErrorsTextBox";
+            this.massErrorsTextBox.Size = new System.Drawing.Size(261, 20);
+            this.massErrorsTextBox.TabIndex = 53;
+            this.massErrorsTextBox.Text = "0";
+            this.massErrorsTextBox.TextChanged += new System.EventHandler(this.ResetProgressBar);
+            // 
+            // massErrorsLabel
+            // 
+            this.massErrorsLabel.AutoSize = true;
+            this.massErrorsLabel.Location = new System.Drawing.Point(438, 468);
+            this.massErrorsLabel.Name = "massErrorsLabel";
+            this.massErrorsLabel.Size = new System.Drawing.Size(112, 13);
+            this.massErrorsLabel.TabIndex = 52;
+            this.massErrorsLabel.Text = "Mass errors to accept:";
             // 
             // chkMinimizeMemoryUsage
             // 
@@ -584,75 +596,6 @@
             this.label19.Size = new System.Drawing.Size(93, 13);
             this.label19.TabIndex = 43;
             this.label19.Text = "Maximum Threads";
-            // 
-            // chkPrecursorMonoisotopicPeakCorrection
-            // 
-            this.chkPrecursorMonoisotopicPeakCorrection.AutoSize = true;
-            this.chkPrecursorMonoisotopicPeakCorrection.Location = new System.Drawing.Point(441, 471);
-            this.chkPrecursorMonoisotopicPeakCorrection.Name = "chkPrecursorMonoisotopicPeakCorrection";
-            this.chkPrecursorMonoisotopicPeakCorrection.Size = new System.Drawing.Size(216, 17);
-            this.chkPrecursorMonoisotopicPeakCorrection.TabIndex = 26;
-            this.chkPrecursorMonoisotopicPeakCorrection.Text = "Precursor Monoisotopic Peak Correction";
-            this.chkPrecursorMonoisotopicPeakCorrection.UseVisualStyleBackColor = true;
-            this.chkPrecursorMonoisotopicPeakCorrection.CheckedChanged += new System.EventHandler(this.chkMonoisotopicPeakCorrection_CheckedChanged);
-            // 
-            // label20
-            // 
-            this.label20.AutoSize = true;
-            this.label20.Enabled = false;
-            this.label20.Location = new System.Drawing.Point(500, 496);
-            this.label20.Name = "label20";
-            this.label20.Size = new System.Drawing.Size(16, 13);
-            this.label20.TabIndex = 28;
-            this.label20.Text = "to";
-            // 
-            // numMaxPrecursorMonoPeakOffset
-            // 
-            this.numMaxPrecursorMonoPeakOffset.Enabled = false;
-            this.numMaxPrecursorMonoPeakOffset.Location = new System.Drawing.Point(522, 494);
-            this.numMaxPrecursorMonoPeakOffset.Maximum = new decimal(new int[] {
-            10,
-            0,
-            0,
-            0});
-            this.numMaxPrecursorMonoPeakOffset.Minimum = new decimal(new int[] {
-            10,
-            0,
-            0,
-            -2147483648});
-            this.numMaxPrecursorMonoPeakOffset.Name = "numMaxPrecursorMonoPeakOffset";
-            this.numMaxPrecursorMonoPeakOffset.Size = new System.Drawing.Size(54, 20);
-            this.numMaxPrecursorMonoPeakOffset.TabIndex = 29;
-            this.numMaxPrecursorMonoPeakOffset.Value = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-            this.numMaxPrecursorMonoPeakOffset.ValueChanged += new System.EventHandler(this.ResetProgressBar);
-            // 
-            // numMinPrecursorMonoPeakOffset
-            // 
-            this.numMinPrecursorMonoPeakOffset.Enabled = false;
-            this.numMinPrecursorMonoPeakOffset.Location = new System.Drawing.Point(440, 494);
-            this.numMinPrecursorMonoPeakOffset.Maximum = new decimal(new int[] {
-            10,
-            0,
-            0,
-            0});
-            this.numMinPrecursorMonoPeakOffset.Minimum = new decimal(new int[] {
-            10,
-            0,
-            0,
-            -2147483648});
-            this.numMinPrecursorMonoPeakOffset.Name = "numMinPrecursorMonoPeakOffset";
-            this.numMinPrecursorMonoPeakOffset.Size = new System.Drawing.Size(54, 20);
-            this.numMinPrecursorMonoPeakOffset.TabIndex = 27;
-            this.numMinPrecursorMonoPeakOffset.Value = new decimal(new int[] {
-            3,
-            0,
-            0,
-            -2147483648});
-            this.numMinPrecursorMonoPeakOffset.ValueChanged += new System.EventHandler(this.ResetProgressBar);
             // 
             // chkOnTheFlyDecoys
             // 
@@ -1027,8 +970,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.numMinimumAssumedPrecursorChargeState)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numMaximumAssumedPrecursorChargeState)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numMaxThreads)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numMaxPrecursorMonoPeakOffset)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numMinPrecursorMonoPeakOffset)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numMaxVariableModIsoforms)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numProductMassTolerance)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numPrecursorMassTolerance)).EndInit();
@@ -1093,10 +1034,6 @@
         private System.Windows.Forms.NumericUpDown numMaxVariableModIsoforms;
         private System.Windows.Forms.CheckBox chkConsiderModifiedUnique;
         private System.Windows.Forms.CheckBox chkOnTheFlyDecoys;
-        private System.Windows.Forms.Label label20;
-        private System.Windows.Forms.NumericUpDown numMaxPrecursorMonoPeakOffset;
-        private System.Windows.Forms.NumericUpDown numMinPrecursorMonoPeakOffset;
-        private System.Windows.Forms.CheckBox chkPrecursorMonoisotopicPeakCorrection;
         private System.Windows.Forms.NumericUpDown numMaxThreads;
         private System.Windows.Forms.Label label19;
         private System.Windows.Forms.GroupBox groupBox3;
@@ -1118,5 +1055,7 @@
         private System.Windows.Forms.CheckBox chkMinimizeMemoryUsage;
         private System.ComponentModel.BackgroundWorker backgroundWorker1;
         private System.Windows.Forms.Label label21;
+        private System.Windows.Forms.TextBox massErrorsTextBox;
+        private System.Windows.Forms.Label massErrorsLabel;
     }
 }

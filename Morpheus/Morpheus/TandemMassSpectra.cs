@@ -28,34 +28,35 @@ namespace Morpheus
             UpdateProgress?.Invoke(null, e);
         }
 
-        public IEnumerable<TandemMassSpectrum> GetTandemMassSpectraInMassRange(double precursorMass, MassTolerance precursorMassTolerance)
+
+        internal IEnumerable<TandemMassSpectrum> GetTandemMassSpectraInIntervals(List<double> precursorMasses, MassTolerance precursorMassTolerance)
         {
-            return GetTandemMassSpectraInMassRange(precursorMass, precursorMassTolerance, 0, 0);
+            foreach (var precursorMass in precursorMasses)
+            {
+                foreach (var b in GetTandemMassSpectraInMassRange(precursorMass, precursorMassTolerance))
+                {
+                    yield return b;
+                }
+            }
         }
 
-        public IEnumerable<TandemMassSpectrum> GetTandemMassSpectraInMassRange(double precursorMass, MassTolerance precursorMassTolerance,
-            int minimumMonoisotopicPeakOffset, int maximumMonoisotopicPeakOffset)
+        public IEnumerable<TandemMassSpectrum> GetTandemMassSpectraInMassRange(double precursorMass, MassTolerance precursorMassTolerance)
         {
-            for(int i = minimumMonoisotopicPeakOffset; i <= maximumMonoisotopicPeakOffset; i++)
+            double minimum_precursor_mass = precursorMass - precursorMassTolerance;
+            double maximum_precursor_mass = precursorMass + precursorMassTolerance;
+
+            int index = BinarySearch(NextHigherDouble(maximum_precursor_mass));
+            if(index == Count)
             {
-                double precursor_mass = precursorMass + i * Constants.C12_C13_MASS_DIFFERENCE;
-
-                double minimum_precursor_mass = precursor_mass - precursorMassTolerance;
-                double maximum_precursor_mass = precursor_mass + precursorMassTolerance;
-
-                int index = BinarySearch(NextHigherDouble(maximum_precursor_mass));
-                if(index == Count)
+                index--;
+            }
+            while(index >= 0 && this[index].PrecursorMass >= minimum_precursor_mass)
+            {
+                if(this[index].PrecursorMass <= maximum_precursor_mass)
                 {
-                    index--;
+                    yield return this[index];
                 }
-                while(index >= 0 && this[index].PrecursorMass >= minimum_precursor_mass)
-                {
-                    if(this[index].PrecursorMass <= maximum_precursor_mass)
-                    {
-                        yield return this[index];
-                    }
-                    index--;
-                }
+                index--;
             }
         }
 
