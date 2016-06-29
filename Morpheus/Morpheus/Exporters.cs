@@ -208,6 +208,10 @@ namespace Morpheus
                 output.WriteAttributeString("value", '±' + precursorMassTolerance.Value.ToString(CultureInfo.InvariantCulture) + ' ' + precursorMassTolerance.Units.ToString() + " (" + precursorMassType.ToString().ToLower() + ')');
                 output.WriteEndElement();  // parameter
                 output.WriteStartElement("parameter");
+                output.WriteAttributeString("name", "Mass errors accepted");
+                output.WriteAttributeString("value", string.Join(", ", massErrors));
+                output.WriteEndElement();  // parameter
+                output.WriteStartElement("parameter");
                 output.WriteAttributeString("name", "Product Mass Tolerance");
                 output.WriteAttributeString("value", '±' + productMassTolerance.Value.ToString(CultureInfo.InvariantCulture) + ' ' + productMassTolerance.Units.ToString() + " (" + productMassType.ToString().ToLower() + ')');
                 output.WriteEndElement();  // parameter
@@ -600,6 +604,10 @@ namespace Morpheus
                 output.WriteStartElement("userParam");
                 output.WriteAttributeString("name", "Maximum Number of Variable Modification Isoforms per Peptide");
                 output.WriteAttributeString("value", maximumVariableModificationIsoforms.ToString());
+                output.WriteEndElement();  // userParam
+                output.WriteStartElement("userParam");
+                output.WriteAttributeString("name", "Mass errors accepted");
+                output.WriteAttributeString("value", string.Join(", ", massErrors));
                 output.WriteEndElement();  // userParam
                 output.WriteStartElement("userParam");
                 output.WriteAttributeString("name", "Consider Modified Forms as Unique Peptides");
