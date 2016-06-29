@@ -30,9 +30,6 @@ namespace Morpheus
         private int maximumVariableModificationIsoforms;
         private MassTolerance precursorMassTolerance;
         private MassType precursorMassType;
-        private bool precursorMonoisotopicPeakCorrection;
-        private int minimumPrecursorMonoisotopicPeakOffset;
-        private int maximumPrecursorMonoisotopicPeakOffset;
         private MassTolerance productMassTolerance;
         private MassType productMassType;
         private double maximumFalseDiscoveryRate;
@@ -50,7 +47,6 @@ namespace Morpheus
             Protease protease, int maximumMissedCleavages, InitiatorMethionineBehavior initiatorMethionineBehavior,
             IEnumerable<Modification> fixedModifications, IEnumerable<Modification> variableModifications, int maximumVariableModificationIsoforms,
             MassTolerance precursorMassTolerance, MassType precursorMassType,
-            bool precursorMonoisotopicPeakCorrection, int minimumPrecursorMonoisotopicPeakOffset, int maximumPrecursorMonoisotopicPeakOffset,
             MassTolerance productMassTolerance, MassType productMassType,
             double maximumFalseDiscoveryRate, bool considerModifiedFormsAsUniquePeptides,
             int maximumThreads, bool minimizeMemoryUsage,
@@ -74,9 +70,6 @@ namespace Morpheus
             this.maximumNumberOfPeaks = maximumNumberOfPeaks;
             this.precursorMassTolerance = precursorMassTolerance;
             this.precursorMassType = precursorMassType;
-            this.precursorMonoisotopicPeakCorrection = precursorMonoisotopicPeakCorrection;
-            this.minimumPrecursorMonoisotopicPeakOffset = minimumPrecursorMonoisotopicPeakOffset;
-            this.maximumPrecursorMonoisotopicPeakOffset = maximumPrecursorMonoisotopicPeakOffset;
             this.productMassTolerance = productMassTolerance;
             this.productMassType = productMassType;
             this.maximumFalseDiscoveryRate = maximumFalseDiscoveryRate;
@@ -291,7 +284,7 @@ namespace Morpheus
                     overall_log.WriteLine("Variable Modifications: " + variable_modifications);
                     overall_log.WriteLine("Maximum Variable Modification Isoforms Per Peptide: " + maximumVariableModificationIsoforms.ToString());
                     overall_log.WriteLine("Precursor Mass Tolerance: ±" + precursorMassTolerance.Value.ToString(CultureInfo.InvariantCulture) + ' ' + precursorMassTolerance.Units.ToString() + " (" + precursorMassType.ToString().ToLower() + ')');
-                    overall_log.WriteLine("Precursor Monoisotopic Peak Correction: " + (precursorMonoisotopicPeakCorrection ? minimumPrecursorMonoisotopicPeakOffset.ToString("+0;-0;0") + ".." + maximumPrecursorMonoisotopicPeakOffset.ToString("+0;-0;0") : "disabled"));
+                    overall_log.WriteLine("Mass errors accepted: " + string.Join(", ", massErrors));
                     overall_log.WriteLine("Product Mass Tolerance: ±" + productMassTolerance.Value.ToString(CultureInfo.InvariantCulture) + ' ' + productMassTolerance.Units.ToString() + " (" + productMassType.ToString().ToLower() + ')');
                     overall_log.WriteLine("Maximum False Discovery Rate: " + (maximumFalseDiscoveryRate * 100).ToString(CultureInfo.InvariantCulture) + '%');
                     overall_log.WriteLine("Consider Modified Forms as Unique Peptides: " + considerModifiedFormsAsUniquePeptides.ToString().ToLower());
@@ -350,7 +343,7 @@ namespace Morpheus
                     log.WriteLine("Variable Modifications: " + variable_modifications);
                     log.WriteLine("Maximum Variable Modification Isoforms Per Peptide: " + maximumVariableModificationIsoforms.ToString());
                     log.WriteLine("Precursor Mass Tolerance: ±" + precursorMassTolerance.Value.ToString(CultureInfo.InvariantCulture) + ' ' + precursorMassTolerance.Units.ToString() + " (" + precursorMassType.ToString().ToLower() + ')');
-                    log.WriteLine("Precursor Monoisotopic Peak Correction: " + (precursorMonoisotopicPeakCorrection ? minimumPrecursorMonoisotopicPeakOffset.ToString("+0;-0;0") + ".." + maximumPrecursorMonoisotopicPeakOffset.ToString("+0;-0;0") : "disabled"));
+                    log.WriteLine("Mass errors accepted: " + string.Join(", ", massErrors));
                     log.WriteLine("Product Mass Tolerance: ±" + productMassTolerance.Value.ToString(CultureInfo.InvariantCulture) + ' ' + productMassTolerance.Units.ToString() + " (" + productMassType.ToString().ToLower() + ')');
                     log.WriteLine("Maximum False Discovery Rate: " + (maximumFalseDiscoveryRate * 100).ToString(CultureInfo.InvariantCulture) + '%');
                     log.WriteLine("Consider Modified Forms as Unique Peptides: " + considerModifiedFormsAsUniquePeptides.ToString().ToLower());
@@ -496,7 +489,7 @@ namespace Morpheus
                     int proteins = 0;
                     int old_progress = 0;
                     ParallelOptions parallel_options = new ParallelOptions();
-                    parallel_options.MaxDegreeOfParallelism = maximumThreads;
+                    parallel_options.MaxDegreeOfParallelism = 1;
                     Parallel.ForEach(ProteomeDatabaseReader.ReadProteins(proteome_database, onTheFlyDecoys, known_variable_modifications), parallel_options, protein =>
                     {
                         foreach(Peptide peptide in protein.Digest(protease, maximumMissedCleavages, initiatorMethionineBehavior, null, null))
@@ -550,9 +543,7 @@ namespace Morpheus
                                 List<double> massesToConsider = new List<double>();
                                 foreach (double massError in massErrors)
                                     massesToConsider.Add(massToConsider + massError);
-                                foreach (TandemMassSpectrum spectrum in precursorMonoisotopicPeakCorrection ?
-                                    spectra.GetTandemMassSpectraInIntervals(massesToConsider, precursorMassTolerance, minimumPrecursorMonoisotopicPeakOffset, maximumPrecursorMonoisotopicPeakOffset) :
-                                    spectra.GetTandemMassSpectraInIntervals(massesToConsider, precursorMassTolerance))
+                                foreach (TandemMassSpectrum spectrum in spectra.GetTandemMassSpectraInIntervals(massesToConsider, precursorMassTolerance))
                                 {
                                     PeptideSpectrumMatch psm = new PeptideSpectrumMatch(spectrum, modified_peptide, productMassTolerance);
                                     lock(psms)
@@ -643,7 +634,6 @@ namespace Morpheus
                         protease, maximumMissedCleavages, initiatorMethionineBehavior,
                         fixedModifications, fixed_modifications, variableModifications, variable_modifications, maximumVariableModificationIsoforms,
                         precursorMassTolerance, precursorMassType,
-                        precursorMonoisotopicPeakCorrection, minimumPrecursorMonoisotopicPeakOffset, maximumPrecursorMonoisotopicPeakOffset,
                         productMassTolerance, productMassType,
                         maximumFalseDiscoveryRate, considerModifiedFormsAsUniquePeptides,
                         maximumThreads, minimizeMemoryUsage,
@@ -706,7 +696,6 @@ namespace Morpheus
                         protease, maximumMissedCleavages, initiatorMethionineBehavior,
                         fixedModifications, variableModifications, maximumVariableModificationIsoforms,
                         precursorMassTolerance, precursorMassType,
-                        precursorMonoisotopicPeakCorrection, minimumPrecursorMonoisotopicPeakOffset, maximumPrecursorMonoisotopicPeakOffset,
                         productMassTolerance, productMassType,
                         maximumFalseDiscoveryRate, considerModifiedFormsAsUniquePeptides,
                         maximumThreads, minimizeMemoryUsage,
@@ -823,8 +812,7 @@ namespace Morpheus
                             protease, maximumMissedCleavages, initiatorMethionineBehavior,
                             fixedModifications, variableModifications, maximumVariableModificationIsoforms,
                             precursorMassTolerance, precursorMassType,
-                            precursorMonoisotopicPeakCorrection, minimumPrecursorMonoisotopicPeakOffset, maximumPrecursorMonoisotopicPeakOffset,
-                            productMassTolerance, productMassType,
+                           productMassTolerance, productMassType,
                             maximumFalseDiscoveryRate, considerModifiedFormsAsUniquePeptides,
                             maximumThreads, minimizeMemoryUsage,
                             outputFolder,
@@ -904,7 +892,6 @@ namespace Morpheus
                         protease, maximumMissedCleavages, initiatorMethionineBehavior,
                         fixedModifications, variableModifications, maximumVariableModificationIsoforms,
                         precursorMassTolerance, precursorMassType,
-                        precursorMonoisotopicPeakCorrection, minimumPrecursorMonoisotopicPeakOffset, maximumPrecursorMonoisotopicPeakOffset,
                         productMassTolerance, productMassType,
                         maximumFalseDiscoveryRate, considerModifiedFormsAsUniquePeptides,
                         maximumThreads, minimizeMemoryUsage,

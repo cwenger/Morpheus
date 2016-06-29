@@ -46,7 +46,6 @@ namespace Morpheus
             Protease protease, int maximumMissedCleavages, InitiatorMethionineBehavior initiatorMethionineBehavior,
             IEnumerable<Modification> fixedModifications, string fixedModificationsString, IEnumerable<Modification> variableModifications, string variableModificationsString, int maximumVariableModificationIsoforms,
             MassTolerance precursorMassTolerance, MassType precursorMassType,
-            bool precursorMonoisotopicPeakCorrection, int minimumPrecursorMonoisotopicPeakOffset, int maximumPrecursorMonoisotopicPeakOffset,
             MassTolerance productMassTolerance, MassType productMassType,
             double maximumFalseDiscoveryRate, bool considerModifiedFormsAsUniquePeptides,
             int maximumThreads, bool minimizeMemoryUsage,
@@ -208,10 +207,6 @@ namespace Morpheus
                 output.WriteAttributeString("value", '±' + precursorMassTolerance.Value.ToString(CultureInfo.InvariantCulture) + ' ' + precursorMassTolerance.Units.ToString() + " (" + precursorMassType.ToString().ToLower() + ')');
                 output.WriteEndElement();  // parameter
                 output.WriteStartElement("parameter");
-                output.WriteAttributeString("name", "Precursor Monoisotopic Peak Correction");
-                output.WriteAttributeString("value", (precursorMonoisotopicPeakCorrection ? minimumPrecursorMonoisotopicPeakOffset.ToString("+0;-0;0") + ".." + maximumPrecursorMonoisotopicPeakOffset.ToString("+0;-0;0") : "disabled"));
-                output.WriteEndElement();  // parameter
-                output.WriteStartElement("parameter");
                 output.WriteAttributeString("name", "Product Mass Tolerance");
                 output.WriteAttributeString("value", '±' + productMassTolerance.Value.ToString(CultureInfo.InvariantCulture) + ' ' + productMassTolerance.Units.ToString() + " (" + productMassType.ToString().ToLower() + ')');
                 output.WriteEndElement();  // parameter
@@ -325,7 +320,6 @@ namespace Morpheus
             Protease protease, int maximumMissedCleavages, InitiatorMethionineBehavior initiatorMethionineBehavior,
             IEnumerable<Modification> fixedModifications, IEnumerable<Modification> variableModifications, int maximumVariableModificationIsoforms,
             MassTolerance precursorMassTolerance, MassType precursorMassType,
-            bool precursorMonoisotopicPeakCorrection, int minimumPrecursorMonoisotopicPeakOffset, int maximumPrecursorMonoisotopicPeakOffset,
             MassTolerance productMassTolerance, MassType productMassType,
             double maximumFalseDiscoveryRate, bool considerModifiedFormsAsUniquePeptides,
             int maximumThreads, bool minimizeMemoryUsage,
@@ -604,18 +598,6 @@ namespace Morpheus
                 output.WriteStartElement("userParam");
                 output.WriteAttributeString("name", "Maximum Number of Variable Modification Isoforms per Peptide");
                 output.WriteAttributeString("value", maximumVariableModificationIsoforms.ToString());
-                output.WriteEndElement();  // userParam
-                output.WriteStartElement("userParam");
-                output.WriteAttributeString("name", "Precursor Monoisotopic Peak Correction Enabled");
-                output.WriteAttributeString("value", precursorMonoisotopicPeakCorrection.ToString().ToLower());
-                output.WriteEndElement();  // userParam
-                output.WriteStartElement("userParam");
-                output.WriteAttributeString("name", "Minimum Precursor Monoisotopic Peak Correction Offset");
-                output.WriteAttributeString("value", precursorMonoisotopicPeakCorrection ? minimumPrecursorMonoisotopicPeakOffset.ToString() : "n/a");
-                output.WriteEndElement();  // userParam
-                output.WriteStartElement("userParam");
-                output.WriteAttributeString("name", "Maximum Precursor Monoisotopic Peak Correction Offset");
-                output.WriteAttributeString("value", precursorMonoisotopicPeakCorrection ? maximumPrecursorMonoisotopicPeakOffset.ToString() : "n/a");
                 output.WriteEndElement();  // userParam
                 output.WriteStartElement("userParam");
                 output.WriteAttributeString("name", "Consider Modified Forms as Unique Peptides");

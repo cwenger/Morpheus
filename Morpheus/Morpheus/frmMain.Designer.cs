@@ -69,10 +69,6 @@
             this.label21 = new System.Windows.Forms.Label();
             this.numMaxThreads = new System.Windows.Forms.NumericUpDown();
             this.label19 = new System.Windows.Forms.Label();
-            this.chkPrecursorMonoisotopicPeakCorrection = new System.Windows.Forms.CheckBox();
-            this.label20 = new System.Windows.Forms.Label();
-            this.numMaxPrecursorMonoPeakOffset = new System.Windows.Forms.NumericUpDown();
-            this.numMinPrecursorMonoPeakOffset = new System.Windows.Forms.NumericUpDown();
             this.chkOnTheFlyDecoys = new System.Windows.Forms.CheckBox();
             this.chkConsiderModifiedUnique = new System.Windows.Forms.CheckBox();
             this.numMaxVariableModIsoforms = new System.Windows.Forms.NumericUpDown();
@@ -117,8 +113,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.numMinimumAssumedPrecursorChargeState)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numMaximumAssumedPrecursorChargeState)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numMaxThreads)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numMaxPrecursorMonoPeakOffset)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numMinPrecursorMonoPeakOffset)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numMaxVariableModIsoforms)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numProductMassTolerance)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numPrecursorMassTolerance)).BeginInit();
@@ -291,10 +285,6 @@
             this.pnlMain.Controls.Add(this.groupBox1);
             this.pnlMain.Controls.Add(this.numMaxThreads);
             this.pnlMain.Controls.Add(this.label19);
-            this.pnlMain.Controls.Add(this.chkPrecursorMonoisotopicPeakCorrection);
-            this.pnlMain.Controls.Add(this.label20);
-            this.pnlMain.Controls.Add(this.numMaxPrecursorMonoPeakOffset);
-            this.pnlMain.Controls.Add(this.numMinPrecursorMonoPeakOffset);
             this.pnlMain.Controls.Add(this.chkOnTheFlyDecoys);
             this.pnlMain.Controls.Add(this.chkConsiderModifiedUnique);
             this.pnlMain.Controls.Add(this.numMaxVariableModIsoforms);
@@ -339,7 +329,7 @@
             // 
             // textBox1
             // 
-            this.textBox1.Location = new System.Drawing.Point(441, 539);
+            this.textBox1.Location = new System.Drawing.Point(443, 487);
             this.textBox1.Name = "textBox1";
             this.textBox1.Size = new System.Drawing.Size(261, 20);
             this.textBox1.TabIndex = 53;
@@ -584,6 +574,15 @@
             0});
             this.numMaximumAssumedPrecursorChargeState.ValueChanged += new System.EventHandler(this.ResetProgressBar);
             // 
+            // label21
+            // 
+            this.label21.AutoSize = true;
+            this.label21.Location = new System.Drawing.Point(6, 13);
+            this.label21.Name = "label21";
+            this.label21.Size = new System.Drawing.Size(88, 13);
+            this.label21.TabIndex = 50;
+            this.label21.Text = "(Unknowns Only)";
+            // 
             // numMaxThreads
             // 
             this.numMaxThreads.Location = new System.Drawing.Point(108, 622);
@@ -605,75 +604,6 @@
             this.label19.Size = new System.Drawing.Size(93, 13);
             this.label19.TabIndex = 43;
             this.label19.Text = "Maximum Threads";
-            // 
-            // chkPrecursorMonoisotopicPeakCorrection
-            // 
-            this.chkPrecursorMonoisotopicPeakCorrection.AutoSize = true;
-            this.chkPrecursorMonoisotopicPeakCorrection.Location = new System.Drawing.Point(441, 471);
-            this.chkPrecursorMonoisotopicPeakCorrection.Name = "chkPrecursorMonoisotopicPeakCorrection";
-            this.chkPrecursorMonoisotopicPeakCorrection.Size = new System.Drawing.Size(216, 17);
-            this.chkPrecursorMonoisotopicPeakCorrection.TabIndex = 26;
-            this.chkPrecursorMonoisotopicPeakCorrection.Text = "Precursor Monoisotopic Peak Correction";
-            this.chkPrecursorMonoisotopicPeakCorrection.UseVisualStyleBackColor = true;
-            this.chkPrecursorMonoisotopicPeakCorrection.CheckedChanged += new System.EventHandler(this.chkMonoisotopicPeakCorrection_CheckedChanged);
-            // 
-            // label20
-            // 
-            this.label20.AutoSize = true;
-            this.label20.Enabled = false;
-            this.label20.Location = new System.Drawing.Point(500, 496);
-            this.label20.Name = "label20";
-            this.label20.Size = new System.Drawing.Size(16, 13);
-            this.label20.TabIndex = 28;
-            this.label20.Text = "to";
-            // 
-            // numMaxPrecursorMonoPeakOffset
-            // 
-            this.numMaxPrecursorMonoPeakOffset.Enabled = false;
-            this.numMaxPrecursorMonoPeakOffset.Location = new System.Drawing.Point(522, 494);
-            this.numMaxPrecursorMonoPeakOffset.Maximum = new decimal(new int[] {
-            10,
-            0,
-            0,
-            0});
-            this.numMaxPrecursorMonoPeakOffset.Minimum = new decimal(new int[] {
-            10,
-            0,
-            0,
-            -2147483648});
-            this.numMaxPrecursorMonoPeakOffset.Name = "numMaxPrecursorMonoPeakOffset";
-            this.numMaxPrecursorMonoPeakOffset.Size = new System.Drawing.Size(54, 20);
-            this.numMaxPrecursorMonoPeakOffset.TabIndex = 29;
-            this.numMaxPrecursorMonoPeakOffset.Value = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-            this.numMaxPrecursorMonoPeakOffset.ValueChanged += new System.EventHandler(this.ResetProgressBar);
-            // 
-            // numMinPrecursorMonoPeakOffset
-            // 
-            this.numMinPrecursorMonoPeakOffset.Enabled = false;
-            this.numMinPrecursorMonoPeakOffset.Location = new System.Drawing.Point(440, 494);
-            this.numMinPrecursorMonoPeakOffset.Maximum = new decimal(new int[] {
-            10,
-            0,
-            0,
-            0});
-            this.numMinPrecursorMonoPeakOffset.Minimum = new decimal(new int[] {
-            10,
-            0,
-            0,
-            -2147483648});
-            this.numMinPrecursorMonoPeakOffset.Name = "numMinPrecursorMonoPeakOffset";
-            this.numMinPrecursorMonoPeakOffset.Size = new System.Drawing.Size(54, 20);
-            this.numMinPrecursorMonoPeakOffset.TabIndex = 27;
-            this.numMinPrecursorMonoPeakOffset.Value = new decimal(new int[] {
-            3,
-            0,
-            0,
-            -2147483648});
-            this.numMinPrecursorMonoPeakOffset.ValueChanged += new System.EventHandler(this.ResetProgressBar);
             // 
             // chkOnTheFlyDecoys
             // 
@@ -1009,15 +939,6 @@
             this.backgroundWorker1.DoWork += new System.ComponentModel.DoWorkEventHandler(this.backgroundWorker1_DoWork);
             this.backgroundWorker1.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.backgroundWorker1_RunWorkerCompleted);
             // 
-            // label21
-            // 
-            this.label21.AutoSize = true;
-            this.label21.Location = new System.Drawing.Point(6, 13);
-            this.label21.Name = "label21";
-            this.label21.Size = new System.Drawing.Size(88, 13);
-            this.label21.TabIndex = 50;
-            this.label21.Text = "(Unknowns Only)";
-            // 
             // frmMain
             // 
             this.AllowDrop = true;
@@ -1048,8 +969,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.numMinimumAssumedPrecursorChargeState)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numMaximumAssumedPrecursorChargeState)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numMaxThreads)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numMaxPrecursorMonoPeakOffset)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numMinPrecursorMonoPeakOffset)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numMaxVariableModIsoforms)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numProductMassTolerance)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numPrecursorMassTolerance)).EndInit();
@@ -1114,10 +1033,6 @@
         private System.Windows.Forms.NumericUpDown numMaxVariableModIsoforms;
         private System.Windows.Forms.CheckBox chkConsiderModifiedUnique;
         private System.Windows.Forms.CheckBox chkOnTheFlyDecoys;
-        private System.Windows.Forms.Label label20;
-        private System.Windows.Forms.NumericUpDown numMaxPrecursorMonoPeakOffset;
-        private System.Windows.Forms.NumericUpDown numMinPrecursorMonoPeakOffset;
-        private System.Windows.Forms.CheckBox chkPrecursorMonoisotopicPeakCorrection;
         private System.Windows.Forms.NumericUpDown numMaxThreads;
         private System.Windows.Forms.Label label19;
         private System.Windows.Forms.GroupBox groupBox3;
