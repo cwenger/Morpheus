@@ -171,6 +171,9 @@ namespace Morpheus
                                 case "Precursor Mass Type":
                                     cboPrecursorMassType.SelectedIndex = (int)Enum.Parse(typeof(MassType), value, true);
                                     break;
+                                case "Mass errors accepted":
+                                    textBox1.Text = value;
+                                    break;
                                 case "Product Mass Tolerance":
                                     numProductMassTolerance.Value = decimal.Parse(value, CultureInfo.InvariantCulture);
                                     break;
@@ -860,7 +863,7 @@ namespace Morpheus
                 settings.WriteLine("Precursor Mass Tolerance" + '\t' + numPrecursorMassTolerance.Value.ToString(CultureInfo.InvariantCulture));
                 settings.WriteLine("Precursor Mass Tolerance Units" + '\t' + cboPrecursorMassToleranceUnits.Text);
                 settings.WriteLine("Precursor Mass Type" + '\t' + cboPrecursorMassType.Text);
-                settings.WriteLine("Mass errors accepted: " + textBox1.Text);
+                settings.WriteLine("Mass errors accepted " + textBox1.Text);
                 settings.WriteLine("Product Mass Tolerance" + '\t' + numProductMassTolerance.Value.ToString(CultureInfo.InvariantCulture));
                 settings.WriteLine("Product Mass Tolerance Units" + '\t' + cboProductMassToleranceUnits.Text);
                 settings.WriteLine("Product Mass Type" + '\t' + cboProductMassType.Text);
