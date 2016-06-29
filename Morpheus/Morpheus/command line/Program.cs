@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Windows.Forms;
 
 namespace Morpheus
@@ -141,6 +142,11 @@ namespace Morpheus
                 {
                     precursor_mass_type = (MassType)Enum.Parse(typeof(MassType), arguments["precmt"], true);
                 }
+                List<double> massErrors = new List<double>() { 0 };
+                if (arguments["masserrors"] != null)
+                {
+                    massErrors = arguments["masserrors"].Split(',').Select(double.Parse).ToList();
+                }
                 double product_mass_tolerance_value = 0.015;
                 if(arguments["prodmtv"] != null)
                 {
@@ -182,9 +188,6 @@ namespace Morpheus
                 {
                     output_folder = arguments["o"];
                 }
-
-                List<double> massErrors = new List<double>();
-                massErrors.Add(0);
 
                 DatabaseSearcher database_searcher = new DatabaseSearcher(data,
                     min_assumed_precursor_charge_state, max_assumed_precursor_charge_state,
