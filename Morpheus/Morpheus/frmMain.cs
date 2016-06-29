@@ -553,12 +553,7 @@ namespace Morpheus
         {
             tspbProgress.Value = tspbProgress.Minimum;
         }
-
-        private void chkMonoisotopicPeakCorrection_CheckedChanged(object sender, EventArgs e)
-        {
-            tspbProgress.Value = tspbProgress.Minimum;
-        }
-
+        
         private void btnBrowseOutput_Click(object sender, EventArgs e)
         {
             if(fbdOutput.ShowDialog() == DialogResult.OK)
@@ -865,6 +860,7 @@ namespace Morpheus
                 settings.WriteLine("Precursor Mass Tolerance" + '\t' + numPrecursorMassTolerance.Value.ToString(CultureInfo.InvariantCulture));
                 settings.WriteLine("Precursor Mass Tolerance Units" + '\t' + cboPrecursorMassToleranceUnits.Text);
                 settings.WriteLine("Precursor Mass Type" + '\t' + cboPrecursorMassType.Text);
+                settings.WriteLine("Mass errors accepted: " + textBox1.Text);
                 settings.WriteLine("Product Mass Tolerance" + '\t' + numProductMassTolerance.Value.ToString(CultureInfo.InvariantCulture));
                 settings.WriteLine("Product Mass Tolerance Units" + '\t' + cboProductMassToleranceUnits.Text);
                 settings.WriteLine("Product Mass Type" + '\t' + cboProductMassType.Text);
