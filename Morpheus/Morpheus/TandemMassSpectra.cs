@@ -28,14 +28,13 @@ namespace Morpheus
             UpdateProgress?.Invoke(null, e);
         }
 
-
-        internal IEnumerable<TandemMassSpectrum> GetTandemMassSpectraInIntervals(List<double> precursorMasses, MassTolerance precursorMassTolerance)
+        public IEnumerable<TandemMassSpectrum> GetTandemMassSpectraInMassRanges(double precursorMass, IEnumerable<double> acceptedPrecursorMassErrors, MassTolerance precursorMassTolerance)
         {
-            foreach (var precursorMass in precursorMasses)
+            foreach(double accepted_precursor_mass_error in acceptedPrecursorMassErrors)
             {
-                foreach (var b in GetTandemMassSpectraInMassRange(precursorMass, precursorMassTolerance))
+                foreach(TandemMassSpectrum spectrum in GetTandemMassSpectraInMassRange(precursorMass + accepted_precursor_mass_error, precursorMassTolerance))
                 {
-                    yield return b;
+                    yield return spectrum;
                 }
             }
         }

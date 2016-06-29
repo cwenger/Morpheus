@@ -171,8 +171,8 @@ namespace Morpheus
                                 case "Precursor Mass Type":
                                     cboPrecursorMassType.SelectedIndex = (int)Enum.Parse(typeof(MassType), value, true);
                                     break;
-                                case "Mass errors accepted":
-                                    massErrorsTextBox.Text = value;
+                                case "Accepted Precursor Mass Errors (Da)":
+                                    txtAcceptedPrecursorMassErrors.Text = value;
                                     break;
                                 case "Product Mass Tolerance":
                                     numProductMassTolerance.Value = decimal.Parse(value, CultureInfo.InvariantCulture);
@@ -639,7 +639,25 @@ namespace Morpheus
             }
             MassTolerance precursor_mass_tolerance = new MassTolerance((double)numPrecursorMassTolerance.Value, (MassToleranceUnits)cboPrecursorMassToleranceUnits.SelectedIndex);
             MassType precursor_mass_type = (MassType)cboPrecursorMassType.SelectedIndex;
-            List<double> massErrors = massErrorsTextBox.Text.Split(',').Select(double.Parse).ToList();
+            List<double> accepted_precursor_mass_errors = new List<double>();
+            if(txtAcceptedPrecursorMassErrors.Text.Length > 0)
+            {
+                foreach(string accepted_precursor_mass_error_text in txtAcceptedPrecursorMassErrors.Text.Split(','))
+                {
+                    double accepted_precursor_mass_error;
+                    if(!double.TryParse(accepted_precursor_mass_error_text, NumberStyles.Float | NumberStyles.AllowThousands, CultureInfo.InvariantCulture, out accepted_precursor_mass_error))
+                    {
+                        MessageBox.Show("Cannot parse accepted precursor mass errors: " + txtRelativeThresholdPercent.Text);
+                        txtAcceptedPrecursorMassErrors.Focus();
+                        return;
+                    }
+                    accepted_precursor_mass_errors.Add(accepted_precursor_mass_error);
+                }
+            }
+            else
+            {
+                accepted_precursor_mass_errors.Add(0.0);
+            }
             MassTolerance product_mass_tolerance = new MassTolerance((double)numProductMassTolerance.Value, (MassToleranceUnits)cboProductMassToleranceUnits.SelectedIndex);
             MassType product_mass_type = (MassType)cboProductMassType.SelectedIndex;
             double max_false_discovery_rate = (double)numMaximumFalseDiscoveryRatePercent.Value / 100.0;
@@ -676,7 +694,7 @@ namespace Morpheus
                 protease, max_missed_cleavages, initiator_methionine_behavior,
                 fixed_modifications, variable_modifications, max_variable_mod_isoforms,
                 precursor_mass_tolerance, precursor_mass_type,
-                massErrors,
+                accepted_precursor_mass_errors,
                 product_mass_tolerance, product_mass_type,
                 max_false_discovery_rate, consider_modified_unique,
                 max_threads, minimize_memory_usage,
@@ -863,7 +881,7 @@ namespace Morpheus
                 settings.WriteLine("Precursor Mass Tolerance" + '\t' + numPrecursorMassTolerance.Value.ToString(CultureInfo.InvariantCulture));
                 settings.WriteLine("Precursor Mass Tolerance Units" + '\t' + cboPrecursorMassToleranceUnits.Text);
                 settings.WriteLine("Precursor Mass Type" + '\t' + cboPrecursorMassType.Text);
-                settings.WriteLine("Mass errors accepted " + massErrorsTextBox.Text);
+                settings.WriteLine("Accepted Precursor Mass Errors (Da)" + '\t' + txtAcceptedPrecursorMassErrors.Text);
                 settings.WriteLine("Product Mass Tolerance" + '\t' + numProductMassTolerance.Value.ToString(CultureInfo.InvariantCulture));
                 settings.WriteLine("Product Mass Tolerance Units" + '\t' + cboProductMassToleranceUnits.Text);
                 settings.WriteLine("Product Mass Type" + '\t' + cboProductMassType.Text);

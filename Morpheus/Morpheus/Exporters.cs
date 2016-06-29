@@ -46,7 +46,7 @@ namespace Morpheus
             Protease protease, int maximumMissedCleavages, InitiatorMethionineBehavior initiatorMethionineBehavior,
             IEnumerable<Modification> fixedModifications, string fixedModificationsString, IEnumerable<Modification> variableModifications, string variableModificationsString, int maximumVariableModificationIsoforms,
             MassTolerance precursorMassTolerance, MassType precursorMassType,
-            List<double> massErrors,
+            IEnumerable<double> acceptedPrecursorMassErrors,
             MassTolerance productMassTolerance, MassType productMassType,
             double maximumFalseDiscoveryRate, bool considerModifiedFormsAsUniquePeptides,
             int maximumThreads, bool minimizeMemoryUsage,
@@ -208,8 +208,8 @@ namespace Morpheus
                 output.WriteAttributeString("value", '±' + precursorMassTolerance.Value.ToString(CultureInfo.InvariantCulture) + ' ' + precursorMassTolerance.Units.ToString() + " (" + precursorMassType.ToString().ToLower() + ')');
                 output.WriteEndElement();  // parameter
                 output.WriteStartElement("parameter");
-                output.WriteAttributeString("name", "Mass errors accepted");
-                output.WriteAttributeString("value", string.Join(", ", massErrors));
+                output.WriteAttributeString("name", "Accepted Precursor Mass Errors");
+                output.WriteAttributeString("value", string.Join(", ", acceptedPrecursorMassErrors) + " Da");
                 output.WriteEndElement();  // parameter
                 output.WriteStartElement("parameter");
                 output.WriteAttributeString("name", "Product Mass Tolerance");
@@ -325,7 +325,7 @@ namespace Morpheus
             Protease protease, int maximumMissedCleavages, InitiatorMethionineBehavior initiatorMethionineBehavior,
             IEnumerable<Modification> fixedModifications, IEnumerable<Modification> variableModifications, int maximumVariableModificationIsoforms,
             MassTolerance precursorMassTolerance, MassType precursorMassType,
-            List<double> massErrors,
+            IEnumerable<double> acceptedPrecursorMassErrors,
             MassTolerance productMassTolerance, MassType productMassType,
             double maximumFalseDiscoveryRate, bool considerModifiedFormsAsUniquePeptides,
             int maximumThreads, bool minimizeMemoryUsage,
@@ -606,8 +606,11 @@ namespace Morpheus
                 output.WriteAttributeString("value", maximumVariableModificationIsoforms.ToString());
                 output.WriteEndElement();  // userParam
                 output.WriteStartElement("userParam");
-                output.WriteAttributeString("name", "Mass errors accepted");
-                output.WriteAttributeString("value", string.Join(", ", massErrors));
+                output.WriteAttributeString("name", "Accepted Precursor Mass Errors");
+                output.WriteAttributeString("value", string.Join(", ", acceptedPrecursorMassErrors));
+                output.WriteAttributeString("unitAccession", "UO:0000221");
+                output.WriteAttributeString("unitName", "dalton");
+                output.WriteAttributeString("unitCvRef", "UO");
                 output.WriteEndElement();  // userParam
                 output.WriteStartElement("userParam");
                 output.WriteAttributeString("name", "Consider Modified Forms as Unique Peptides");
