@@ -50,7 +50,8 @@ namespace Morpheus
             MassTolerance productMassTolerance, MassType productMassType,
             double maximumFalseDiscoveryRate, bool considerModifiedFormsAsUniquePeptides,
             int maximumThreads, bool minimizeMemoryUsage,
-            string outputFolder, List<double> massErrors)
+            string outputFolder,
+            List<double> massErrors)
         {
             this.dataFilepaths = dataFilepaths;
             this.assignChargeStates = assignChargeStates;
@@ -489,7 +490,7 @@ namespace Morpheus
                     int proteins = 0;
                     int old_progress = 0;
                     ParallelOptions parallel_options = new ParallelOptions();
-                    parallel_options.MaxDegreeOfParallelism = 1;
+                    parallel_options.MaxDegreeOfParallelism = maximumThreads;
                     Parallel.ForEach(ProteomeDatabaseReader.ReadProteins(proteome_database, onTheFlyDecoys, known_variable_modifications), parallel_options, protein =>
                     {
                         foreach(Peptide peptide in protein.Digest(protease, maximumMissedCleavages, initiatorMethionineBehavior, null, null))
@@ -812,7 +813,7 @@ namespace Morpheus
                             protease, maximumMissedCleavages, initiatorMethionineBehavior,
                             fixedModifications, variableModifications, maximumVariableModificationIsoforms,
                             precursorMassTolerance, precursorMassType,
-                           productMassTolerance, productMassType,
+                            productMassTolerance, productMassType,
                             maximumFalseDiscoveryRate, considerModifiedFormsAsUniquePeptides,
                             maximumThreads, minimizeMemoryUsage,
                             outputFolder,
