@@ -127,19 +127,19 @@ namespace Morpheus
                                     numMaximumAssumedPrecursorChargeState.Value = int.Parse(value);
                                     break;
                                 case "Absolute MS/MS Peak Threshold":
-                                    value_fields = value.Split(',');
+                                    value_fields = value.Split(';');
                                     chkAbsoluteThreshold.Checked = bool.Parse(value_fields[0]);
                                     txtAbsoluteThreshold.Text = value_fields[1];
                                     break;
                                 case "Relative MS/MS Peak Threshold (%)":
-                                    value_fields = value.Split(',');
+                                    value_fields = value.Split(';');
                                     chkRelativeThreshold.Checked = bool.Parse(value_fields[0]);
                                     txtRelativeThresholdPercent.Text = value_fields[1];
                                     break;
                                 case "Maximum Number of MS/MS Peaks":
-                                    value_fields = value.Split(',');
+                                    value_fields = value.Split(';');
                                     chkMaxNumPeaks.Checked = bool.Parse(value_fields[0]);
-                                    numMaxPeaks.Value = (decimal)int.Parse(value_fields[1]);
+                                    numMaxPeaks.Value = int.Parse(value_fields[1]);
                                     break;
                                 case "Assign Charge States":
                                     chkAssignChargeStates.Checked = bool.Parse(value);
@@ -615,7 +615,7 @@ namespace Morpheus
             double absolute_threshold = -1.0;
             if(chkAbsoluteThreshold.Checked)
             {
-                if(!double.TryParse(txtAbsoluteThreshold.Text, out absolute_threshold))
+                if(!double.TryParse(txtAbsoluteThreshold.Text, NumberStyles.Float | NumberStyles.AllowThousands, CultureInfo.InvariantCulture, out absolute_threshold))
                 {
                     MessageBox.Show("Cannot parse absolute MS/MS peak threshold: " + txtAbsoluteThreshold.Text);
                     txtAbsoluteThreshold.Focus();
@@ -625,7 +625,7 @@ namespace Morpheus
             double relative_threshold_percent = -1.0;
             if(chkRelativeThreshold.Checked)
             {
-                if(!double.TryParse(txtRelativeThresholdPercent.Text, out relative_threshold_percent))
+                if(!double.TryParse(txtRelativeThresholdPercent.Text, NumberStyles.Float | NumberStyles.AllowThousands, CultureInfo.InvariantCulture, out relative_threshold_percent))
                 {
                     MessageBox.Show("Cannot parse relative MS/MS peak threshold: " + txtRelativeThresholdPercent.Text);
                     txtRelativeThresholdPercent.Focus();
@@ -642,7 +642,7 @@ namespace Morpheus
             List<double> accepted_precursor_mass_errors = new List<double>();
             if(txtAcceptedPrecursorMassErrors.Text.Length > 0)
             {
-                foreach(string accepted_precursor_mass_error_text in txtAcceptedPrecursorMassErrors.Text.Split(','))
+                foreach(string accepted_precursor_mass_error_text in txtAcceptedPrecursorMassErrors.Text.Split(';'))
                 {
                     double accepted_precursor_mass_error;
                     if(!double.TryParse(accepted_precursor_mass_error_text, NumberStyles.Float | NumberStyles.AllowThousands, CultureInfo.InvariantCulture, out accepted_precursor_mass_error))
@@ -869,9 +869,9 @@ namespace Morpheus
             {
                 settings.WriteLine("Minimum Assumed Precursor Charge State" + '\t' + ((int)numMinimumAssumedPrecursorChargeState.Value).ToString());
                 settings.WriteLine("Maximum Assumed Precursor Charge State" + '\t' + ((int)numMaximumAssumedPrecursorChargeState.Value).ToString());
-                settings.WriteLine("Absolute MS/MS Peak Threshold" + '\t' + chkAbsoluteThreshold.Checked.ToString().ToLower() + ',' + txtAbsoluteThreshold.Text);
-                settings.WriteLine("Relative MS/MS Peak Threshold (%)" + '\t' + chkRelativeThreshold.Checked.ToString().ToLower() + ',' + txtRelativeThresholdPercent.Text);
-                settings.WriteLine("Maximum Number of MS/MS Peaks" + '\t' + chkMaxNumPeaks.Checked.ToString().ToLower() + ',' + ((int)numMaxPeaks.Value).ToString());
+                settings.WriteLine("Absolute MS/MS Peak Threshold" + '\t' + chkAbsoluteThreshold.Checked.ToString().ToLower() + ';' + txtAbsoluteThreshold.Text);
+                settings.WriteLine("Relative MS/MS Peak Threshold (%)" + '\t' + chkRelativeThreshold.Checked.ToString().ToLower() + ';' + txtRelativeThresholdPercent.Text);
+                settings.WriteLine("Maximum Number of MS/MS Peaks" + '\t' + chkMaxNumPeaks.Checked.ToString().ToLower() + ';' + ((int)numMaxPeaks.Value).ToString());
                 settings.WriteLine("Assign Charge States" + '\t' + chkAssignChargeStates.Checked.ToString().ToLower());
                 settings.WriteLine("De-isotope" + '\t' + chkDeisotope.Checked.ToString().ToLower());
                 settings.WriteLine("Protease" + '\t' + cboProtease.Text);

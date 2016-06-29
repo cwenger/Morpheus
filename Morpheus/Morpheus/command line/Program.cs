@@ -145,7 +145,7 @@ namespace Morpheus
                 List<double> accepted_precursor_mass_errors = new List<double>();
                 if(arguments["apme"] != null && arguments["apme"].Length > 0)
                 {
-                    foreach(string accepted_precursor_mass_error in arguments["apme"].Split(','))
+                    foreach(string accepted_precursor_mass_error in arguments["apme"].Split(';'))
                     {
                         accepted_precursor_mass_errors.Add(double.Parse(accepted_precursor_mass_error, CultureInfo.InvariantCulture));
                     }

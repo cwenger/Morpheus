@@ -209,7 +209,7 @@ namespace Morpheus
                 output.WriteEndElement();  // parameter
                 output.WriteStartElement("parameter");
                 output.WriteAttributeString("name", "Accepted Precursor Mass Errors");
-                output.WriteAttributeString("value", string.Join(", ", acceptedPrecursorMassErrors) + " Da");
+                output.WriteAttributeString("value", string.Join("; ", acceptedPrecursorMassErrors) + " Da");
                 output.WriteEndElement();  // parameter
                 output.WriteStartElement("parameter");
                 output.WriteAttributeString("name", "Product Mass Tolerance");
@@ -607,7 +607,7 @@ namespace Morpheus
                 output.WriteEndElement();  // userParam
                 output.WriteStartElement("userParam");
                 output.WriteAttributeString("name", "Accepted Precursor Mass Errors");
-                output.WriteAttributeString("value", string.Join(", ", acceptedPrecursorMassErrors));
+                output.WriteAttributeString("value", string.Join("; ", acceptedPrecursorMassErrors));
                 output.WriteAttributeString("unitAccession", "UO:0000221");
                 output.WriteAttributeString("unitName", "dalton");
                 output.WriteAttributeString("unitCvRef", "UO");

@@ -285,7 +285,7 @@ namespace Morpheus
                     overall_log.WriteLine("Variable Modifications: " + variable_modifications);
                     overall_log.WriteLine("Maximum Variable Modification Isoforms Per Peptide: " + maximumVariableModificationIsoforms.ToString());
                     overall_log.WriteLine("Precursor Mass Tolerance: ±" + precursorMassTolerance.Value.ToString(CultureInfo.InvariantCulture) + ' ' + precursorMassTolerance.Units.ToString() + " (" + precursorMassType.ToString().ToLower() + ')');
-                    overall_log.WriteLine("Accepted Precursor Mass Errors: " + string.Join(", ", acceptedPrecursorMassErrors) + " Da");
+                    overall_log.WriteLine("Accepted Precursor Mass Errors: " + string.Join("; ", acceptedPrecursorMassErrors) + " Da");
                     overall_log.WriteLine("Product Mass Tolerance: ±" + productMassTolerance.Value.ToString(CultureInfo.InvariantCulture) + ' ' + productMassTolerance.Units.ToString() + " (" + productMassType.ToString().ToLower() + ')');
                     overall_log.WriteLine("Maximum False Discovery Rate: " + (maximumFalseDiscoveryRate * 100).ToString(CultureInfo.InvariantCulture) + '%');
                     overall_log.WriteLine("Consider Modified Forms as Unique Peptides: " + considerModifiedFormsAsUniquePeptides.ToString().ToLower());
@@ -344,7 +344,7 @@ namespace Morpheus
                     log.WriteLine("Variable Modifications: " + variable_modifications);
                     log.WriteLine("Maximum Variable Modification Isoforms Per Peptide: " + maximumVariableModificationIsoforms.ToString());
                     log.WriteLine("Precursor Mass Tolerance: ±" + precursorMassTolerance.Value.ToString(CultureInfo.InvariantCulture) + ' ' + precursorMassTolerance.Units.ToString() + " (" + precursorMassType.ToString().ToLower() + ')');
-                    log.WriteLine("Accepted Precursor Mass Errors: " + string.Join(", ", acceptedPrecursorMassErrors) + " Da");
+                    log.WriteLine("Accepted Precursor Mass Errors: " + string.Join("; ", acceptedPrecursorMassErrors) + " Da");
                     log.WriteLine("Product Mass Tolerance: ±" + productMassTolerance.Value.ToString(CultureInfo.InvariantCulture) + ' ' + productMassTolerance.Units.ToString() + " (" + productMassType.ToString().ToLower() + ')');
                     log.WriteLine("Maximum False Discovery Rate: " + (maximumFalseDiscoveryRate * 100).ToString(CultureInfo.InvariantCulture) + '%');
                     log.WriteLine("Consider Modified Forms as Unique Peptides: " + considerModifiedFormsAsUniquePeptides.ToString().ToLower());

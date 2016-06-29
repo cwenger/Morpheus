@@ -47,6 +47,8 @@
             this.label9 = new System.Windows.Forms.Label();
             this.fbdOutput = new System.Windows.Forms.FolderBrowserDialog();
             this.pnlMain = new System.Windows.Forms.Panel();
+            this.label22 = new System.Windows.Forms.Label();
+            this.label20 = new System.Windows.Forms.Label();
             this.txtAcceptedPrecursorMassErrors = new System.Windows.Forms.TextBox();
             this.chkMinimizeMemoryUsage = new System.Windows.Forms.CheckBox();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
@@ -103,8 +105,6 @@
             this.tsslStatus = new System.Windows.Forms.ToolStripStatusLabel();
             this.tspbProgress = new System.Windows.Forms.ToolStripProgressBar();
             this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
-            this.label20 = new System.Windows.Forms.Label();
-            this.label22 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.numMaxMissedCleavages)).BeginInit();
             this.pnlMain.SuspendLayout();
             this.groupBox3.SuspendLayout();
@@ -328,6 +328,24 @@
             this.pnlMain.Name = "pnlMain";
             this.pnlMain.Size = new System.Drawing.Size(712, 723);
             this.pnlMain.TabIndex = 2;
+            // 
+            // label22
+            // 
+            this.label22.AutoSize = true;
+            this.label22.Location = new System.Drawing.Point(437, 477);
+            this.label22.Name = "label22";
+            this.label22.Size = new System.Drawing.Size(265, 13);
+            this.label22.TabIndex = 55;
+            this.label22.Text = "Accepted Precursor Mass Errors (semicolon-separated)";
+            // 
+            // label20
+            // 
+            this.label20.AutoSize = true;
+            this.label20.Location = new System.Drawing.Point(680, 496);
+            this.label20.Name = "label20";
+            this.label20.Size = new System.Drawing.Size(21, 13);
+            this.label20.TabIndex = 54;
+            this.label20.Text = "Da";
             // 
             // txtAcceptedPrecursorMassErrors
             // 
@@ -932,24 +950,6 @@
             // 
             this.backgroundWorker1.DoWork += new System.ComponentModel.DoWorkEventHandler(this.backgroundWorker1_DoWork);
             this.backgroundWorker1.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.backgroundWorker1_RunWorkerCompleted);
-            // 
-            // label20
-            // 
-            this.label20.AutoSize = true;
-            this.label20.Location = new System.Drawing.Point(680, 496);
-            this.label20.Name = "label20";
-            this.label20.Size = new System.Drawing.Size(21, 13);
-            this.label20.TabIndex = 54;
-            this.label20.Text = "Da";
-            // 
-            // label22
-            // 
-            this.label22.AutoSize = true;
-            this.label22.Location = new System.Drawing.Point(437, 477);
-            this.label22.Name = "label22";
-            this.label22.Size = new System.Drawing.Size(252, 13);
-            this.label22.TabIndex = 55;
-            this.label22.Text = "Accepted Precursor Mass Errors (comma-separated)";
             // 
             // frmMain
             // 
