@@ -553,7 +553,7 @@ namespace Morpheus
         {
             tspbProgress.Value = tspbProgress.Minimum;
         }
-        
+
         private void btnBrowseOutput_Click(object sender, EventArgs e)
         {
             if(fbdOutput.ShowDialog() == DialogResult.OK)
@@ -636,6 +636,7 @@ namespace Morpheus
             }
             MassTolerance precursor_mass_tolerance = new MassTolerance((double)numPrecursorMassTolerance.Value, (MassToleranceUnits)cboPrecursorMassToleranceUnits.SelectedIndex);
             MassType precursor_mass_type = (MassType)cboPrecursorMassType.SelectedIndex;
+            List<double> massErrors = textBox1.Text.Split(',').Select(double.Parse).ToList();
             MassTolerance product_mass_tolerance = new MassTolerance((double)numProductMassTolerance.Value, (MassToleranceUnits)cboProductMassToleranceUnits.SelectedIndex);
             MassType product_mass_type = (MassType)cboProductMassType.SelectedIndex;
             double max_false_discovery_rate = (double)numMaximumFalseDiscoveryRatePercent.Value / 100.0;
@@ -643,7 +644,6 @@ namespace Morpheus
             int max_threads = (int)numMaxThreads.Value;
             bool minimize_memory_usage = chkMinimizeMemoryUsage.Checked;
             string output_folder = txtOutputFolder.Text;
-            List<double> massErrors = textBox1.Text.Split(',').Select(double.Parse).ToList();
             if(!Directory.Exists(output_folder))
             {
                 try
