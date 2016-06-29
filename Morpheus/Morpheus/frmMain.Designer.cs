@@ -66,6 +66,7 @@
             this.numMinimumAssumedPrecursorChargeState = new System.Windows.Forms.NumericUpDown();
             this.label14 = new System.Windows.Forms.Label();
             this.numMaximumAssumedPrecursorChargeState = new System.Windows.Forms.NumericUpDown();
+            this.label21 = new System.Windows.Forms.Label();
             this.numMaxThreads = new System.Windows.Forms.NumericUpDown();
             this.label19 = new System.Windows.Forms.Label();
             this.chkOnTheFlyDecoys = new System.Windows.Forms.CheckBox();
@@ -103,7 +104,6 @@
             this.tsslStatus = new System.Windows.Forms.ToolStripStatusLabel();
             this.tspbProgress = new System.Windows.Forms.ToolStripProgressBar();
             this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
-            this.label21 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.numMaxMissedCleavages)).BeginInit();
             this.pnlMain.SuspendLayout();
             this.groupBox3.SuspendLayout();
@@ -338,7 +338,7 @@
             // label22
             // 
             this.label22.AutoSize = true;
-            this.label22.Location = new System.Drawing.Point(438, 523);
+            this.label22.Location = new System.Drawing.Point(438, 468);
             this.label22.Name = "label22";
             this.label22.Size = new System.Drawing.Size(112, 13);
             this.label22.TabIndex = 52;
@@ -573,6 +573,15 @@
             0,
             0});
             this.numMaximumAssumedPrecursorChargeState.ValueChanged += new System.EventHandler(this.ResetProgressBar);
+            // 
+            // label21
+            // 
+            this.label21.AutoSize = true;
+            this.label21.Location = new System.Drawing.Point(6, 13);
+            this.label21.Name = "label21";
+            this.label21.Size = new System.Drawing.Size(88, 13);
+            this.label21.TabIndex = 50;
+            this.label21.Text = "(Unknowns Only)";
             // 
             // numMaxThreads
             // 
@@ -929,15 +938,6 @@
             // 
             this.backgroundWorker1.DoWork += new System.ComponentModel.DoWorkEventHandler(this.backgroundWorker1_DoWork);
             this.backgroundWorker1.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.backgroundWorker1_RunWorkerCompleted);
-            // 
-            // label21
-            // 
-            this.label21.AutoSize = true;
-            this.label21.Location = new System.Drawing.Point(6, 13);
-            this.label21.Name = "label21";
-            this.label21.Size = new System.Drawing.Size(88, 13);
-            this.label21.TabIndex = 50;
-            this.label21.Text = "(Unknowns Only)";
             // 
             // frmMain
             // 
