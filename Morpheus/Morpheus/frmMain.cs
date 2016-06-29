@@ -678,10 +678,11 @@ namespace Morpheus
                 protease, max_missed_cleavages, initiator_methionine_behavior,
                 fixed_modifications, variable_modifications, max_variable_mod_isoforms,
                 precursor_mass_tolerance, precursor_mass_type,
+                massErrors,
                 product_mass_tolerance, product_mass_type,
                 max_false_discovery_rate, consider_modified_unique,
                 max_threads, minimize_memory_usage,
-                output_folder, massErrors);
+                output_folder);
 
             database_searcher.Starting += HandleStarting;
             database_searcher.StartingFile += HandleStartingFile;

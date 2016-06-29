@@ -30,6 +30,7 @@ namespace Morpheus
         private int maximumVariableModificationIsoforms;
         private MassTolerance precursorMassTolerance;
         private MassType precursorMassType;
+        private List<double> massErrors;
         private MassTolerance productMassTolerance;
         private MassType productMassType;
         private double maximumFalseDiscoveryRate;
@@ -37,7 +38,6 @@ namespace Morpheus
         private int maximumThreads;
         private bool minimizeMemoryUsage;
         private string outputFolder;
-        private List<double> massErrors;
 
         public DatabaseSearcher(IList<string> dataFilepaths,
             int minimumAssumedPrecursorChargeState, int maximumAssumedPrecursorChargeState,
@@ -47,11 +47,11 @@ namespace Morpheus
             Protease protease, int maximumMissedCleavages, InitiatorMethionineBehavior initiatorMethionineBehavior,
             IEnumerable<Modification> fixedModifications, IEnumerable<Modification> variableModifications, int maximumVariableModificationIsoforms,
             MassTolerance precursorMassTolerance, MassType precursorMassType,
+            List<double> massErrors,
             MassTolerance productMassTolerance, MassType productMassType,
             double maximumFalseDiscoveryRate, bool considerModifiedFormsAsUniquePeptides,
             int maximumThreads, bool minimizeMemoryUsage,
-            string outputFolder,
-            List<double> massErrors)
+            string outputFolder)
         {
             this.dataFilepaths = dataFilepaths;
             this.assignChargeStates = assignChargeStates;
@@ -71,6 +71,7 @@ namespace Morpheus
             this.maximumNumberOfPeaks = maximumNumberOfPeaks;
             this.precursorMassTolerance = precursorMassTolerance;
             this.precursorMassType = precursorMassType;
+            this.massErrors = massErrors;
             this.productMassTolerance = productMassTolerance;
             this.productMassType = productMassType;
             this.maximumFalseDiscoveryRate = maximumFalseDiscoveryRate;
@@ -78,7 +79,6 @@ namespace Morpheus
             this.maximumThreads = maximumThreads;
             this.minimizeMemoryUsage = minimizeMemoryUsage;
             this.outputFolder = outputFolder;
-            this.massErrors = massErrors;
         }
 
         public event EventHandler Starting;
@@ -635,6 +635,7 @@ namespace Morpheus
                         protease, maximumMissedCleavages, initiatorMethionineBehavior,
                         fixedModifications, fixed_modifications, variableModifications, variable_modifications, maximumVariableModificationIsoforms,
                         precursorMassTolerance, precursorMassType,
+                        massErrors,
                         productMassTolerance, productMassType,
                         maximumFalseDiscoveryRate, considerModifiedFormsAsUniquePeptides,
                         maximumThreads, minimizeMemoryUsage,
@@ -697,6 +698,7 @@ namespace Morpheus
                         protease, maximumMissedCleavages, initiatorMethionineBehavior,
                         fixedModifications, variableModifications, maximumVariableModificationIsoforms,
                         precursorMassTolerance, precursorMassType,
+                        massErrors,
                         productMassTolerance, productMassType,
                         maximumFalseDiscoveryRate, considerModifiedFormsAsUniquePeptides,
                         maximumThreads, minimizeMemoryUsage,
@@ -813,6 +815,7 @@ namespace Morpheus
                             protease, maximumMissedCleavages, initiatorMethionineBehavior,
                             fixedModifications, variableModifications, maximumVariableModificationIsoforms,
                             precursorMassTolerance, precursorMassType,
+                            massErrors,
                             productMassTolerance, productMassType,
                             maximumFalseDiscoveryRate, considerModifiedFormsAsUniquePeptides,
                             maximumThreads, minimizeMemoryUsage,
@@ -893,6 +896,7 @@ namespace Morpheus
                         protease, maximumMissedCleavages, initiatorMethionineBehavior,
                         fixedModifications, variableModifications, maximumVariableModificationIsoforms,
                         precursorMassTolerance, precursorMassType,
+                        massErrors,
                         productMassTolerance, productMassType,
                         maximumFalseDiscoveryRate, considerModifiedFormsAsUniquePeptides,
                         maximumThreads, minimizeMemoryUsage,
