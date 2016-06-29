@@ -47,8 +47,8 @@
             this.label9 = new System.Windows.Forms.Label();
             this.fbdOutput = new System.Windows.Forms.FolderBrowserDialog();
             this.pnlMain = new System.Windows.Forms.Panel();
-            this.textBox1 = new System.Windows.Forms.TextBox();
-            this.label22 = new System.Windows.Forms.Label();
+            this.massErrorsTextBox = new System.Windows.Forms.TextBox();
+            this.massErrorsLabel = new System.Windows.Forms.Label();
             this.chkMinimizeMemoryUsage = new System.Windows.Forms.CheckBox();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.chkDeisotope = new System.Windows.Forms.CheckBox();
@@ -275,8 +275,8 @@
             // 
             // pnlMain
             // 
-            this.pnlMain.Controls.Add(this.textBox1);
-            this.pnlMain.Controls.Add(this.label22);
+            this.pnlMain.Controls.Add(this.massErrorsTextBox);
+            this.pnlMain.Controls.Add(this.massErrorsLabel);
             this.pnlMain.Controls.Add(this.chkMinimizeMemoryUsage);
             this.pnlMain.Controls.Add(this.groupBox3);
             this.pnlMain.Controls.Add(this.groupBox2);
@@ -327,22 +327,23 @@
             this.pnlMain.Size = new System.Drawing.Size(712, 723);
             this.pnlMain.TabIndex = 2;
             // 
-            // textBox1
+            // massErrorsTextBox
             // 
-            this.textBox1.Location = new System.Drawing.Point(443, 487);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(261, 20);
-            this.textBox1.TabIndex = 53;
-            this.textBox1.Text = "0";
+            this.massErrorsTextBox.Location = new System.Drawing.Point(443, 487);
+            this.massErrorsTextBox.Name = "massErrorsTextBox";
+            this.massErrorsTextBox.Size = new System.Drawing.Size(261, 20);
+            this.massErrorsTextBox.TabIndex = 53;
+            this.massErrorsTextBox.Text = "0";
+            this.massErrorsTextBox.TextChanged += new System.EventHandler(this.ResetProgressBar);
             // 
-            // label22
+            // massErrorsLabel
             // 
-            this.label22.AutoSize = true;
-            this.label22.Location = new System.Drawing.Point(438, 468);
-            this.label22.Name = "label22";
-            this.label22.Size = new System.Drawing.Size(112, 13);
-            this.label22.TabIndex = 52;
-            this.label22.Text = "Mass errors to accept:";
+            this.massErrorsLabel.AutoSize = true;
+            this.massErrorsLabel.Location = new System.Drawing.Point(438, 468);
+            this.massErrorsLabel.Name = "massErrorsLabel";
+            this.massErrorsLabel.Size = new System.Drawing.Size(112, 13);
+            this.massErrorsLabel.TabIndex = 52;
+            this.massErrorsLabel.Text = "Mass errors to accept:";
             // 
             // chkMinimizeMemoryUsage
             // 
@@ -1054,7 +1055,7 @@
         private System.Windows.Forms.CheckBox chkMinimizeMemoryUsage;
         private System.ComponentModel.BackgroundWorker backgroundWorker1;
         private System.Windows.Forms.Label label21;
-        private System.Windows.Forms.TextBox textBox1;
-        private System.Windows.Forms.Label label22;
+        private System.Windows.Forms.TextBox massErrorsTextBox;
+        private System.Windows.Forms.Label massErrorsLabel;
     }
 }

@@ -172,7 +172,7 @@ namespace Morpheus
                                     cboPrecursorMassType.SelectedIndex = (int)Enum.Parse(typeof(MassType), value, true);
                                     break;
                                 case "Mass errors accepted":
-                                    textBox1.Text = value;
+                                    massErrorsTextBox.Text = value;
                                     break;
                                 case "Product Mass Tolerance":
                                     numProductMassTolerance.Value = decimal.Parse(value, CultureInfo.InvariantCulture);
@@ -639,7 +639,7 @@ namespace Morpheus
             }
             MassTolerance precursor_mass_tolerance = new MassTolerance((double)numPrecursorMassTolerance.Value, (MassToleranceUnits)cboPrecursorMassToleranceUnits.SelectedIndex);
             MassType precursor_mass_type = (MassType)cboPrecursorMassType.SelectedIndex;
-            List<double> massErrors = textBox1.Text.Split(',').Select(double.Parse).ToList();
+            List<double> massErrors = massErrorsTextBox.Text.Split(',').Select(double.Parse).ToList();
             MassTolerance product_mass_tolerance = new MassTolerance((double)numProductMassTolerance.Value, (MassToleranceUnits)cboProductMassToleranceUnits.SelectedIndex);
             MassType product_mass_type = (MassType)cboProductMassType.SelectedIndex;
             double max_false_discovery_rate = (double)numMaximumFalseDiscoveryRatePercent.Value / 100.0;
@@ -863,7 +863,7 @@ namespace Morpheus
                 settings.WriteLine("Precursor Mass Tolerance" + '\t' + numPrecursorMassTolerance.Value.ToString(CultureInfo.InvariantCulture));
                 settings.WriteLine("Precursor Mass Tolerance Units" + '\t' + cboPrecursorMassToleranceUnits.Text);
                 settings.WriteLine("Precursor Mass Type" + '\t' + cboPrecursorMassType.Text);
-                settings.WriteLine("Mass errors accepted " + textBox1.Text);
+                settings.WriteLine("Mass errors accepted " + massErrorsTextBox.Text);
                 settings.WriteLine("Product Mass Tolerance" + '\t' + numProductMassTolerance.Value.ToString(CultureInfo.InvariantCulture));
                 settings.WriteLine("Product Mass Tolerance Units" + '\t' + cboProductMassToleranceUnits.Text);
                 settings.WriteLine("Product Mass Type" + '\t' + cboProductMassType.Text);
