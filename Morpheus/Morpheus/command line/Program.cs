@@ -142,10 +142,17 @@ namespace Morpheus
                 {
                     precursor_mass_type = (MassType)Enum.Parse(typeof(MassType), arguments["precmt"], true);
                 }
-                List<double> massErrors = new List<double>() { 0 };
-                if (arguments["masserrors"] != null)
+                List<double> accepted_precursor_mass_errors = new List<double>();
+                if(arguments["apme"] != null && arguments["apme"].Length > 0)
                 {
-                    massErrors = arguments["masserrors"].Split(',').Select(double.Parse).ToList();
+                    foreach(string accepted_precursor_mass_error in arguments["apme"].Split(';'))
+                    {
+                        accepted_precursor_mass_errors.Add(double.Parse(accepted_precursor_mass_error, CultureInfo.InvariantCulture));
+                    }
+                }
+                else
+                {
+                    accepted_precursor_mass_errors.Add(0.0);
                 }
                 double product_mass_tolerance_value = 0.015;
                 if(arguments["prodmtv"] != null)
@@ -197,7 +204,7 @@ namespace Morpheus
                     protease, max_missed_cleavages, initiator_methionine_behavior,
                     fixed_mods, variable_mods, max_variable_mod_isoforms_per_peptide,
                     precursor_mass_tolerance, precursor_mass_type,
-                    massErrors,
+                    accepted_precursor_mass_errors,
                     product_mass_tolerance, product_mass_type,
                     max_fdr, consider_mods_unique,
                     max_threads, minimize_memory_usage,

@@ -47,8 +47,9 @@
             this.label9 = new System.Windows.Forms.Label();
             this.fbdOutput = new System.Windows.Forms.FolderBrowserDialog();
             this.pnlMain = new System.Windows.Forms.Panel();
-            this.massErrorsTextBox = new System.Windows.Forms.TextBox();
-            this.massErrorsLabel = new System.Windows.Forms.Label();
+            this.label22 = new System.Windows.Forms.Label();
+            this.label20 = new System.Windows.Forms.Label();
+            this.txtAcceptedPrecursorMassErrors = new System.Windows.Forms.TextBox();
             this.chkMinimizeMemoryUsage = new System.Windows.Forms.CheckBox();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.chkDeisotope = new System.Windows.Forms.CheckBox();
@@ -66,6 +67,7 @@
             this.numMinimumAssumedPrecursorChargeState = new System.Windows.Forms.NumericUpDown();
             this.label14 = new System.Windows.Forms.Label();
             this.numMaximumAssumedPrecursorChargeState = new System.Windows.Forms.NumericUpDown();
+            this.label21 = new System.Windows.Forms.Label();
             this.numMaxThreads = new System.Windows.Forms.NumericUpDown();
             this.label19 = new System.Windows.Forms.Label();
             this.chkOnTheFlyDecoys = new System.Windows.Forms.CheckBox();
@@ -103,7 +105,6 @@
             this.tsslStatus = new System.Windows.Forms.ToolStripStatusLabel();
             this.tspbProgress = new System.Windows.Forms.ToolStripProgressBar();
             this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
-            this.label21 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.numMaxMissedCleavages)).BeginInit();
             this.pnlMain.SuspendLayout();
             this.groupBox3.SuspendLayout();
@@ -275,8 +276,9 @@
             // 
             // pnlMain
             // 
-            this.pnlMain.Controls.Add(this.massErrorsTextBox);
-            this.pnlMain.Controls.Add(this.massErrorsLabel);
+            this.pnlMain.Controls.Add(this.label22);
+            this.pnlMain.Controls.Add(this.label20);
+            this.pnlMain.Controls.Add(this.txtAcceptedPrecursorMassErrors);
             this.pnlMain.Controls.Add(this.chkMinimizeMemoryUsage);
             this.pnlMain.Controls.Add(this.groupBox3);
             this.pnlMain.Controls.Add(this.groupBox2);
@@ -327,23 +329,32 @@
             this.pnlMain.Size = new System.Drawing.Size(712, 723);
             this.pnlMain.TabIndex = 2;
             // 
-            // massErrorsTextBox
+            // label22
             // 
-            this.massErrorsTextBox.Location = new System.Drawing.Point(443, 487);
-            this.massErrorsTextBox.Name = "massErrorsTextBox";
-            this.massErrorsTextBox.Size = new System.Drawing.Size(261, 20);
-            this.massErrorsTextBox.TabIndex = 53;
-            this.massErrorsTextBox.Text = "0";
-            this.massErrorsTextBox.TextChanged += new System.EventHandler(this.ResetProgressBar);
+            this.label22.AutoSize = true;
+            this.label22.Location = new System.Drawing.Point(437, 477);
+            this.label22.Name = "label22";
+            this.label22.Size = new System.Drawing.Size(265, 13);
+            this.label22.TabIndex = 55;
+            this.label22.Text = "Accepted Precursor Mass Errors (semicolon-separated)";
             // 
-            // massErrorsLabel
+            // label20
             // 
-            this.massErrorsLabel.AutoSize = true;
-            this.massErrorsLabel.Location = new System.Drawing.Point(438, 468);
-            this.massErrorsLabel.Name = "massErrorsLabel";
-            this.massErrorsLabel.Size = new System.Drawing.Size(112, 13);
-            this.massErrorsLabel.TabIndex = 52;
-            this.massErrorsLabel.Text = "Mass errors to accept:";
+            this.label20.AutoSize = true;
+            this.label20.Location = new System.Drawing.Point(680, 496);
+            this.label20.Name = "label20";
+            this.label20.Size = new System.Drawing.Size(21, 13);
+            this.label20.TabIndex = 54;
+            this.label20.Text = "Da";
+            // 
+            // txtAcceptedPrecursorMassErrors
+            // 
+            this.txtAcceptedPrecursorMassErrors.Location = new System.Drawing.Point(440, 493);
+            this.txtAcceptedPrecursorMassErrors.Name = "txtAcceptedPrecursorMassErrors";
+            this.txtAcceptedPrecursorMassErrors.Size = new System.Drawing.Size(240, 20);
+            this.txtAcceptedPrecursorMassErrors.TabIndex = 53;
+            this.txtAcceptedPrecursorMassErrors.Text = "0";
+            this.txtAcceptedPrecursorMassErrors.TextChanged += new System.EventHandler(this.ResetProgressBar);
             // 
             // chkMinimizeMemoryUsage
             // 
@@ -574,6 +585,15 @@
             0,
             0});
             this.numMaximumAssumedPrecursorChargeState.ValueChanged += new System.EventHandler(this.ResetProgressBar);
+            // 
+            // label21
+            // 
+            this.label21.AutoSize = true;
+            this.label21.Location = new System.Drawing.Point(6, 13);
+            this.label21.Name = "label21";
+            this.label21.Size = new System.Drawing.Size(88, 13);
+            this.label21.TabIndex = 50;
+            this.label21.Text = "(Unknowns Only)";
             // 
             // numMaxThreads
             // 
@@ -931,15 +951,6 @@
             this.backgroundWorker1.DoWork += new System.ComponentModel.DoWorkEventHandler(this.backgroundWorker1_DoWork);
             this.backgroundWorker1.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.backgroundWorker1_RunWorkerCompleted);
             // 
-            // label21
-            // 
-            this.label21.AutoSize = true;
-            this.label21.Location = new System.Drawing.Point(6, 13);
-            this.label21.Name = "label21";
-            this.label21.Size = new System.Drawing.Size(88, 13);
-            this.label21.TabIndex = 50;
-            this.label21.Text = "(Unknowns Only)";
-            // 
             // frmMain
             // 
             this.AllowDrop = true;
@@ -1055,7 +1066,8 @@
         private System.Windows.Forms.CheckBox chkMinimizeMemoryUsage;
         private System.ComponentModel.BackgroundWorker backgroundWorker1;
         private System.Windows.Forms.Label label21;
-        private System.Windows.Forms.TextBox massErrorsTextBox;
-        private System.Windows.Forms.Label massErrorsLabel;
+        private System.Windows.Forms.TextBox txtAcceptedPrecursorMassErrors;
+        private System.Windows.Forms.Label label20;
+        private System.Windows.Forms.Label label22;
     }
 }
