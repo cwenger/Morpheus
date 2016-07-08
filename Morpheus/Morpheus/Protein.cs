@@ -7,7 +7,18 @@ namespace Morpheus
     {
         public string Accession
         {
-            get { return Description.Substring(0, Description.IndexOf(' ')); }
+            get
+            {
+                int index = Description.IndexOf(' ');
+                if(index >= 0)
+                {
+                    return Description.Substring(0, index);
+                }
+                else
+                {
+                    return Description;
+                }
+            }
         }
 
         public string Description { get; private set; }
