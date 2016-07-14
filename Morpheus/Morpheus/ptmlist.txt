@@ -9,7 +9,7 @@
 
 Description: Controlled vocabulary of posttranslational modifications (PTM)
 Name:        ptmlist.txt
-Release:     2016_06 of 08-Jun-2016
+Release:     2016_07 of 06-Jul-2016
 
 ---------------------------------------------------------------------------
 
@@ -5369,8 +5369,8 @@ ID   Pentaglycyl murein peptidoglycan amidated alanine
 AC   PTM-0245
 FT   MOD_RES
 TG   Alanine.
-PA   Amino acid side chain.
-PP   Anywhere.
+PA   Amino acid backbone.
+PP   C-terminal.
 LC   Extracellular and lumenal localisation.
 TR   Bacteria; taxId:1239 (Firmicutes).
 KW   Peptidoglycan-anchor.
@@ -5381,8 +5381,8 @@ ID   Pentaglycyl murein peptidoglycan amidated threonine
 AC   PTM-0246
 FT   MOD_RES
 TG   Threonine.
-PA   Amino acid side chain.
-PP   Anywhere.
+PA   Amino acid backbone.
+PP   C-terminal.
 LC   Extracellular and lumenal localisation.
 TR   Bacteria; taxId:2 (Bacteria).
 KW   Peptidoglycan-anchor.
