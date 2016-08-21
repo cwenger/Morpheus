@@ -41,7 +41,7 @@ namespace Morpheus
 
         public void Add(Protease protease)
         {
-            base.Add(protease.Name, protease);
+            Add(protease.Name, protease);
         }
     }
 }
