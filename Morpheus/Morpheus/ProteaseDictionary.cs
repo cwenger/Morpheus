@@ -25,7 +25,10 @@ namespace Morpheus
                     string[] sequences_preventing_cleavage = fields[2].Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
                     Terminus cleavage_terminus = (Terminus)Enum.Parse(typeof(Terminus), fields[3], true);
                     CleavageSpecificity cleavage_specificity = (CleavageSpecificity)Enum.Parse(typeof(CleavageSpecificity), fields[4], true);
-                    Protease protease = new Protease(name, sequences_inducing_cleavage, sequences_preventing_cleavage, cleavage_terminus, cleavage_specificity);
+                    string psi_ms_accession_number = fields[5];
+                    string psi_ms_name = fields[6];
+                    string site_regexp = fields[7];
+                    Protease protease = new Protease(name, sequences_inducing_cleavage, sequences_preventing_cleavage, cleavage_terminus, cleavage_specificity, psi_ms_accession_number, psi_ms_name, site_regexp);
                     Add(protease);
                 }
             }
