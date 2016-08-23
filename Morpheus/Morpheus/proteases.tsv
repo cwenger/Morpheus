@@ -8,10 +8,10 @@ Glu-C	E		C	full
 Lys-C	K	P	C	full	MS:1001309	Lys-C	(?<=K)(?!P)	
 Lys-C (no proline rule)	K		C	full	MS:10001310	Lys-C/P	(?<=K)	
 Lys-N	K		N	full				
-semi-trypsin	K,R	P	C	semi	MS:10001251	Trypsin	(?<=[KR])(?!P)	
-semi-trypsin (no proline rule)	K,R		C	semi	MS:10001313	Trypsin/P	(?<=[KR])	
-trypsin	K,R	P	C	full	MS:10001251	Trypsin	(?<=[KR])(?!P)	
-trypsin (no proline rule)	K,R		C	full	MS:10001313	Trypsin/P	(?<=[KR])	
+semi-trypsin	K,R	P	C	semi	MS:1001251	Trypsin	(?<=[KR])(?!P)	
+semi-trypsin (no proline rule)	K,R		C	semi	MS:1001313	Trypsin/P	(?<=[KR])	
+trypsin	K,R	P	C	full	MS:1001251	Trypsin	(?<=[KR])(?!P)	
+trypsin (no proline rule)	K,R		C	full	MS:1001313	Trypsin/P	(?<=[KR])	
 tryptophan oxidation	W		C	full				
 non-specific	A,C,D,E,F,G,H,I,K,L,M,N,P,Q,R,S,T,U,V,W,Y		none	full	MS:1001956	unspecific cleavage		
 top-down			none	none	MS:10001955	no cleavage		
