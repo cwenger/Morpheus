@@ -138,6 +138,11 @@ namespace Morpheus
             {
                 return comparison;
             }
+            comparison = Math.Abs(left.PrecursorMassErrorDa).CompareTo(Math.Abs(right.PrecursorMassErrorDa));
+            if (comparison != 0)
+            {
+                return comparison;
+            }
             else
             {
                 return left.Target.CompareTo(right.Target);
