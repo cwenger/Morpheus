@@ -51,13 +51,22 @@ namespace Morpheus
 
         public CleavageSpecificity CleavageSpecificity { get; private set; }
 
-        public Protease(string name, IEnumerable<string> sequencesInducingCleavage, IEnumerable<string> sequencesPreventingCleavage, Terminus cleavageTerminus, CleavageSpecificity cleavageSpecificity)
+        public string PsiMsAccessionNumber { get; private set; }
+
+        public string PsiMsName { get; private set; }
+
+        public string SiteRegexp { get; private set; }
+
+        public Protease(string name, IEnumerable<string> sequencesInducingCleavage, IEnumerable<string> sequencesPreventingCleavage, Terminus cleavageTerminus, CleavageSpecificity cleavageSpecificity, string psiMsAccessionNumber, string psiMsName, string siteRegexp)
         {
             Name = name;
             SequencesInducingCleavage = sequencesInducingCleavage;
             SequencesPreventingCleavage = sequencesPreventingCleavage;
             CleavageTerminus = cleavageTerminus;
             CleavageSpecificity = cleavageSpecificity;
+            PsiMsAccessionNumber = psiMsAccessionNumber;
+            PsiMsName = psiMsName;
+            SiteRegexp = siteRegexp;
         }
 
         public override string ToString()

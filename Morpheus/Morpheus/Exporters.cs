@@ -666,6 +666,22 @@ namespace Morpheus
                 output.WriteAttributeString("name", protease.Name);
                 output.WriteAttributeString("semiSpecific", (protease.CleavageSpecificity == CleavageSpecificity.Semi || protease.CleavageSpecificity == CleavageSpecificity.SemiN || protease.CleavageSpecificity == CleavageSpecificity.SemiC).ToString().ToLower());
                 output.WriteAttributeString("missedCleavages", maximumMissedCleavages.ToString());
+                if(!string.IsNullOrWhiteSpace(protease.SiteRegexp))
+                {
+                    output.WriteStartElement("SiteRegexp");
+                    output.WriteCData(protease.SiteRegexp);
+                    output.WriteEndElement();  // SiteRegexp
+                }
+                if(!string.IsNullOrWhiteSpace(protease.PsiMsAccessionNumber))
+                {
+                    output.WriteStartElement("EnzymeName");
+                    output.WriteStartElement("cvParam");
+                    output.WriteAttributeString("accession", protease.PsiMsAccessionNumber);
+                    output.WriteAttributeString("name", protease.PsiMsName);
+                    output.WriteAttributeString("cvRef", "PSI-MS");
+                    output.WriteEndElement();  // cvParam
+                    output.WriteEndElement();  // EnzymeName
+                }
                 output.WriteEndElement();  // Enzyme
                 output.WriteEndElement();  // Enzymes
                 output.WriteStartElement("FragmentTolerance");
