@@ -18,7 +18,7 @@ namespace Morpheus
                 {
                     output.WriteLine(PeptideSpectrumMatch.Header);
                 }
-                else if(typeof(T) == typeof(PeptideSpectrumMatch))
+                else if(typeof(T) == typeof(ProteinGroup))
                 {
                     output.WriteLine(ProteinGroup.Header);
                 }
