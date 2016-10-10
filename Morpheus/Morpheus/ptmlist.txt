@@ -9,7 +9,7 @@
 
 Description: Controlled vocabulary of posttranslational modifications (PTM)
 Name:        ptmlist.txt
-Release:     2016_08 of 07-Sep-2016
+Release:     2016_09 of 05-Oct-2016
 
 ---------------------------------------------------------------------------
 
