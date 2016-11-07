@@ -9,7 +9,7 @@
 
 Description: Controlled vocabulary of posttranslational modifications (PTM)
 Name:        ptmlist.txt
-Release:     2016_09 of 05-Oct-2016
+Release:     2016_10 of 02-Nov-2016
 
 ---------------------------------------------------------------------------
 
@@ -88,6 +88,7 @@ MM   15.994915
 MA   16.00
 TR   Bacteria; taxId:2 (Bacteria).
 KW   Hydroxylation.
+DR   RESID; AA0601.
 DR   PSI-MOD; 01956.
 //
 ID   (3R)-3-hydroxyasparagine
@@ -3259,6 +3260,17 @@ KW   Amidation.
 DR   RESID; AA0089.
 DR   PSI-MOD; 00098.
 //
+ID   Hydroxylated arginine
+AC   PTM-0498
+FT   MOD_RES
+TG   Arginine.
+PA   Amino acid side chain.
+PP   Anywhere.
+TR   Bacteria; taxId:2 (Bacteria).
+TR   Eukaryota; taxId:40674 (Mammalia).
+KW   Hydroxylation.
+DR   PSI-MOD; 00682.
+//
 ID   Hydroxyproline
 AC   PTM-0149
 FT   MOD_RES
@@ -4400,6 +4412,19 @@ LC   Intracellular localisation.
 TR   Bacteria; taxId:2 (Bacteria).
 TR   Eukaryota; taxId:2759 (Eukaryota).
 //
+ID   N6-(beta-hydroxybutyrate)lysine
+AC   PTM-0499
+FT   MOD_RES
+TG   Lysine.
+PA   Amino acid side chain.
+PP   Anywhere.
+CF   C4 H7 O2
+MM   87.044604
+MA   87.09
+LC   Intracellular localisation.
+TR   Eukaryota; taxId:40674 (Mammalia).
+KW   Hydroxylation.
+//
 ID   N-[(12R)-12-hydroxymyristoyl]cysteine
 AC   PTM-0419
 FT   LIPID
@@ -5445,6 +5470,7 @@ CF   H1 O3 P1
 MM   79.966331
 MA   79.98
 LC   Intracellular localisation.
+TR   Archaea; taxId:2157 (Archaea).
 TR   Bacteria; taxId:2 (Bacteria).
 KW   Phosphoprotein.
 DR   RESID; AA0034.
