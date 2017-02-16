@@ -9,7 +9,7 @@
 
 Description: Controlled vocabulary of posttranslational modifications (PTM)
 Name:        ptmlist.txt
-Release:     2017_01 of 18-Jan-2017
+Release:     2017_02 of 15-Feb-2017
 
 ---------------------------------------------------------------------------
 
@@ -3865,6 +3865,22 @@ TR   Eukaryota; taxId:40674 (Mammalia).
 KW   Methylation.
 DR   RESID; AA0619.
 DR   PSI-MOD; 01982.
+//
+ID   N,N,N-trimethylmethionine
+AC   PTM-503
+FT   MOD_RES
+TG   Methionine.
+PA   Amino acid backbone.
+PP   N-terminal.
+CF   C3 H7
+MM   43.054227
+MA   43.09
+LC   Intracellular localisation.
+TR   Bacteria; taxId:1224 (Proteobacteria).
+TR   Deinococcus-Thermus; taxId:188787 (Deinococci).
+KW   Methylation.
+DR   RESID; AA0456.
+DR   PSI-MOD; 01382.
 //
 ID   N,N,N-trimethylserine
 AC   PTM-0430
