@@ -1,3 +1,4 @@
+
 ---------------------------------------------------------------------------
         UniProt Knowledgebase:
           Swiss-Prot Protein Knowledgebase
@@ -9,7 +10,7 @@
 
 Description: Controlled vocabulary of posttranslational modifications (PTM)
 Name:        ptmlist.txt
-Release:     2017_05 of 10-May-2017
+Release:     2017_06 of 07-Jun-2017
 
 ---------------------------------------------------------------------------
 
@@ -1254,7 +1255,7 @@ AC   PTM-0479
 FT   MOD_RES
 TG   Glutamate.
 PA   Amino acid side chain.
-PP   C-terminal.
+PP   Anywhere.
 CF   C5 H7 N1 O3
 MM   129.042593
 MA   129.12
@@ -2247,6 +2248,18 @@ PA   Amino acid backbone-Amino acid backbone.
 PP   C-terminal-N-terminal.
 LC   Extracellular and lumenal localisation.
 TR   Eukaryota; taxId:9544 (Macaca mulatta).
+//
+ID   Cyclopeptide (Glu-Asn)
+AC   PTM-0635
+FT   CROSSLNK
+TG   Glutamate-Asparagine.
+PA   Amino acid backbone-Amino acid backbone.
+PP   N-terminal-C-terminal.
+CF   H-2 O-1
+MM   -18.010565
+MA   -18.02
+LC   Extracellular and lumenal localisation.
+TR   Eukaryota; taxId:71240 (eudicotyledons).
 //
 ID   Cyclopeptide (Gly-Asn)
 AC   PTM-0098
@@ -4514,19 +4527,6 @@ KW   Acetylation.
 DR   RESID; AA0042.
 DR   PSI-MOD; MOD:00051.
 //
-ID   N-acetylated lysine
-AC   PTM-0482
-FT   MOD_RES
-TG   Lysine.
-CF   C2 H2 O1
-MM   42.010565
-MA   42.04
-TR   Archaea; taxId:2157 (Archaea).
-TR   Bacteria; taxId:2 (Bacteria).
-TR   Eukaryota; taxId:2759 (Eukaryota).
-KW   Acetylation.
-DR   PSI-MOD; MOD:00723.
-//
 ID   N-acetylcysteine
 AC   PTM-0201
 FT   MOD_RES
@@ -5125,7 +5125,7 @@ CF   C2 H2 O1
 MM   42.010565
 MA   42.04
 LC   Intracellular localisation.
-TR   Eukaryota; taxId:9606 (Homo sapiens).
+TR   Eukaryota; taxId:2759 (Eukaryota).
 KW   Acetylation.
 DR   RESID; AA0364.
 DR   PSI-MOD; MOD:00369.
@@ -5140,7 +5140,7 @@ CF   C2 H2 O1
 MM   42.010565
 MA   42.04
 LC   Intracellular localisation.
-TR   Eukaryota; taxId:9606 (Homo sapiens).
+TR   Eukaryota; taxId:2759 (Eukaryota).
 KW   Acetylation.
 DR   RESID; AA0423.
 DR   PSI-MOD; MOD:01171.
@@ -6183,6 +6183,21 @@ TR   Eukaryota; taxId:3055 (Chlamydomonas reinhardtii).
 KW   Methylation.
 DR   RESID; AA0234.
 DR   PSI-MOD; MOD:00239.
+//
+ID   S-methylmethionine
+AC   PTM-0636
+FT   MOD_RES
+TG   Methionine.
+PA   Amino acid side chain.
+PP   Anywhere.
+CF   C1 H3
+MM   15.022927
+MA   15.03
+LC   Intracellular localisation.
+TR   Eukaryota; taxId:162425 (Emericella nidulans).
+KW   Methylation.
+DR   RESID; AA0616.
+DR   PSI-MOD; MOD:01974.
 //
 ID   S-nitrosocysteine
 AC   PTM-0280
@@ -8418,5 +8433,3 @@ KW   Glycoprotein.
 Copyrighted by the UniProt Consortium, see http://www.uniprot.org/terms
 Distributed under the Creative Commons Attribution-NoDerivs License
 -----------------------------------------------------------------------
-
-
