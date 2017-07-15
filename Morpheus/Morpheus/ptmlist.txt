@@ -10,7 +10,7 @@
 
 Description: Controlled vocabulary of posttranslational modifications (PTM)
 Name:        ptmlist.txt
-Release:     2017_06 of 07-Jun-2017
+Release:     2017_07 of 05-Jul-2017
 
 ---------------------------------------------------------------------------
 
@@ -2971,6 +2971,7 @@ PP   Anywhere.
 LC   Intracellular localisation.
 TR   Bacteria; taxId:2 (Bacteria).
 TR   Eukaryota; taxId:3055 (Chlamydomonas reinhardtii).
+TR   Viruses; taxId:10239 (Viruses).
 KW   Organic radical.
 DR   RESID; AA0008.
 DR   PSI-MOD; MOD:00017.
@@ -3058,6 +3059,7 @@ LC   Intracellular localisation.
 TR   Archaea; taxId:2157 (Archaea).
 TR   Bacteria; taxId:2 (Bacteria).
 TR   Eukaryota; taxId:2759 (Eukaryota).
+TR   Viruses; taxId:10239 (Viruses).
 KW   Isopeptide bond.
 DR   RESID; AA0125.
 DR   PSI-MOD; MOD:00134.
@@ -3232,7 +3234,7 @@ TG   Asparagine.
 PA   Amino acid backbone.
 PP   C-terminal.
 LC   Extracellular and lumenal localisation.
-TR   Eukaryota; taxId:746128 (Neosartorya fumigata).
+TR   Eukaryota; taxId:44689 (Dictyostelium discoideum), taxId:4751 (Fungi).
 KW   GPI-anchor.
 DR   RESID; AA0425.
 DR   PSI-MOD; MOD:01173.
@@ -3268,7 +3270,7 @@ TG   Serine.
 PA   Amino acid backbone.
 PP   C-terminal.
 LC   Extracellular and lumenal localisation.
-TR   Eukaryota; taxId:44689 (Dictyostelium discoideum), taxId:746128 (Neosartorya fumigata).
+TR   Eukaryota; taxId:33083 (Dictyosteliida), taxId:746128 (Neosartorya fumigata).
 KW   GPI-anchor.
 DR   RESID; AA0166.
 DR   PSI-MOD; MOD:00175.
@@ -3381,7 +3383,7 @@ TG   Asparagine-Lysine.
 PA   Amino acid side chain-Amino acid side chain.
 PP   Anywhere-Anywhere.
 LC   Extracellular and lumenal localisation.
-TR   Viruses and phages; taxId:37554 (Enterobacteria phage HK97).
+TR   Viruses; taxId:37554 (Enterobacteria phage HK97).
 KW   Isopeptide bond.
 DR   RESID; AA0294.
 DR   PSI-MOD; MOD:00299.
@@ -3408,7 +3410,7 @@ TG   Lysine-Asparagine.
 PA   Amino acid side chain-Amino acid side chain.
 PP   Anywhere-Anywhere.
 LC   Extracellular and lumenal localisation.
-TR   Viruses and phages; taxId:37554 (Enterobacteria phage HK97).
+TR   Viruses; taxId:37554 (Enterobacteria phage HK97).
 KW   Isopeptide bond.
 DR   RESID; AA0294.
 DR   PSI-MOD; MOD:00299.
@@ -5012,7 +5014,7 @@ TG   Serine.
 PA   Amino acid side chain.
 PP   Anywhere.
 LC   Intracellular localisation.
-TR   Viruses and phages; taxId:10239 (Viruses).
+TR   Viruses; taxId:10239 (Viruses).
 KW   Covalent protein-DNA linkage; Phosphoprotein.
 DR   RESID; AA0246.
 DR   PSI-MOD; MOD:00251.
@@ -5024,7 +5026,7 @@ TG   Tyrosine.
 PA   Amino acid side chain.
 PP   Anywhere.
 LC   Intracellular localisation.
-TR   Viruses and phages; taxId:10239 (Viruses).
+TR   Viruses; taxId:10239 (Viruses).
 KW   Covalent protein-DNA linkage; Phosphoprotein.
 DR   RESID; AA0254.
 DR   PSI-MOD; MOD:00259.
@@ -5037,7 +5039,7 @@ PA   Amino acid side chain.
 PP   Anywhere.
 LC   Intracellular localisation.
 TR   Eukaryota; taxId:7711 (Chordata).
-TR   Viruses and phages; taxId:10239 (Viruses).
+TR   Viruses; taxId:10239 (Viruses).
 KW   Covalent protein-RNA linkage; Phosphoprotein.
 DR   RESID; AA0213.
 DR   PSI-MOD; MOD:00218.
@@ -5049,7 +5051,7 @@ TG   Tyrosine.
 PA   Amino acid side chain.
 PP   Anywhere.
 LC   Intracellular localisation.
-TR   Viruses and phages; taxId:10239 (Viruses).
+TR   Viruses; taxId:10239 (Viruses).
 KW   Covalent protein-RNA linkage; Phosphoprotein.
 DR   RESID; AA0249.
 DR   PSI-MOD; MOD:00254.
@@ -5304,7 +5306,6 @@ MM   238.229666
 MA   238.41
 LC   Extracellular and lumenal localisation.
 TR   Eukaryota; taxId:7711 (Chordata).
-TR   Viruses and phages; taxId:10239 (Viruses).
 KW   Palmitate.
 DR   RESID; AA0080.
 DR   PSI-MOD; MOD:00089.
@@ -5380,7 +5381,7 @@ LC   Intracellular localisation.
 TR   Archaea; taxId:2157 (Archaea).
 TR   Bacteria; taxId:2 (Bacteria).
 TR   Eukaryota; taxId:2797 (Bangiophyceae).
-TR   Viruses and phages; taxId:10239 (Viruses).
+TR   Viruses; taxId:10239 (Viruses).
 KW   Nucleotide-binding; Phosphoprotein.
 DR   RESID; AA0256.
 DR   PSI-MOD; MOD:00261.
@@ -5579,6 +5580,7 @@ LC   Intracellular localisation.
 TR   Archaea; taxId:2157 (Archaea).
 TR   Bacteria; taxId:2 (Bacteria).
 TR   Eukaryota; taxId:2759 (Eukaryota).
+TR   Viruses; taxId:10239 (Viruses).
 KW   Phosphoprotein.
 DR   RESID; AA0037.
 DR   PSI-MOD; MOD:00046.
@@ -5595,6 +5597,7 @@ MA   79.98
 LC   Intracellular localisation.
 TR   Bacteria; taxId:2 (Bacteria).
 TR   Eukaryota; taxId:2759 (Eukaryota).
+TR   Viruses; taxId:10239 (Viruses).
 KW   Phosphoprotein.
 DR   RESID; AA0038.
 DR   PSI-MOD; MOD:00047.
@@ -5612,6 +5615,7 @@ LC   Intracellular localisation.
 TR   Archaea; taxId:2287 (Sulfolobus solfataricus).
 TR   Bacteria; taxId:1224 (Proteobacteria).
 TR   Eukaryota; taxId:2759 (Eukaryota).
+TR   Viruses; taxId:10239 (Viruses).
 KW   Phosphoprotein.
 DR   RESID; AA0039.
 DR   PSI-MOD; MOD:00048.
@@ -5794,7 +5798,6 @@ MM   -33.003705
 MA   -33.09
 LC   Intracellular localisation.
 TR   Bacteria; taxId:1239 (Firmicutes).
-TR   Viruses and phages; taxId:10677 (Enterobacteria phage Mu).
 KW   Pyruvate.
 DR   RESID; AA0127.
 DR   PSI-MOD; MOD:00136.
@@ -6256,7 +6259,6 @@ MM   266.260966
 MA   266.47
 LC   Intracellular localisation.
 TR   Eukaryota; taxId:9606 (Homo sapiens).
-TR   Viruses and phages; taxId:11033 (Semliki forest virus).
 KW   Lipoprotein.
 DR   RESID; AA0407.
 DR   PSI-MOD; MOD:00816.
@@ -7127,7 +7129,6 @@ PP   Anywhere.
 LC   Extracellular and lumenal localisation.
 TR   Archaea; taxId:2157 (Archaea).
 TR   Eukaryota; taxId:2759 (Eukaryota).
-TR   Viruses and phages; taxId:10239 (Viruses).
 KW   Glycoprotein.
 //
 ID   N-linked (GlcNAc...) (complex) asparagine
@@ -7148,7 +7149,6 @@ PA   Amino acid side chain.
 PP   Anywhere.
 LC   Extracellular and lumenal localisation.
 TR   Eukaryota; taxId:2759 (Eukaryota).
-TR   Viruses and phages; taxId:10239 (Viruses).
 KW   Glycoprotein.
 //
 ID   N-linked (GlcNAc...) (high mannose) asparagine
@@ -7159,7 +7159,6 @@ PA   Amino acid side chain.
 PP   Anywhere.
 LC   Extracellular and lumenal localisation.
 TR   Eukaryota; taxId:2759 (Eukaryota).
-TR   Viruses and phages; taxId:10239 (Viruses).
 KW   Glycoprotein.
 //
 ID   N-linked (GlcNAc...) (paucimannose) asparagine
@@ -7190,7 +7189,6 @@ PA   Amino acid side chain.
 PP   Anywhere.
 LC   Extracellular and lumenal localisation.
 TR   Eukaryota; taxId:9606 (Homo sapiens).
-TR   Viruses and phages; taxId:10239 (Viruses).
 KW   Glycoprotein.
 //
 ID   N-linked (Man) tryptophan
@@ -7301,7 +7299,6 @@ PP   Anywhere.
 LC   Extracellular and lumenal localisation.
 TR   Archaea; taxId:2157 (Archaea).
 TR   Eukaryota; taxId:2759 (Eukaryota).
-TR   Viruses and phages; taxId:10239 (Viruses).
 KW   Glycoprotein.
 //
 ID   N-linked (Hex) tryptophan
@@ -7586,7 +7583,6 @@ PA   Amino acid side chain.
 PP   Anywhere.
 LC   Extracellular and lumenal localisation.
 TR   Eukaryota; taxId:2759 (Eukaryota).
-TR   Viruses and phages; taxId:10239 (Viruses).
 KW   Glycoprotein.
 //
 ID   O-linked (GalNAc...) (keratan sulfate) serine
@@ -7622,7 +7618,6 @@ PA   Amino acid side chain.
 PP   Anywhere.
 LC   Extracellular and lumenal localisation.
 TR   Eukaryota; taxId:33208 (Metazoa).
-TR   Viruses and phages; taxId:10239 (Viruses).
 KW   Glycoprotein.
 //
 ID   O-linked (GalNAc...) (keratan sulfate) threonine
@@ -7669,7 +7664,6 @@ CF   C6 H10 O6
 MM   178.047738
 MA   178.14
 LC   Extracellular and lumenal localisation.
-TR   Viruses and phages; taxId:10239 (Viruses).
 KW   Glycoprotein; Hydroxylation.
 DR   RESID; AA0589.
 DR   PSI-MOD; MOD:01935.
@@ -7777,7 +7771,6 @@ MA   203.19
 LC   Intracellular localisation or Extracellular and lumenal localisation.
 TR   Bacteria; taxId:1590 (Lactobacillus plantarum).
 TR   Eukaryota; taxId:2759 (Eukaryota).
-TR   Viruses and phages; taxId:10239 (Viruses).
 KW   Glycoprotein.
 DR   RESID; AA0398.
 DR   PSI-MOD; MOD:00805.
@@ -7791,7 +7784,6 @@ PP   Anywhere.
 LC   Intracellular localisation or Extracellular and lumenal localisation.
 TR   Bacteria; taxId:485 (Neisseria gonorrhoeae).
 TR   Eukaryota; taxId:40674 (Mammalia).
-TR   Viruses and phages; taxId:10239 (Viruses).
 KW   Glycoprotein.
 //
 ID   O-linked (GlcNAc) threonine
@@ -7805,7 +7797,6 @@ MM   203.079373
 MA   203.19
 LC   Intracellular localisation or Extracellular and lumenal localisation.
 TR   Eukaryota; taxId:2759 (Eukaryota).
-TR   Viruses and phages; taxId:10239 (Viruses).
 KW   Glycoprotein.
 DR   RESID; AA0399.
 DR   PSI-MOD; MOD:00806.
@@ -8097,7 +8088,6 @@ MM   178.047738
 MA   178.14
 LC   Extracellular and lumenal localisation.
 TR   Eukaryota; taxId:7742 (Vertebrata).
-TR   Viruses and phages; taxId:10239 (Viruses).
 KW   Glycoprotein; Hydroxylation.
 //
 ID   O-linked (Hex...) hydroxylysine
@@ -8243,7 +8233,6 @@ MA   203.19
 LC   Intracellular localisation or Extracellular and lumenal localisation.
 TR   Bacteria; taxId:1590 (Lactobacillus plantarum).
 TR   Eukaryota; taxId:2759 (Eukaryota).
-TR   Viruses and phages; taxId:10239 (Viruses).
 KW   Glycoprotein.
 //
 ID   O-linked (HexNAc...) serine
@@ -8255,7 +8244,6 @@ PP   Anywhere.
 LC   Intracellular localisation or Extracellular and lumenal localisation.
 TR   Bacteria; taxId:485 (Neisseria gonorrhoeae).
 TR   Eukaryota; taxId:2759 (Eukaryota).
-TR   Viruses and phages; taxId:10239 (Viruses).
 KW   Glycoprotein.
 //
 ID   O-linked (HexNAc) threonine
@@ -8269,7 +8257,6 @@ MM   203.079373
 MA   203.19
 LC   Intracellular localisation or Extracellular and lumenal localisation.
 TR   Eukaryota; taxId:2759 (Eukaryota).
-TR   Viruses and phages; taxId:10239 (Viruses).
 KW   Glycoprotein.
 //
 ID   O-linked (HexNAc...) threonine
@@ -8280,7 +8267,6 @@ PA   Amino acid side chain.
 PP   Anywhere.
 LC   Intracellular localisation or Extracellular and lumenal localisation.
 TR   Eukaryota; taxId:33208 (Metazoa).
-TR   Viruses and phages; taxId:10239 (Viruses).
 KW   Glycoprotein.
 //
 ID   O-linked (HexNAc) tyrosine
@@ -8343,7 +8329,6 @@ MA   162.14
 LC   Extracellular and lumenal localisation.
 TR   Bacteria; taxId:1423 (Bacillus subtilis).
 TR   Eukaryota; taxId:7742 (Vertebrata).
-TR   Viruses and phages; taxId:10239 (Viruses).
 KW   Glycoprotein.
 DR   RESID; AA0152.
 DR   PSI-MOD; MOD:00161.
@@ -8394,7 +8379,6 @@ MA   162.14
 LC   Extracellular and lumenal localisation.
 TR   Bacteria; taxId:1423 (Bacillus subtilis).
 TR   Eukaryota; taxId:7742 (Vertebrata).
-TR   Viruses and phages; taxId:10239 (Viruses).
 KW   Glycoprotein.
 //
 ID   S-linked (Hex...) cysteine
@@ -8433,3 +8417,4 @@ KW   Glycoprotein.
 Copyrighted by the UniProt Consortium, see http://www.uniprot.org/terms
 Distributed under the Creative Commons Attribution-NoDerivs License
 -----------------------------------------------------------------------
+
