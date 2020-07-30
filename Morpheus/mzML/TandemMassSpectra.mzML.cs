@@ -197,7 +197,7 @@ namespace Morpheus
                                 precursor_intensity = double.Parse(navigator.GetAttribute("value", string.Empty), CultureInfo.InvariantCulture);
                             }
                         }
-                        XPathNavigator navigator2 = spectrum_child_navigator.SelectSingleNode("mzML:precursor/mzML:activation/mzML:cvParam", xnm);
+                        XPathNavigator navigator2 = spectrum_child_navigator.SelectSingleNode("mzML:precursor/mzML:activation/mzML:cvParam[@name!='collision energy']", xnm);
                         if(navigator2 != null)
                         {
                             fragmentation_method = navigator2.GetAttribute("name", string.Empty);
