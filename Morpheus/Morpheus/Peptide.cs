@@ -154,7 +154,7 @@ namespace Morpheus
                     }
                 }
 
-                if(variable_modification.Type == ModificationType.ProteinCTerminus && (EndResidueNumber == Parent.Length - 1) 
+                if(variable_modification.Type == ModificationType.ProteinCTerminus && (EndResidueNumber == Parent.Length) 
                     && (variable_modification.AminoAcid == char.MinValue || this[Length - 1] == variable_modification.AminoAcid))
                 {
                     List<Modification> prot_c_term_variable_mods;
