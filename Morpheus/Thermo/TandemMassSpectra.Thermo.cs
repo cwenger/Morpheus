@@ -263,11 +263,11 @@ namespace Morpheus
 
         private static int DeterminePolarity(string scanFilter)
         {
-            if(scanFilter.Contains(" + "))
+            if(scanFilter.Contains("+ "))
             {
                 return 1;
             }
-            else if(scanFilter.Contains(" - "))
+            else if(scanFilter.Contains("- "))
             {
                 return -1;
             }
